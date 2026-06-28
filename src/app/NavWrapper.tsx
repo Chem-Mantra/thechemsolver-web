@@ -9,11 +9,7 @@ const NAV_EXAMS = [
 ]
 const NAV_TOOLS = [
   { label: 'All Labs',   href: '/labs' },
-  { label: 'Study Guide',href: '/ebook' },
-  { label: 'Titration',  href: '/labs/titration' },
-  { label: 'Equilibrium',href: '/labs/equilibrium' },
-  { label: 'Mechanisms', href: '/labs/mechanisms' },
-  { label: 'VSEPR',      href: '/labs/vsepr' },
+  { label: 'Ebook',      href: '/ebook/ap-chemistry' },
 ]
 
 export default function NavWrapper({ children }: { children: React.ReactNode }) {
