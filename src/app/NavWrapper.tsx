@@ -3,9 +3,10 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 const NAV_EXAMS = [
-  { label: 'AP Chemistry', href: '/ap-chemistry', color: 'text-blue-400' },
-  { label: 'USNCO',        href: '/usnco',        color: 'text-orange-400' },
-  { label: 'IChO',         href: '/icho',         color: 'text-yellow-400' },
+  { label: 'AP Chemistry',   href: '/ap-chemistry',      color: 'text-blue-400' },
+  { label: 'Orgo 1 & 2',    href: '/organic-chemistry', color: 'text-emerald-400' },
+  { label: 'USNCO',          href: '/usnco',             color: 'text-orange-400' },
+  { label: 'IChO',           href: '/icho',              color: 'text-yellow-400' },
 ]
 const NAV_TOOLS = [
   { label: 'All Labs',   href: '/labs' },
@@ -59,9 +60,10 @@ export default function NavWrapper({ children }: { children: React.ReactNode }) 
           Free interactive chemistry tools for AP Chemistry, Organic Chemistry, IChO, and College Gen Chem students.
         </p>
         <div className="flex justify-center flex-wrap gap-4 text-xs mb-3">
-          <Link href="/ap-chemistry" className="text-blue-400 hover:text-blue-300 transition-colors">AP Chemistry</Link>
-          <Link href="/usnco"        className="text-orange-400 hover:text-orange-300 transition-colors">USNCO</Link>
-          <Link href="/icho"         className="text-yellow-400 hover:text-yellow-300 transition-colors">IChO</Link>
+          <Link href="/ap-chemistry"      className="text-blue-400 hover:text-blue-300 transition-colors">AP Chemistry</Link>
+          <Link href="/organic-chemistry" className="text-emerald-400 hover:text-emerald-300 transition-colors">Orgo 1 & 2</Link>
+          <Link href="/usnco"             className="text-orange-400 hover:text-orange-300 transition-colors">USNCO</Link>
+          <Link href="/icho"              className="text-yellow-400 hover:text-yellow-300 transition-colors">IChO</Link>
           <span className="text-white/20">|</span>
           <Link href="/labs"    className="hover:text-white transition-colors">All Labs</Link>
           <Link href="/ebook"   className="hover:text-white transition-colors">Study Guide</Link>

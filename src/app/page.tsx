@@ -39,6 +39,8 @@ export default function USHomePage() {
           <Link href="/usnco" className="text-orange-400 hover:text-orange-300 font-semibold px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors">USNCO</Link>
           <Link href="/icho" className="text-yellow-400 hover:text-yellow-300 font-semibold px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors">IChO</Link>
           <span className="text-white/20 mx-1">|</span>
+          <Link href="/organic-chemistry" className="text-emerald-400 hover:text-emerald-300 font-semibold px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors">Orgo 1 & 2</Link>
+          <span className="text-white/20 mx-1">|</span>
           <Link href="/labs" className="text-gray-400 hover:text-white px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors">All Labs</Link>
           <Link href="/ebook/ap-chemistry" className="text-gray-400 hover:text-white px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors">Ebook</Link>
         </div>
@@ -63,27 +65,34 @@ export default function USHomePage() {
         </p>
 
         {/* Exam hub cards */}
-        <div className="grid md:grid-cols-3 gap-4 max-w-4xl mx-auto mb-10">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto mb-10">
           <Link href="/ap-chemistry"
-            className="group bg-blue-900/20 hover:bg-blue-900/35 border border-blue-700/30 hover:border-blue-600/50 rounded-2xl p-6 text-left transition-all">
+            className="group bg-blue-900/20 hover:bg-blue-900/35 border border-blue-700/30 hover:border-blue-600/50 rounded-2xl p-5 text-left transition-all">
             <div className="text-blue-400 text-xs font-bold uppercase tracking-widest mb-2">AP Chemistry</div>
-            <div className="font-bold text-lg mb-2">College Board Exam</div>
+            <div className="font-bold text-base mb-2">College Board Exam</div>
             <div className="text-gray-400 text-xs mb-4 leading-relaxed">Simulations · Ebook · Tests — all 9 units covered</div>
-            <div className="text-blue-400 text-sm font-semibold group-hover:translate-x-1 transition-transform inline-block">AP Chemistry Hub →</div>
+            <div className="text-blue-400 text-xs font-semibold group-hover:translate-x-1 transition-transform inline-block">Open Hub →</div>
+          </Link>
+          <Link href="/organic-chemistry"
+            className="group bg-emerald-900/20 hover:bg-emerald-900/35 border border-emerald-700/30 hover:border-emerald-600/50 rounded-2xl p-5 text-left transition-all">
+            <div className="text-emerald-400 text-xs font-bold uppercase tracking-widest mb-2">Organic Chemistry</div>
+            <div className="font-bold text-base mb-2">Orgo 1 & 2 · Pre-Med</div>
+            <div className="text-gray-400 text-xs mb-4 leading-relaxed">Simulations · Ebook · Tests — 22 chapters, MCAT-ready</div>
+            <div className="text-emerald-400 text-xs font-semibold group-hover:translate-x-1 transition-transform inline-block">Open Hub →</div>
           </Link>
           <Link href="/usnco"
-            className="group bg-orange-900/20 hover:bg-orange-900/35 border border-orange-700/30 hover:border-orange-600/50 rounded-2xl p-6 text-left transition-all">
+            className="group bg-orange-900/20 hover:bg-orange-900/35 border border-orange-700/30 hover:border-orange-600/50 rounded-2xl p-5 text-left transition-all">
             <div className="text-orange-400 text-xs font-bold uppercase tracking-widest mb-2">USNCO</div>
-            <div className="font-bold text-lg mb-2">US Chemistry Olympiad</div>
+            <div className="font-bold text-base mb-2">US Chemistry Olympiad</div>
             <div className="text-gray-400 text-xs mb-4 leading-relaxed">Simulations · Ebook · Tests — Local & National levels</div>
-            <div className="text-orange-400 text-sm font-semibold group-hover:translate-x-1 transition-transform inline-block">USNCO Hub →</div>
+            <div className="text-orange-400 text-xs font-semibold group-hover:translate-x-1 transition-transform inline-block">Open Hub →</div>
           </Link>
           <Link href="/icho"
-            className="group bg-yellow-900/20 hover:bg-yellow-900/35 border border-yellow-700/30 hover:border-yellow-600/50 rounded-2xl p-6 text-left transition-all">
+            className="group bg-yellow-900/20 hover:bg-yellow-900/35 border border-yellow-700/30 hover:border-yellow-600/50 rounded-2xl p-5 text-left transition-all">
             <div className="text-yellow-400 text-xs font-bold uppercase tracking-widest mb-2">IChO</div>
-            <div className="font-bold text-lg mb-2">International Olympiad</div>
+            <div className="font-bold text-base mb-2">International Olympiad</div>
             <div className="text-gray-400 text-xs mb-4 leading-relaxed">Simulations · Ebook · Problems — university-depth prep</div>
-            <div className="text-yellow-400 text-sm font-semibold group-hover:translate-x-1 transition-transform inline-block">IChO Hub →</div>
+            <div className="text-yellow-400 text-xs font-semibold group-hover:translate-x-1 transition-transform inline-block">Open Hub →</div>
           </Link>
         </div>
 
@@ -157,6 +166,7 @@ export default function USHomePage() {
         <p className="text-gray-400 mb-8">Simulations, ebook, and practice tests — all in one hub per exam.</p>
         <div className="flex flex-wrap gap-3 justify-center">
           <Link href="/ap-chemistry" className="bg-blue-700 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-xl transition-colors text-sm">AP Chemistry →</Link>
+          <Link href="/organic-chemistry" className="bg-emerald-700 hover:bg-emerald-600 text-white font-semibold px-6 py-3 rounded-xl transition-colors text-sm">Orgo 1 & 2 →</Link>
           <Link href="/usnco" className="bg-orange-700 hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-xl transition-colors text-sm">USNCO →</Link>
           <Link href="/icho" className="bg-yellow-700 hover:bg-yellow-600 text-white font-semibold px-6 py-3 rounded-xl transition-colors text-sm">IChO →</Link>
           <Link href="/labs" className="border border-white/20 hover:border-white/40 hover:bg-white/5 text-white font-semibold px-6 py-3 rounded-xl transition-colors text-sm">All Simulations →</Link>
