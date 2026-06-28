@@ -417,15 +417,6 @@ Elimination reactions (E1 and E2) compete with substitution. E2 is concerted: a 
 
 Electrophilic aromatic substitution (EAS) — halogenation, nitration, Friedel-Crafts — follows a two-step mechanism: electrophile attack forms an arenium ion (Wheland intermediate), then deprotonation restores aromaticity. This 3D mechanism viewer animates every step with curved arrows, helping you internalize the mechanistic logic rather than merely memorize reaction equations.`,
 
-  titration: `The titration curve is one of the most powerful analytical tools in chemistry, forming the backbone of AP Chemistry Unit 8 and appearing consistently on USNCO and IChO examinations. Mastering titration goes beyond knowing that moles of acid equal moles of base at the equivalence point — it requires understanding the pH behavior at every stage of the reaction.
-
-In a strong acid–strong base titration, such as HCl with NaOH, the equivalence point occurs exactly at pH 7.00, because the resulting salt (NaCl) does not undergo hydrolysis. The steep, near-vertical jump in pH around the equivalence point makes indicator selection flexible: phenolphthalein, methyl orange, or bromothymol blue all work reliably.
-
-Weak acid titrations reveal a richer landscape. When acetic acid (Ka = 1.8 × 10⁻⁵) is titrated with NaOH, the half-equivalence point falls at pH = pKa = 4.74. This point marks the center of the buffer region, where the concentration of the acid equals that of its conjugate base and pH changes most gradually with added titrant. The Henderson–Hasselbalch equation (pH = pKa + log [A⁻]/[HA]) governs the buffer region precisely. The equivalence point for this system falls above pH 7 because the conjugate base CH₃COO⁻ hydrolyzes water, producing OH⁻.
-
-Polyprotic acids like H₃PO₄ produce multiple equivalence points — one per ionizable proton — each separated by a buffer region governed by its respective Ka. Identifying multiple inflection points on a curve is a standard USNCO and AP FRQ question type.
-
-This free titration simulator plots full S-curves in real time, marks equivalence and half-equivalence points automatically, supports strong/weak systems and polyprotic acids, and lets you select indicators to see their color-transition ranges directly on the curve — everything you need to master this topic completely.`,
 }
 
 // Fallback for labs without a custom seoBody
