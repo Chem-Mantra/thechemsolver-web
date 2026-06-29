@@ -16,11 +16,16 @@ const NAV_TOOLS = [
 export default function NavWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const isHome = pathname === '/'
+  const isEbook = pathname?.startsWith('/ebook/')
+
+  // Full-screen app routes: no nav, no footer, no flex-col wrapper
+  if (isHome || isEbook) {
+    return <>{children}</>
+  }
 
   return (
     <div className="min-h-screen bg-[#060610] text-white flex flex-col">
-      {!isHome && (
-        <nav className="border-b border-white/10 px-5 py-3 flex items-center justify-between sticky top-0 bg-[#060610]/95 backdrop-blur z-50">
+      <nav className="border-b border-white/10 px-5 py-3 flex items-center justify-between sticky top-0 bg-[#060610]/95 backdrop-blur z-50">
           <Link href="/" className="flex items-center gap-2 shrink-0">
             <span className="text-xl">⚗️</span>
             <span className="font-bold text-base tracking-tight">TheChemSolver</span>
@@ -46,7 +51,6 @@ export default function NavWrapper({ children }: { children: React.ReactNode }) 
             Home
           </Link>
         </nav>
-      )}
 
       <div className="flex-1">{children}</div>
 
