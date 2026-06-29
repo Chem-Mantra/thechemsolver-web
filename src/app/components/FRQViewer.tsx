@@ -7,6 +7,7 @@ export interface FRQPart {
   question: string
   points: number
   model_answer?: string
+  image_url?: string
 }
 
 export interface FRQProblem {
@@ -108,6 +109,9 @@ export default function FRQViewer({ problems, examLabel }: Props) {
                         <ChemText text={part.question} className="text-sm leading-relaxed block" block />
                         <span className="text-xs text-gray-600 shrink-0 mt-0.5">{part.points} pt{part.points !== 1 ? 's' : ''}</span>
                       </div>
+                      {part.image_url && (
+                        <img src={part.image_url} alt={`Part ${part.label} diagram`} className="mt-3 max-h-72 rounded-xl border border-white/10" />
+                      )}
                     </div>
                   </div>
 

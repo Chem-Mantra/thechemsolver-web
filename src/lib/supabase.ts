@@ -27,6 +27,7 @@ export type FRQPart = {
   question: string
   points: number | null
   model_answer: string | null
+  image_url?: string | null
 }
 
 export type FRQRow = {
@@ -49,7 +50,8 @@ export type IChOPart = {
   question: string
   points: number | null
   model_answer: string | null
-  sub_parts?: { label: string; question: string; points: number | null; model_answer: string | null }[]
+  image_url?: string | null
+  sub_parts?: { label: string; question: string; points: number | null; model_answer: string | null; image_url?: string | null }[]
 }
 
 export type IChORow = {

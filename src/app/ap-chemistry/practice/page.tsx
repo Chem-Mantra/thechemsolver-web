@@ -16,6 +16,7 @@ function rowToFRQProblem(r: FRQRow, idx: number): FRQProblem {
       question: p.question,
       points: p.points ?? 0,
       model_answer: p.model_answer ?? undefined,
+      image_url: p.image_url ?? undefined,
     })),
     has_visual: r.has_visual,
     image_url: r.image_url ?? undefined,

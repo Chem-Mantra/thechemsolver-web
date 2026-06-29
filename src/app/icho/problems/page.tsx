@@ -17,11 +17,13 @@ function rowToProblem(r: IChORow, idx: number): IChOProblem {
       question: p.question,
       points: p.points ?? undefined,
       model_answer: p.model_answer ?? undefined,
+      image_url: p.image_url ?? undefined,
       sub_parts: p.sub_parts?.map((sp): IChOSubPart => ({
         label: sp.label,
         question: sp.question,
         points: sp.points ?? undefined,
         model_answer: sp.model_answer ?? undefined,
+        image_url: sp.image_url ?? undefined,
       })),
     })),
     has_visual: r.has_visual,
