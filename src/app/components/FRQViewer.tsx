@@ -1,6 +1,27 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import ChemText from './ChemText'
+
+function ProblemImage({ src, alt }: { src: string; alt: string }) {
+  const [loaded, setLoaded] = useState(false)
+  const [error, setError] = useState(false)
+  if (error) return null
+  return (
+    <div className="mt-3 relative">
+      {!loaded && (
+        <div className="h-40 rounded-xl border border-white/10 bg-white/[0.03] animate-pulse flex items-center justify-center">
+          <span className="text-xs text-gray-600">Loading diagram…</span>
+        </div>
+      )}
+      <img
+        src={src} alt={alt}
+        className={`max-h-72 rounded-xl border border-white/10 ${loaded ? 'block' : 'hidden'}`}
+        onLoad={() => setLoaded(true)}
+        onError={() => setError(true)}
+      />
+    </div>
+  )
+}
 
 export interface FRQPart {
   label: string          // 'a', 'b', 'c', 'i', 'ii', etc.
@@ -32,6 +53,16 @@ export default function FRQViewer({ problems, examLabel }: Props) {
   const [selected, setSelected] = useState(0)
   const [revealed, setRevealed] = useState<Set<string>>(new Set())
   const [revealAll, setRevealAll] = useState(false)
+
+  // Prefetch all images for the selected problem as soon as it's chosen
+  useEffect(() => {
+    const prob = problems[selected]
+    if (!prob) return
+    const urls: string[] = []
+    if (prob.image_url) urls.push(prob.image_url)
+    prob.parts.forEach(p => { if (p.image_url) urls.push(p.image_url) })
+    urls.forEach(url => { const img = new Image(); img.src = url })
+  }, [selected, problems])
 
   const prob = problems[selected]
   if (!prob) return null
@@ -90,9 +121,7 @@ export default function FRQViewer({ problems, examLabel }: Props) {
               <div className="bg-white/[0.04] border border-white/10 rounded-2xl p-6 mb-6">
                 <div className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3">Given / Context</div>
                 <ChemText text={prob.context} className="text-sm leading-relaxed text-gray-200 whitespace-pre-line block" block />
-                {prob.image_url && (
-                  <img src={prob.image_url} alt="Problem diagram" className="mt-4 max-h-64 rounded-xl border border-white/10" />
-                )}
+                {prob.image_url && <ProblemImage src={prob.image_url} alt="Problem diagram" />}
               </div>
             )}
 
@@ -109,9 +138,7 @@ export default function FRQViewer({ problems, examLabel }: Props) {
                         <ChemText text={part.question} className="text-sm leading-relaxed block" block />
                         <span className="text-xs text-gray-600 shrink-0 mt-0.5">{part.points} pt{part.points !== 1 ? 's' : ''}</span>
                       </div>
-                      {part.image_url && (
-                        <img src={part.image_url} alt={`Part ${part.label} diagram`} className="mt-3 max-h-72 rounded-xl border border-white/10" />
-                      )}
+                      {part.image_url && <ProblemImage src={part.image_url} alt={`Part ${part.label} diagram`} />}
                     </div>
                   </div>
 
