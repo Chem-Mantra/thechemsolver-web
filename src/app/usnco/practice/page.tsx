@@ -1,203 +1,229 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import MCQExam, { MCQQuestion } from '@/app/components/MCQExam'
+import FRQViewer, { FRQProblem, FRQPart } from '@/app/components/FRQViewer'
+import type { MCQRow, FRQRow } from '@/lib/supabase'
 
-// ── Sample USNCO Local Exam questions ─────────────────────────────────────────
-const USNCO_LOCAL_SAMPLE: MCQQuestion[] = [
-  {
-    id: 1,
-    stem: 'How many sigma (σ) and pi (π) bonds are present in a molecule of CO₂?',
-    options: { A: '2σ, 0π', B: '2σ, 2π', C: '1σ, 2π', D: '3σ, 1π' },
-    answer: 'B',
-    explanation: 'CO₂ has two C=O double bonds. Each double bond consists of 1σ + 1π. Total: 2σ + 2π.',
-    unit: 'Bonding',
-  },
-  {
-    id: 2,
-    stem: 'A 1.00 L solution contains 0.100 mol HCl and 0.0500 mol NaOH. What is the approximate pH?',
-    options: { A: '1.00', B: '1.30', C: '2.00', D: '7.00' },
-    answer: 'B',
-    explanation: 'HCl is strong acid, NaOH is strong base. Net H⁺ = 0.100 − 0.0500 = 0.0500 M. pH = −log(0.0500) = 1.30.',
-    unit: 'Acids & Bases',
-  },
-  {
-    id: 3,
-    stem: 'At 25°C, which of the following aqueous solutions has the highest electrical conductivity?',
-    options: { A: '0.10 M glucose', B: '0.10 M acetic acid', C: '0.10 M NaCl', D: '0.10 M HF' },
-    answer: 'C',
-    explanation: 'NaCl is a strong electrolyte and fully dissociates into Na⁺ and Cl⁻, giving the highest ion concentration and thus the highest conductivity. Glucose is a nonelectrolyte; acetic acid and HF are weak electrolytes.',
-    unit: 'Solutions',
-  },
-  {
-    id: 4,
-    stem: 'The half-life of a radioactive isotope is 30.0 years. What fraction of a sample remains after 90.0 years?',
-    options: { A: '1/2', B: '1/4', C: '1/8', D: '1/16' },
-    answer: 'C',
-    explanation: '90.0 years = 3 half-lives. Remaining fraction = (1/2)³ = 1/8.',
-    unit: 'Nuclear Chemistry',
-  },
-  {
-    id: 5,
-    stem: 'Which of the following statements about entropy is correct?',
-    options: { A: 'Entropy decreases when a gas dissolves in a liquid.', B: 'The entropy of a pure crystalline substance at 0 K is 1.', C: 'All spontaneous processes have positive ΔS.', D: 'Entropy is a path function.' },
-    answer: 'A',
-    explanation: 'When a gas dissolves in a liquid, the molecules become more ordered (go from gas-phase disorder to solution-phase constraint), so entropy decreases. The third law states S = 0 at 0 K for pure crystals. Spontaneous processes can have negative ΔS if ΔH drives the process. Entropy is a state function.',
-    unit: 'Thermodynamics',
-  },
+type Tab = 'local' | 'national1' | 'national2' | 'national3'
+
+const TABS: { id: Tab; label: string; sub: string; color: string }[] = [
+  { id: 'local',    label: 'Local',       sub: '60 MCQ · 110 min',    color: 'text-orange-300 border-orange-500' },
+  { id: 'national1',label: 'National I',  sub: '60 MCQ · 110 min',    color: 'text-red-300 border-red-500' },
+  { id: 'national2',label: 'National II', sub: 'FRQ · 105 min',       color: 'text-yellow-300 border-yellow-500' },
+  { id: 'national3',label: 'National III',sub: 'Lab · 90 min',        color: 'text-green-300 border-green-500' },
 ]
 
-// ── Sample USNCO National Part I questions ────────────────────────────────────
-const USNCO_NAT_SAMPLE: MCQQuestion[] = [
-  {
-    id: 101,
-    stem: 'For the reaction PCl₃(g) + Cl₂(g) ⇌ PCl₅(g), ΔH° = −87.9 kJ/mol. At equilibrium at 300°C, which change would most increase the equilibrium constant K?',
-    options: { A: 'Increasing the total pressure', B: 'Decreasing the temperature', C: 'Adding more PCl₃', D: 'Using a catalyst' },
-    answer: 'B',
-    explanation: 'K depends only on temperature. For an exothermic reaction (ΔH < 0), decreasing temperature favors the forward reaction (products), increasing K. Pressure and concentration changes shift equilibrium but do not change K. Catalysts do not change K.',
-    unit: 'Equilibrium',
-  },
-  {
-    id: 102,
-    stem: 'A 0.250 M solution of a diprotic acid H₂A has Ka1 = 1.2 × 10⁻² and Ka2 = 6.2 × 10⁻⁸. Which species is the predominant form at pH 5.0?',
-    options: { A: 'H₂A', B: 'HA⁻', C: 'A²⁻', D: 'H₃O⁺' },
-    answer: 'B',
-    explanation: 'pKa1 = 1.92, pKa2 = 7.21. At pH 5.0: pH > pKa1, so H₂A is largely deprotonated to HA⁻; pH < pKa2, so HA⁻ is largely not yet deprotonated to A²⁻. Hence HA⁻ is the predominant species.',
-    unit: 'Polyprotic Acids',
-  },
-  {
-    id: 103,
-    stem: 'The complex ion [Co(NH₃)₄Cl₂]⁺ can exist in two geometric isomers. The magnetic properties show the complex is diamagnetic. What is the geometry and oxidation state of cobalt?',
-    options: { A: 'Tetrahedral, Co(II)', B: 'Octahedral, Co(III)', C: 'Square planar, Co(II)', D: 'Octahedral, Co(II)' },
-    answer: 'B',
-    explanation: '[Co(NH₃)₄Cl₂]⁺: 4 NH₃ + 2 Cl⁻ = 6 ligands → octahedral. Charge: Co + 0(NH₃)×4 + (−1)(Cl)×2 = +1 → Co = +3. Co(III) with strong NH₃ field ligands is typically low-spin and diamagnetic (d⁶, all paired).',
-    unit: 'Coordination Chemistry',
-  },
-  {
-    id: 104,
-    stem: 'The activation energy for a reaction is 75.0 kJ/mol. By what factor does the rate constant increase when the temperature is raised from 300 K to 310 K? (R = 8.314 J/mol·K)',
-    options: { A: '1.8', B: '2.2', C: '3.6', D: '4.1' },
-    answer: 'B',
-    explanation: 'ln(k₂/k₁) = (Ea/R)(1/T₁ − 1/T₂) = (75000/8.314)(1/300 − 1/310) = 9024 × 1.075 × 10⁻⁴ = 0.785. k₂/k₁ = e^0.785 ≈ 2.19 ≈ 2.2.',
-    unit: 'Kinetics',
-  },
-  {
-    id: 105,
-    stem: 'Which of the following correctly ranks the compounds in order of increasing lattice energy? (Most negative = highest)',
-    options: { A: 'NaF < NaCl < MgCl₂', B: 'MgCl₂ < NaCl < NaF', C: 'NaCl < NaF < MgCl₂', D: 'NaF < MgCl₂ < NaCl' },
-    answer: 'C',
-    explanation: 'Lattice energy increases with greater charge and smaller ionic radius. NaCl (+1/−1, larger Cl⁻) < NaF (+1/−1, smaller F⁻) < MgCl₂ (+2/−1 charges, doubly charged Mg²⁺ greatly increases lattice energy).',
-    unit: 'Ionic Bonding',
-  },
-]
+function mcqRowToQuestion(r: MCQRow): MCQQuestion {
+  return {
+    id: r.id,
+    stem: r.stem,
+    options: r.options,
+    answer: r.correct_answer,
+    unit: r.topic ?? undefined,
+    has_visual: r.has_visual,
+    image_url: r.image_url ?? undefined,
+  }
+}
 
-type Tab = 'local' | 'national'
+function frqRowToProblem(r: FRQRow, idx: number): FRQProblem {
+  return {
+    id: r.id ?? idx,
+    year: r.year,
+    number: r.problem_number,
+    type: 'SAQ',
+    total_points: r.total_points ?? 0,
+    context: r.context ?? '',
+    parts: (r.parts ?? []).map((p): FRQPart => ({
+      label: p.label,
+      question: p.question,
+      points: p.points ?? 0,
+      model_answer: p.model_answer ?? undefined,
+    })),
+    has_visual: r.has_visual,
+    image_url: r.image_url ?? undefined,
+    source: `USNCO ${r.year} ${r.frq_type === 'Part3_Lab' ? 'Part III' : 'Part II'}`,
+  }
+}
+
+function useYears(tab: Tab) {
+  const [years, setYears] = useState<number[]>([])
+
+  useEffect(() => {
+    let url = ''
+    if (tab === 'local')    url = '/api/usnco/mcq?years=true&source=USNCO_Local'
+    if (tab === 'national1') url = '/api/usnco/mcq?years=true&source=USNCO_Nat_Part1'
+    if (tab === 'national2') url = '/api/usnco/frq?years=true&part=Part2'
+    if (tab === 'national3') url = '/api/usnco/frq?years=true&part=Part3_Lab'
+    if (!url) return
+    fetch(url)
+      .then(r => r.json())
+      .then((data) => {
+        // MCQ years endpoint returns [{source, year}], FRQ returns [number]
+        const raw: number[] = Array.isArray(data) && typeof data[0] === 'object'
+          ? (data as {year: number}[]).map(d => d.year)
+          : data as number[]
+        setYears([...new Set(raw)].sort((a, b) => b - a))
+      })
+      .catch(() => {})
+  }, [tab])
+
+  return years
+}
 
 export default function USNCOPracticePage() {
-  const [tab, setTab] = useState<Tab>('local')
-  const [started, setStarted] = useState(false)
+  const [tab, setTab]           = useState<Tab>('local')
+  const [started, setStarted]   = useState(false)
+  const [selectedYear, setYear] = useState<number | null>(null)
+  const [mcqQs, setMcqQs]       = useState<MCQQuestion[]>([])
+  const [frqPs, setFrqPs]       = useState<FRQProblem[]>([])
+  const [loading, setLoading]   = useState(false)
+  const [error, setError]       = useState<string | null>(null)
 
-  if (started && tab === 'local') {
-    return (
-      <MCQExam
-        questions={USNCO_LOCAL_SAMPLE}
-        examName="USNCO Local Exam (Sample)"
-        timeLimitSeconds={6600}
-        onExit={() => setStarted(false)}
-      />
-    )
+  const years = useYears(tab)
+  const isMCQ = tab === 'local' || tab === 'national1'
+
+  // Auto-select most recent year when tab/years change
+  useEffect(() => {
+    if (years.length > 0) setYear(years[0])
+    setStarted(false)
+    setMcqQs([])
+    setFrqPs([])
+  }, [tab, years.join(',')])
+
+  // Fetch questions when year selected
+  useEffect(() => {
+    if (!selectedYear) return
+    setLoading(true)
+    setError(null)
+
+    let url = ''
+    if (tab === 'local')     url = `/api/usnco/mcq?source=USNCO_Local&year=${selectedYear}`
+    if (tab === 'national1') url = `/api/usnco/mcq?source=USNCO_Nat_Part1&year=${selectedYear}`
+    if (tab === 'national2') url = `/api/usnco/frq?part=Part2&year=${selectedYear}`
+    if (tab === 'national3') url = `/api/usnco/frq?part=Part3_Lab&year=${selectedYear}`
+
+    fetch(url)
+      .then(r => r.json())
+      .then(data => {
+        if (isMCQ) setMcqQs((data as MCQRow[]).map(mcqRowToQuestion))
+        else       setFrqPs((data as FRQRow[]).map(frqRowToProblem))
+      })
+      .catch(() => setError('Failed to load questions'))
+      .finally(() => setLoading(false))
+  }, [tab, selectedYear])
+
+  // Exam mode
+  if (started && isMCQ && mcqQs.length > 0) {
+    const examNames: Record<Tab, string> = {
+      local:     `USNCO Local Exam ${selectedYear}`,
+      national1: `USNCO National Exam ${selectedYear} — Part I`,
+      national2: '',
+      national3: '',
+    }
+    return <MCQExam questions={mcqQs} examName={examNames[tab]} timeLimitSeconds={6600} onExit={() => setStarted(false)} />
+  }
+  if (started && !isMCQ && frqPs.length > 0) {
+    const labels: Record<Tab, string> = {
+      local:     '',
+      national1: '',
+      national2: `USNCO National ${selectedYear} — Part II Free Response`,
+      national3: `USNCO National ${selectedYear} — Part III Laboratory`,
+    }
+    return <FRQViewer problems={frqPs} examLabel={labels[tab]} />
   }
 
-  if (started && tab === 'national') {
-    return (
-      <MCQExam
-        questions={USNCO_NAT_SAMPLE}
-        examName="USNCO National Exam — Part I (Sample)"
-        timeLimitSeconds={6600}
-        onExit={() => setStarted(false)}
-      />
-    )
-  }
+  const questionCount = isMCQ ? mcqQs.length : frqPs.length
 
   return (
     <div className="min-h-screen bg-[#060610] text-white px-6 py-12">
       <div className="max-w-3xl mx-auto">
         <a href="/usnco" className="text-sm text-gray-500 hover:text-white transition-colors mb-8 inline-block">← USNCO Hub</a>
-
         <h1 className="text-4xl font-black mb-2">USNCO Practice</h1>
-        <p className="text-gray-400 mb-10">Practice for all stages of the US National Chemistry Olympiad.</p>
+        <p className="text-gray-400 mb-8">Practice for all stages of the US National Chemistry Olympiad.</p>
 
         {/* Tabs */}
-        <div className="flex gap-2 mb-8 border-b border-white/10 pb-0">
-          {[
-            { id: 'local' as Tab, label: 'Local Exam', sub: '60 MCQ · 110 min', color: 'text-orange-300 border-orange-500' },
-            { id: 'national' as Tab, label: 'National Part I', sub: '60 MCQ · 110 min', color: 'text-red-300 border-red-500' },
-          ].map(t => (
+        <div className="flex gap-1 mb-8 border-b border-white/10 overflow-x-auto">
+          {TABS.map(t => (
             <button key={t.id} onClick={() => { setTab(t.id); setStarted(false) }}
-              className={`px-5 py-3 text-sm font-semibold border-b-2 transition-colors -mb-px ${tab === t.id ? t.color : 'border-transparent text-gray-500 hover:text-white'}`}>
+              className={`px-4 py-3 text-sm font-semibold border-b-2 whitespace-nowrap transition-colors -mb-px ${tab === t.id ? t.color : 'border-transparent text-gray-500 hover:text-white'}`}>
               {t.label}
-              <span className="ml-2 text-[10px] font-normal opacity-60">{t.sub}</span>
+              <span className="ml-1 text-[10px] font-normal opacity-60">{t.sub}</span>
             </button>
           ))}
         </div>
 
-        {/* Cards */}
-        <div className="grid gap-5 md:grid-cols-2">
-          {tab === 'local' ? (
-            <>
-              <div className="border border-white/10 rounded-2xl p-6">
-                <div className="text-sm font-bold text-orange-300 mb-3">USNCO Local Exam</div>
-                <div className="space-y-2 text-sm text-gray-400">
-                  <div>60 multiple-choice questions</div>
-                  <div>110 minutes (approx. 6600s)</div>
-                  <div>Held at your school / regional site</div>
-                  <div>Covers general to advanced college chemistry</div>
-                  <div className="text-yellow-500 text-xs mt-3">Sample: 5 questions available</div>
-                </div>
+        {/* Year selector */}
+        {years.length > 0 && (
+          <div className="mb-6 flex gap-2 flex-wrap">
+            <span className="text-xs text-gray-500 self-center mr-1">Year:</span>
+            {years.map(y => (
+              <button key={y} onClick={() => setYear(y)}
+                className={`px-3 py-1 rounded-lg text-sm font-medium border transition-all ${
+                  selectedYear === y ? 'bg-orange-600 border-orange-500 text-white' : 'border-white/15 text-gray-400 hover:border-white/30'
+                }`}>
+                {y}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Info cards */}
+        <div className="grid gap-5 md:grid-cols-2 mb-8">
+          <div className="border border-white/10 rounded-2xl p-6">
+            {tab === 'local' && <>
+              <div className="text-sm font-bold text-orange-300 mb-3">USNCO Local Exam</div>
+              <div className="space-y-1 text-sm text-gray-400">
+                <div>60 MCQ · 110 minutes · No penalty for wrong answers</div>
+                <div>Held at your school/regional site (Feb–Mar)</div>
+                <div>Top ~1,500 students advance to National</div>
               </div>
-              <div className="border border-white/10 rounded-2xl p-6">
-                <div className="text-sm font-bold text-gray-400 mb-3">Scoring</div>
-                <div className="space-y-1 text-sm text-gray-400">
-                  <div>+1 per correct answer</div>
-                  <div>No penalty for wrong answers</div>
-                  <div>Top ~1500 students nationally advance</div>
-                  <div>Typically &gt;70% correct to advance</div>
-                </div>
+            </>}
+            {tab === 'national1' && <>
+              <div className="text-sm font-bold text-red-300 mb-3">National Exam — Part I</div>
+              <div className="space-y-1 text-sm text-gray-400">
+                <div>60 MCQ · 110 minutes</div>
+                <div>College-level analytical, physical, organic, inorganic</div>
+                <div>Held at regional sites (April)</div>
               </div>
-            </>
-          ) : (
-            <>
-              <div className="border border-white/10 rounded-2xl p-6">
-                <div className="text-sm font-bold text-red-300 mb-3">National Exam — Part I</div>
-                <div className="space-y-2 text-sm text-gray-400">
-                  <div>60 multiple-choice questions</div>
-                  <div>110 minutes</div>
-                  <div>Held at regional sites (April)</div>
-                  <div>College-level analytical, physical, organic chemistry</div>
-                  <div className="text-yellow-500 text-xs mt-3">Sample: 5 questions available</div>
-                </div>
+            </>}
+            {tab === 'national2' && <>
+              <div className="text-sm font-bold text-yellow-300 mb-3">National Exam — Part II</div>
+              <div className="space-y-1 text-sm text-gray-400">
+                <div>8 free-response problems · 105 minutes</div>
+                <div>Multi-part calculations and explanations</div>
+                <div>Covers thermodynamics, equilibrium, kinetics, electrochemistry</div>
               </div>
-              <div className="border border-white/10 rounded-2xl p-6">
-                <div className="text-sm font-bold text-gray-400 mb-3">National Exam Structure</div>
-                <div className="space-y-1 text-sm text-gray-400">
-                  <div>Part I: 60 MCQ (110 min)</div>
-                  <div>Part II: 8 Free Response (105 min)</div>
-                  <div>Part III: Lab practical (90 min)</div>
-                  <div>Top 20 form the US IChO team</div>
-                </div>
+            </>}
+            {tab === 'national3' && <>
+              <div className="text-sm font-bold text-green-300 mb-3">National Exam — Part III</div>
+              <div className="space-y-1 text-sm text-gray-400">
+                <div>2 laboratory problems · 90 minutes</div>
+                <div>Experimental design and data analysis</div>
+                <div>Tests practical lab reasoning skills</div>
               </div>
-            </>
-          )}
+            </>}
+          </div>
+
+          <div className="border border-white/10 rounded-2xl p-6 flex flex-col justify-between">
+            <div className="text-sm font-bold text-gray-400 mb-3">Question Bank</div>
+            {loading
+              ? <div className="text-blue-400 text-sm">Loading {selectedYear}…</div>
+              : questionCount > 0
+                ? <div className="text-green-400 text-sm">{questionCount} {isMCQ ? 'questions' : 'problems'} from {selectedYear} ready</div>
+                : selectedYear
+                  ? <div className="text-gray-500 text-sm">Select a year to load questions</div>
+                  : <div className="text-gray-500 text-sm">Loading years…</div>
+            }
+            {error && <div className="text-red-400 text-xs mt-2">{error}</div>}
+          </div>
         </div>
 
         <button
+          disabled={loading || questionCount === 0}
           onClick={() => setStarted(true)}
-          className="mt-8 w-full py-4 bg-orange-600 hover:bg-orange-500 rounded-2xl font-bold text-lg transition-colors">
-          Start {tab === 'local' ? 'Local Exam Practice' : 'National Part I Practice'} →
+          className="w-full py-4 bg-orange-600 hover:bg-orange-500 disabled:opacity-40 disabled:cursor-not-allowed rounded-2xl font-bold text-lg transition-colors">
+          {loading ? 'Loading…' : `Start ${TABS.find(t => t.id === tab)?.label} ${selectedYear ?? ''} →`}
         </button>
-
-        <p className="text-center text-xs text-gray-600 mt-4">
-          Sample questions only — full question banks coming soon
-        </p>
       </div>
     </div>
   )
