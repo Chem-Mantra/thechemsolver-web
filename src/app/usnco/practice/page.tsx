@@ -120,7 +120,7 @@ export default function USNCOPracticePage() {
       national2: '',
       national3: '',
     }
-    return <MCQExam questions={mcqQs} examName={examNames[tab]} timeLimitSeconds={6600} onExit={() => setStarted(false)} />
+    return <MCQExam questions={mcqQs} examName={examNames[tab]} mode="practice" onExit={() => setStarted(false)} />
   }
   if (started && !isMCQ && frqPs.length > 0) {
     const labels: Record<Tab, string> = {

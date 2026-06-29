@@ -60,9 +60,9 @@ const GATEWAY = [
     gradient: 'from-amber-900/40 to-amber-950/30',
     border: 'border-amber-700/40',
     cta: 'Start Practice →',
-    badge: 'Coming soon',
+    badge: 'Live — Local, National I/II/III',
     badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-    live: false,
+    live: true,
   },
 ]
 

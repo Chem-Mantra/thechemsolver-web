@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react'
+import ChemText from './ChemText'
 
 export interface MCQQuestion {
   id: number
@@ -12,10 +13,20 @@ export interface MCQQuestion {
   has_visual?: boolean
 }
 
+const PRAISE = [
+  'Correct! Excellent work.',
+  'That\'s right! Great chemistry knowledge.',
+  'Correct! You nailed it.',
+  'Well done! That\'s the right answer.',
+  'Correct! Keep it up.',
+  'Spot on! Great job.',
+]
+
 interface Props {
   questions: MCQQuestion[]
   examName: string
-  timeLimitSeconds: number   // 5400 for AP (90 min), 6600 for USNCO (110 min)
+  timeLimitSeconds?: number  // optional — omit for practice mode
+  mode?: 'exam' | 'practice' // default: 'exam'
   onExit?: () => void
 }
 
@@ -34,7 +45,7 @@ const STATUS_COLOR: Record<Status, string> = {
   'answered-flagged': 'bg-orange-500/60 border-orange-400 text-white',
 }
 
-export default function MCQExam({ questions, examName, timeLimitSeconds, onExit }: Props) {
+export default function MCQExam({ questions, examName, timeLimitSeconds = 6600, mode = 'exam', onExit }: Props) {
   const [current, setCurrent] = useState(0)
   const [answers, setAnswers] = useState<Record<number, 'A' | 'B' | 'C' | 'D'>>({})
   const [flags, setFlags] = useState<Set<number>>(new Set())
@@ -42,10 +53,14 @@ export default function MCQExam({ questions, examName, timeLimitSeconds, onExit 
   const [submitted, setSubmitted] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
   const [reviewMode, setReviewMode] = useState(false)
+  // Practice mode: tracks which questions have been answered (locked in)
+  const [locked, setLocked] = useState<Set<number>>(new Set())
 
-  // Timer
+  const isPractice = mode === 'practice'
+
+  // Timer (exam mode only)
   useEffect(() => {
-    if (submitted) return
+    if (isPractice || submitted) return
     const t = setInterval(() => {
       setTimeLeft(p => {
         if (p <= 1) { handleSubmit(); return 0 }
@@ -53,7 +68,7 @@ export default function MCQExam({ questions, examName, timeLimitSeconds, onExit 
       })
     }, 1000)
     return () => clearInterval(t)
-  }, [submitted])
+  }, [submitted, isPractice])
 
   const handleSubmit = useCallback(() => {
     setSubmitted(true)
@@ -160,7 +175,7 @@ export default function MCQExam({ questions, examName, timeLimitSeconds, onExit 
                     {correct ? '✓ Correct' : userAns ? '✗ Incorrect' : '— Not answered'}
                   </span>
                 </div>
-                <p className="text-sm leading-relaxed mb-4">{q.stem}</p>
+                <ChemText text={q.stem} className="text-sm leading-relaxed mb-4 block" block />
                 {q.image_url && <img src={q.image_url} alt="Question diagram" className="max-h-48 mb-4 rounded-lg" />}
                 <div className="space-y-2">
                   {(['A', 'B', 'C', 'D'] as const).map(opt => {
@@ -174,7 +189,7 @@ export default function MCQExam({ questions, examName, timeLimitSeconds, onExit 
                           'bg-white/[0.02] border-white/5 text-gray-400'
                         }`}>
                         <span className="font-bold shrink-0">{opt}.</span>
-                        <span>{q.options[opt]}</span>
+                        <ChemText text={q.options[opt]} />
                         {isCorrect && <span className="ml-auto text-green-400 shrink-0">✓</span>}
                         {isUser && !isCorrect && <span className="ml-auto text-red-400 shrink-0">✗</span>}
                       </div>
@@ -189,6 +204,133 @@ export default function MCQExam({ questions, examName, timeLimitSeconds, onExit 
               </div>
             )
           })}
+        </div>
+      </div>
+    )
+  }
+
+  // ── Practice mode ─────────────────────────────────────────────────────────
+  if (isPractice) {
+    const q = questions[current]
+    const isLocked = locked.has(current)
+    const userAns = answers[current]
+    const isCorrect = isLocked && userAns === q.answer
+    const praiseMsg = PRAISE[q.id % PRAISE.length]
+
+    const handlePracticeSelect = (opt: 'A' | 'B' | 'C' | 'D') => {
+      if (isLocked) return
+      setAnswers(p => ({ ...p, [current]: opt }))
+      setLocked(p => { const n = new Set(p); n.add(current); return n })
+    }
+
+    return (
+      <div className="min-h-screen bg-[#060610] text-white flex flex-col">
+        {/* Top bar */}
+        <div className="sticky top-0 z-40 bg-[#060610]/95 backdrop-blur border-b border-white/10 px-4 py-2.5 flex items-center gap-4">
+          <span className="font-bold text-sm truncate flex-1">{examName}</span>
+          <span className="text-xs text-gray-500">{current + 1} / {questions.length}</span>
+          {onExit && (
+            <button onClick={onExit} className="text-xs border border-white/15 px-3 py-1.5 rounded-lg hover:bg-white/5">
+              Exit
+            </button>
+          )}
+        </div>
+
+        <div className="flex-1 overflow-y-auto">
+          <div className="max-w-2xl mx-auto px-5 py-8">
+            {/* Question header */}
+            <div className="flex items-center gap-3 mb-5">
+              <span className="bg-white/10 border border-white/15 text-xs font-bold px-3 py-1.5 rounded-full">
+                Q {current + 1}
+              </span>
+              {q.unit && (
+                <span className="text-xs bg-blue-900/40 text-blue-400 border border-blue-700/30 px-2.5 py-1 rounded-full">
+                  {q.unit}
+                </span>
+              )}
+              <div className="ml-auto flex gap-2 text-xs text-gray-500">
+                <span className="text-green-400">{Object.keys(answers).filter((k, i) => answers[parseInt(k)] === questions[parseInt(k)]?.answer).length} correct</span>
+                <span>/</span>
+                <span>{locked.size} answered</span>
+              </div>
+            </div>
+
+            {/* Stem */}
+            <ChemText text={q.stem} className="text-base leading-relaxed mb-5 block" block />
+            {q.image_url && (
+              <img src={q.image_url} alt="Diagram" className="max-h-64 mb-5 rounded-xl border border-white/10" />
+            )}
+
+            {/* Options */}
+            <div className="space-y-3 mb-6">
+              {(['A', 'B', 'C', 'D'] as const).map(opt => {
+                const isSelected = userAns === opt
+                const isRight = opt === q.answer
+                let style = 'bg-white/[0.03] border-white/8 text-gray-300 hover:bg-white/[0.06] hover:border-white/15 cursor-pointer'
+                if (isLocked) {
+                  if (isRight) style = 'bg-green-900/30 border-green-500/60 text-green-200 cursor-default'
+                  else if (isSelected) style = 'bg-red-900/30 border-red-500/60 text-red-300 cursor-default'
+                  else style = 'bg-white/[0.02] border-white/5 text-gray-500 cursor-default opacity-50'
+                } else if (isSelected) {
+                  style = 'bg-blue-600/25 border-blue-500/60 text-white cursor-pointer'
+                }
+
+                return (
+                  <button key={opt}
+                    onClick={() => handlePracticeSelect(opt)}
+                    disabled={isLocked}
+                    className={`w-full flex gap-4 items-start text-left px-5 py-4 rounded-2xl border transition-all ${style}`}>
+                    <span className={`shrink-0 w-7 h-7 rounded-full border flex items-center justify-center text-xs font-bold transition-colors ${
+                      isLocked && isRight ? 'bg-green-600 border-green-400 text-white' :
+                      isLocked && isSelected && !isRight ? 'bg-red-600 border-red-400 text-white' :
+                      isSelected ? 'bg-blue-600 border-blue-400 text-white' :
+                      'border-white/20 text-gray-500'
+                    }`}>{opt}</span>
+                    <ChemText text={q.options[opt]} className="text-sm leading-relaxed pt-0.5" />
+                    {isLocked && isRight && <span className="ml-auto shrink-0 text-green-400 font-bold">✓</span>}
+                    {isLocked && isSelected && !isRight && <span className="ml-auto shrink-0 text-red-400 font-bold">✗</span>}
+                  </button>
+                )
+              })}
+            </div>
+
+            {/* Feedback */}
+            {isLocked && (
+              <div className={`rounded-2xl p-4 mb-6 border ${isCorrect
+                ? 'bg-green-900/20 border-green-700/40 text-green-200'
+                : 'bg-red-900/15 border-red-700/30 text-red-200'
+              }`}>
+                {isCorrect ? (
+                  <p className="text-sm font-semibold">{praiseMsg}</p>
+                ) : (
+                  <p className="text-sm">
+                    <span className="font-bold text-red-300">Incorrect.</span>{' '}
+                    The correct answer is <span className="font-bold text-green-300">{q.answer}: </span>
+                    <ChemText text={q.options[q.answer]} className="text-green-200" />
+                  </p>
+                )}
+                {q.explanation && (
+                  <p className="text-xs mt-2 text-blue-300 leading-relaxed">{q.explanation}</p>
+                )}
+              </div>
+            )}
+
+            {/* Nav */}
+            <div className="flex items-center gap-3">
+              <button onClick={() => setCurrent(p => Math.max(0, p - 1))} disabled={current === 0}
+                className="px-5 py-2.5 border border-white/15 rounded-xl text-sm font-medium disabled:opacity-30 hover:bg-white/5 transition-colors">
+                ← Previous
+              </button>
+              <button
+                onClick={() => setCurrent(p => Math.min(questions.length - 1, p + 1))}
+                disabled={current === questions.length - 1}
+                className={`ml-auto px-5 py-2.5 rounded-xl text-sm font-semibold disabled:opacity-30 transition-colors ${
+                  isLocked ? 'bg-blue-600 hover:bg-blue-500' : 'bg-white/10 hover:bg-white/15'
+                }`}>
+                Next →
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     )
@@ -261,7 +403,7 @@ export default function MCQExam({ questions, examName, timeLimitSeconds, onExit 
             </div>
 
             {/* Stem */}
-            <p className="text-base leading-relaxed mb-6">{q.stem}</p>
+            <ChemText text={q.stem} className="text-base leading-relaxed mb-6 block" block />
             {q.image_url && (
               <img src={q.image_url} alt="Diagram" className="max-h-64 mb-6 rounded-xl border border-white/10" />
             )}
@@ -280,7 +422,7 @@ export default function MCQExam({ questions, examName, timeLimitSeconds, onExit 
                     <span className={`shrink-0 w-7 h-7 rounded-full border flex items-center justify-center text-xs font-bold transition-colors ${
                       selected ? 'bg-blue-600 border-blue-400 text-white' : 'border-white/20 text-gray-500'
                     }`}>{opt}</span>
-                    <span className="text-sm leading-relaxed pt-0.5">{q.options[opt]}</span>
+                    <ChemText text={q.options[opt]} className="text-sm leading-relaxed pt-0.5" />
                   </button>
                 )
               })}
