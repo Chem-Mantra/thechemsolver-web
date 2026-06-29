@@ -1,9 +1,9 @@
 import { Metadata } from 'next'
-import Link from 'next/link'
+import Link from 'next/link' // used by gateway card links
 
 export const metadata: Metadata = {
   title: 'Organic Chemistry — Free Orgo 1 & 2 Tools | TheChemSolver',
-  description: 'Free Organic Chemistry tools for Orgo 1 & 2 students. Interactive simulations, coming-soon ebook covering all chapters, and practice tests. Perfect for pre-med and MCAT prep. No login required.',
+  description: 'Free Organic Chemistry tools for Orgo 1 & 2 students. Interactive simulations, free ebook covering all 22 chapters, and practice tests. Perfect for pre-med and MCAT prep. No login required.',
   alternates: { canonical: 'https://www.thechemsolver.com/organic-chemistry' },
   openGraph: {
     title: 'Organic Chemistry — Free Orgo 1 & 2 Prep | TheChemSolver',
@@ -41,14 +41,14 @@ const GATEWAY = [
     title: 'Ebook',
     subtitle: 'Orgo 1 & 2 Study Guide',
     desc: 'A complete interactive ebook covering all Orgo 1 & 2 chapters — mechanisms, stereochemistry, carbonyl chemistry, spectroscopy, and more. With flashcards, MCQs, and worked examples.',
-    href: '#',
+    href: '/ebook/organic-chemistry',
     color: '#a855f7',
     gradient: 'from-purple-900/30 to-purple-950/20',
     border: 'border-purple-700/30',
-    cta: 'Coming Soon',
-    badge: 'In development',
+    cta: 'Read Ebook →',
+    badge: 'Free · All 22 chapters',
     badgeColor: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
-    live: false,
+    live: true,
   },
   {
     icon: '📝',
@@ -112,7 +112,7 @@ export default function OrganicChemistryPage() {
           </span>
         </h1>
         <p className="text-gray-400 max-w-xl mb-8 leading-relaxed text-sm">
-          The most feared pre-med course — made visual and interactive. Free simulations, a coming-soon ebook for all 22 chapters, and timed practice sets. Whether you're in Orgo 1, Orgo 2, or prepping for the MCAT, everything is free.
+          The most feared pre-med course — made visual and interactive. Free simulations, a full interactive ebook for all 22 chapters, and timed practice sets. Whether you're in Orgo 1, Orgo 2, or prepping for the MCAT, everything is free.
         </p>
 
         {/* Course info chips */}
@@ -183,7 +183,8 @@ export default function OrganicChemistryPage() {
           </div>
           <div className="grid md:grid-cols-2 gap-2">
             {ORGO1_CHAPTERS.map(c => (
-              <div key={c.n} className="flex gap-3 rounded-xl bg-emerald-900/10 border border-emerald-700/20 px-4 py-3">
+              <div key={c.n}
+                className="flex gap-3 rounded-xl bg-emerald-900/10 border border-emerald-700/20 px-4 py-3">
                 <span className="text-xs font-black text-emerald-400 shrink-0 w-6 mt-0.5">Ch{c.n}</span>
                 <div className="min-w-0">
                   <p className="text-xs font-semibold text-white leading-snug mb-0.5">{c.title}</p>
@@ -205,7 +206,8 @@ export default function OrganicChemistryPage() {
           </div>
           <div className="grid md:grid-cols-2 gap-2">
             {ORGO2_CHAPTERS.map(c => (
-              <div key={c.n} className="flex gap-3 rounded-xl bg-purple-900/10 border border-purple-700/20 px-4 py-3">
+              <div key={c.n}
+                className="flex gap-3 rounded-xl bg-purple-900/10 border border-purple-700/20 px-4 py-3">
                 <span className="text-xs font-black text-purple-400 shrink-0 w-6 mt-0.5">Ch{c.n}</span>
                 <div className="min-w-0">
                   <p className="text-xs font-semibold text-white leading-snug mb-0.5">{c.title}</p>
