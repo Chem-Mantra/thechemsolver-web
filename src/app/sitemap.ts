@@ -30,6 +30,9 @@ export default function sitemap() {
     { url: `${base}/usnco/practice`,  lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 0.85 },
     { url: `${base}/icho`,            lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 0.95 },
     { url: `${base}/icho/problems`,   lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 0.85 },
+    { url: `${base}/ebook/ap-chemistry`,      lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.9 },
+    { url: `${base}/ebook/organic-chemistry`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.9 },
+    { url: `${base}/ebook/advanced-chemistry`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.85 },
     ...LAB_SLUGS.map(slug => ({
       url: `${base}/labs/${slug}`,
       lastModified: new Date(),
