@@ -2,13 +2,14 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { CH01 } from './content/ch01'
+import { CH02 } from './content/ch02'
 import ConceptView from './components/ConceptView'
 import type { Concept, AdvChapter } from './types'
 
 const STORAGE_KEY = 'advanced_chem_ebook_v1'
 
 const CHAPTERS: AdvChapter[] = [
-  CH01,
+  CH01, CH02,
 ]
 
 type StoredState = {
