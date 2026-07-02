@@ -252,13 +252,13 @@ export const LAB_META: Record<string, LabMeta> = {
   },
   'organic-synthesis': {
     name: 'Organic Synthesis Pathways',
-    h1: 'Organic Synthesis Multi-step Pathways — JEE Advanced Reaction Routes',
-    description: 'Explore multi-step organic synthesis routes with step-by-step mechanism breakdowns. Covers benzene → aniline, diazonium chemistry, Grignard synthesis, aldol condensation, and more. Each route shows reagents, conditions, and the key mechanism at every stage.',
-    keywords: ['organic synthesis pathways', 'multi-step synthesis JEE', 'Grignard synthesis', 'aldol condensation synthesis', 'diazonium chemistry synthesis'],
+    h1: 'Organic Synthesis Multi-step Pathways — Reaction Routes & Mechanisms',
+    description: 'Explore multi-step organic synthesis routes with step-by-step mechanism breakdowns. Covers benzene → aniline, diazonium chemistry, Grignard synthesis, aldol condensation, and more.',
+    keywords: ['organic synthesis pathways', 'multi-step synthesis', 'Grignard synthesis', 'aldol condensation synthesis', 'diazonium chemistry synthesis'],
     apUnits: [],
     icho: true,
     topics: ['Benzene → aniline (nitration + reduction)', 'Benzene → phenol via diazonium', 'Aldol condensation synthesis', 'Grignard synthesis of secondary alcohols', 'Diazonium salt reactions (Sandmeyer, azo coupling)', 'Reagent and condition selection for each step'],
-    howTo: ['Select a synthesis target from the list', 'Follow each step with reagents, conditions, and mechanism type', 'Review key JEE points highlighted for each transformation'],
+    howTo: ['Select a synthesis target from the list', 'Follow each step with reagents, conditions, and mechanism type', 'Review key points highlighted for each transformation'],
   },
   // ── New AP Chemistry labs ──────────────────────────────────────────────
   'gas-laws': {
