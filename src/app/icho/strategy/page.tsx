@@ -4,7 +4,7 @@ import TopicBarChart from '../../components/TopicBarChart'
 import { ICHO_PREP, ICHO_VOLUMES } from '@/data/examTopicFrequency'
 
 export const metadata: Metadata = {
-  title: 'IChO Exam Strategy — What Actually Gets Tested | TheChemSolver',
+  title: 'IChO Exam Strategy — What Actually Gets Tested',
   description:
     'Real topic-frequency data from 261 official IChO preparatory problems and compiled volumes — see exactly what IChO tests before you study, not a generic syllabus guess.',
   alternates: { canonical: 'https://www.thechemsolver.com/icho/strategy' },

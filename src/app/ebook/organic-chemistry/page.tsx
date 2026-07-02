@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import EbookClient from './EbookClient'
 
 export const metadata: Metadata = {
-  title: 'Organic Chemistry Ebook — Orgo 1 & 2 Interactive Study Guide | TheChemSolver',
+  title: 'Organic Chemistry Ebook — Orgo 1 & 2 Interactive Study Guide',
   description:
     'Free interactive Organic Chemistry ebook for Orgo 1 & 2. Concept-by-concept lessons with worked mechanisms, KaTeX formulas, practice MCQs, and flashcard decks. Pre-med and MCAT ready.',
   openGraph: {

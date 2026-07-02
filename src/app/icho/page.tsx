@@ -3,7 +3,7 @@ import Link from 'next/link'
 import EmailCaptureForm from '../components/EmailCaptureForm'
 
 export const metadata: Metadata = {
-  title: 'IChO Prep — Free International Chemistry Olympiad Tools | TheChemSolver',
+  title: 'IChO Prep — Free International Chemistry Olympiad Tools',
   description: 'Free IChO prep on TheChemSolver. Advanced simulators for theoretical and practical exam topics — coordination chemistry, thermodynamics, organic synthesis, spectroscopy, and more.',
   alternates: { canonical: 'https://www.thechemsolver.com/icho' },
   openGraph: {

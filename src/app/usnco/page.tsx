@@ -3,7 +3,7 @@ import Link from 'next/link'
 import EmailCaptureForm from '../components/EmailCaptureForm'
 
 export const metadata: Metadata = {
-  title: 'USNCO Prep — Free Tools & Practice | TheChemSolver',
+  title: 'USNCO Prep — Free Tools & Practice',
   description: 'Free USNCO prep on TheChemSolver. Interactive simulators, practice MCQ sets, and coming-soon ebook for Local and National exam levels. No login required.',
   alternates: { canonical: 'https://www.thechemsolver.com/usnco' },
   openGraph: {

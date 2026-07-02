@@ -3,7 +3,7 @@ import Link from 'next/link' // used by gateway card links
 import EmailCaptureForm from '../components/EmailCaptureForm'
 
 export const metadata: Metadata = {
-  title: 'Organic Chemistry — Free Orgo 1 & 2 Tools | TheChemSolver',
+  title: 'Organic Chemistry — Free Orgo 1 & 2 Tools',
   description: 'Free Organic Chemistry tools for Orgo 1 & 2 students. Interactive simulations, free ebook covering all 22 chapters, and practice tests. Perfect for pre-med and MCAT prep. No login required.',
   alternates: { canonical: 'https://www.thechemsolver.com/organic-chemistry' },
   openGraph: {

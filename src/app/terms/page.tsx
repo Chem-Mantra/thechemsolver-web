@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Terms of Use | TheChemSolver',
+  title: 'Terms of Use',
   description: 'Terms of Use for TheChemSolver — the free chemistry simulators, ebooks, and practice tools.',
   alternates: { canonical: 'https://www.thechemsolver.com/terms' },
   robots: { index: true, follow: true },

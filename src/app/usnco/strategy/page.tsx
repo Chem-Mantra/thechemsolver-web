@@ -4,7 +4,7 @@ import TopicBarChart from '../../components/TopicBarChart'
 import { USNCO_LOCAL, USNCO_NAT_PART1, USNCO_NAT_PART2, USNCO_NAT_PART3 } from '@/data/examTopicFrequency'
 
 export const metadata: Metadata = {
-  title: 'USNCO Exam Strategy — What Actually Gets Tested | TheChemSolver',
+  title: 'USNCO Exam Strategy — What Actually Gets Tested',
   description:
     'Real topic-frequency data from hundreds of official USNCO Local, National Part I, II, and III past papers — see exactly what USNCO tests before you study, not a generic syllabus guess.',
   alternates: { canonical: 'https://www.thechemsolver.com/usnco/strategy' },

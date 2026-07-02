@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import ChemEbook, { EbookUnit } from '@/app/components/ChemEbook'
 
 export const metadata: Metadata = {
-  title: 'Free AP Chemistry eBook — Units 1–9 + USNCO + IChO | TheChemSolver',
+  title: 'Free AP Chemistry eBook — Units 1–9 + USNCO + IChO',
   description: 'Complete free AP Chemistry study guide covering all 9 units plus advanced USNCO and IChO topics: crystal field theory, advanced thermodynamics, stereochemistry, and coordination chemistry. Clear explanations, formulas, and exam strategy.',
   keywords: ['AP Chemistry study guide free', 'AP chem unit 1 through 9', 'USNCO study guide', 'IChO preparatory notes', 'chemistry ebook free', 'AP chemistry notes PDF alternative'],
 }

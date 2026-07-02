@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | TheChemSolver',
+  title: 'Privacy Policy',
   description: 'Privacy Policy for TheChemSolver — how we use cookies, Google AdSense, analytics, and any information you provide.',
   alternates: { canonical: 'https://www.thechemsolver.com/privacy' },
   robots: { index: true, follow: true },

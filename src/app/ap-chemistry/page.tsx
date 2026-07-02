@@ -3,7 +3,7 @@ import Link from 'next/link'
 import EmailCaptureForm from '../components/EmailCaptureForm'
 
 export const metadata: Metadata = {
-  title: 'AP Chemistry — Free Prep Hub | TheChemSolver',
+  title: 'AP Chemistry — Free Prep Hub',
   description: 'Free AP Chemistry prep on TheChemSolver. Interactive ebook for Units 1–9, 30+ simulators mapped to AP units, and MCQ/FRQ practice sets. No login required.',
   alternates: { canonical: 'https://www.thechemsolver.com/ap-chemistry' },
   openGraph: {

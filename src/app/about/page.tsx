@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'About & Contact | TheChemSolver',
+  title: 'About & Contact',
   description: 'About TheChemSolver — free interactive chemistry simulators, ebooks, and practice tools for AP Chemistry, USNCO, and IChO students. How to contact us.',
   alternates: { canonical: 'https://www.thechemsolver.com/about' },
 }
