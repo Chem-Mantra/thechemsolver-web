@@ -84,9 +84,16 @@ export default function USNCOPage() {
             US National Chemistry Olympiad
           </span>
         </h1>
-        <p className="text-gray-400 max-w-xl mb-8 leading-relaxed text-sm">
+        <p className="text-gray-400 max-w-xl mb-4 leading-relaxed text-sm">
           From local school exam to IChO selection camp. Prepare with free simulators, practice tests, and coming-soon study materials — all in one place.
         </p>
+
+        <Link
+          href="/usnco/strategy"
+          className="inline-flex items-center gap-2 text-xs font-semibold text-orange-300 hover:text-orange-200 bg-orange-900/20 hover:bg-orange-900/30 border border-orange-700/30 rounded-full px-3.5 py-1.5 mb-6 transition-colors"
+        >
+          📊 See what USNCO actually tests — real past-paper data →
+        </Link>
 
         {/* Exam stage chips */}
         <div className="flex flex-wrap gap-3 mb-2">

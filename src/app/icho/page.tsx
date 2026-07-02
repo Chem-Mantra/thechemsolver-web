@@ -84,9 +84,16 @@ export default function IChOPage() {
             International Chemistry Olympiad
           </span>
         </h1>
-        <p className="text-gray-400 max-w-xl mb-8 leading-relaxed text-sm">
+        <p className="text-gray-400 max-w-xl mb-4 leading-relaxed text-sm">
           The world's most demanding chemistry competition. IChO spans all branches at undergraduate depth — physical, inorganic, organic, analytical — in a 5-hour theoretical exam. Prepare with free advanced simulators and official prep problems.
         </p>
+
+        <Link
+          href="/icho/strategy"
+          className="inline-flex items-center gap-2 text-xs font-semibold text-yellow-300 hover:text-yellow-200 bg-yellow-900/20 hover:bg-yellow-900/30 border border-yellow-700/30 rounded-full px-3.5 py-1.5 mb-6 transition-colors"
+        >
+          📊 See what IChO actually tests — real past-paper data →
+        </Link>
 
         {/* Exam format chips */}
         <div className="flex flex-wrap gap-3 mb-2">
