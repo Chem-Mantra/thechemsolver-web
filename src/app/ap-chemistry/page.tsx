@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import EmailCaptureForm from '../components/EmailCaptureForm'
 
 export const metadata: Metadata = {
   title: 'AP Chemistry — Free Prep Hub | TheChemSolver',
@@ -167,6 +168,13 @@ export default function APChemistryPage() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* Email capture */}
+      <section className="px-5 pb-16 max-w-md mx-auto text-center">
+        <h2 className="text-lg font-bold mb-2">Get AP Chem Updates</h2>
+        <p className="text-gray-400 text-sm mb-5">Occasional emails when we ship new simulators or study guides. No spam, unsubscribe anytime.</p>
+        <EmailCaptureForm sourcePage="/ap-chemistry" />
       </section>
 
     </div>

@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link' // used by gateway card links
+import EmailCaptureForm from '../components/EmailCaptureForm'
 
 export const metadata: Metadata = {
   title: 'Organic Chemistry — Free Orgo 1 & 2 Tools | TheChemSolver',
@@ -234,6 +235,13 @@ export default function OrganicChemistryPage() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* Email capture */}
+      <section className="px-5 pb-16 max-w-md mx-auto text-center">
+        <h2 className="text-lg font-bold mb-2">Get Orgo Updates</h2>
+        <p className="text-gray-400 text-sm mb-5">Occasional emails when we ship new simulators or study guides. No spam, unsubscribe anytime.</p>
+        <EmailCaptureForm sourcePage="/organic-chemistry" />
       </section>
 
     </div>

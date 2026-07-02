@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import EmailCaptureForm from '../components/EmailCaptureForm'
 
 export const metadata: Metadata = {
   title: 'IChO Prep — Free International Chemistry Olympiad Tools | TheChemSolver',
@@ -154,6 +155,13 @@ export default function IChOPage() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* Email capture */}
+      <section className="px-5 pb-16 max-w-md mx-auto text-center">
+        <h2 className="text-lg font-bold mb-2">Get IChO Updates</h2>
+        <p className="text-gray-400 text-sm mb-5">Occasional emails when we ship new simulators or study guides. No spam, unsubscribe anytime.</p>
+        <EmailCaptureForm sourcePage="/icho" />
       </section>
 
     </div>

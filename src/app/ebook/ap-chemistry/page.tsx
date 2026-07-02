@@ -15,6 +15,33 @@ export const metadata: Metadata = {
   },
 }
 
+const courseLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Course',
+  name: 'AP Chemistry Ebook — Interactive Study Guide',
+  description:
+    'Free interactive AP Chemistry ebook covering all 9 units with KaTeX formulas, practice MCQs, flashcards, and simulation-linked lessons.',
+  provider: {
+    '@type': 'Organization',
+    name: 'TheChemSolver',
+    sameAs: 'https://www.thechemsolver.com',
+  },
+  isAccessibleForFree: true,
+  url: 'https://www.thechemsolver.com/ebook/ap-chemistry',
+  hasCourseInstance: {
+    '@type': 'CourseInstance',
+    courseMode: 'online',
+  },
+}
+
 export default function APChemistryEbookPage() {
-  return <EbookClient />
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(courseLd) }}
+      />
+      <EbookClient />
+    </>
+  )
 }

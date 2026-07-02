@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import EmailCaptureForm from './components/EmailCaptureForm'
 
 export const metadata: Metadata = {
   title: 'TheChemSolver — Free Chemistry Tools for AP Chem, Orgo & IChO',
@@ -160,6 +161,15 @@ export default function USHomePage() {
         </div>
       </section>
 
+      {/* Email capture */}
+      <section className="px-5 py-16 border-t border-white/10">
+        <div className="max-w-md mx-auto text-center">
+          <h2 className="text-xl font-bold mb-2">Get Notified About New Tools</h2>
+          <p className="text-gray-400 text-sm mb-5">Occasional emails when we ship new simulators or study guides. No spam, unsubscribe anytime.</p>
+          <EmailCaptureForm sourcePage="/" />
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="px-5 py-20 text-center">
         <h2 className="text-3xl font-bold mb-3">Pick Your Exam — Start Preparing</h2>
@@ -172,6 +182,17 @@ export default function USHomePage() {
           <Link href="/labs" className="border border-white/20 hover:border-white/40 hover:bg-white/5 text-white font-semibold px-6 py-3 rounded-xl transition-colors text-sm">All Simulations →</Link>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="border-t border-white/10 px-6 py-8 text-center text-sm text-gray-500">
+        <div className="flex justify-center flex-wrap gap-4 text-xs mb-3">
+          <Link href="/about"   className="hover:text-white transition-colors">About</Link>
+          <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+          <Link href="/terms"   className="hover:text-white transition-colors">Terms</Link>
+          <a href="mailto:admin@thechemsolver.com" className="hover:text-white transition-colors">Contact</a>
+        </div>
+        <p className="text-[10px] text-gray-700">© {new Date().getFullYear()} TheChemSolver. All rights reserved.</p>
+      </footer>
 
     </div>
   )

@@ -16,6 +16,33 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://www.thechemsolver.com/ebook/organic-chemistry' },
 }
 
+const courseLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Course',
+  name: 'Organic Chemistry Ebook — Orgo 1 & 2 Interactive Study Guide',
+  description:
+    'Free interactive Organic Chemistry ebook covering all 22 chapters of Orgo 1 & 2 with worked mechanisms, KaTeX formulas, practice MCQs, and flashcard decks.',
+  provider: {
+    '@type': 'Organization',
+    name: 'TheChemSolver',
+    sameAs: 'https://www.thechemsolver.com',
+  },
+  isAccessibleForFree: true,
+  url: 'https://www.thechemsolver.com/ebook/organic-chemistry',
+  hasCourseInstance: {
+    '@type': 'CourseInstance',
+    courseMode: 'online',
+  },
+}
+
 export default function OrganicChemistryEbookPage() {
-  return <EbookClient />
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(courseLd) }}
+      />
+      <EbookClient />
+    </>
+  )
 }
