@@ -7,6 +7,12 @@ const LAB_SLUGS = [
   'vsepr', 'hydrocarbon', 'stereochemistry', 'organic-mechanism', 'periodic-table',
   'crystal-field', 'hybridization', 'projection-formula', 'electrochemistry',
   'electrochemical', 'periodic', 'mechanisms', 'organic-synthesis',
+  'gas-laws', 'colligative-properties', 'phase-diagram', 'unit-cell', 'mo-diagram',
+  'lewis-structure', 'bond-polarity', 'imf-comparator', 'beer-lambert', 'chromatography',
+  'reaction-classifier', 'net-ionic-equation', 'limiting-reagent', 'stoichiometry-mapper',
+  'hess-law', 'calorimetry', 'bond-energy', 'enthalpy-diagram', 'electrolytic-cell',
+  'photoelectric-effect', 'h-emission-spectrum', 'electron-config', 'pes-spectrum',
+  'isotope-mass-spec', 'nmr-predictor', 'mass-spec', 'sn1-sn2-e1-e2',
 ]
 
 export default function sitemap() {
