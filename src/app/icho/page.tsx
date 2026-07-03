@@ -1,10 +1,14 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import EmailCaptureForm from '../components/EmailCaptureForm'
+import TopicBarChart from '../components/TopicBarChart'
+import { ICHO_PREP, ICHO_VOLUMES } from '@/data/examTopicFrequency'
+
+const ICHO_YELLOW = '#eab308'
 
 export const metadata: Metadata = {
-  title: 'IChO Prep — Free International Chemistry Olympiad Tools',
-  description: 'Free IChO prep on TheChemSolver. Advanced simulators for theoretical and practical exam topics — coordination chemistry, thermodynamics, organic synthesis, spectroscopy, and more.',
+  title: 'IChO Prep — Free Tools, Real Exam Data & Problems',
+  description: 'Free IChO prep on TheChemSolver. Real topic-frequency data from official problems, advanced simulators for theoretical and practical exam topics — coordination chemistry, thermodynamics, organic synthesis, spectroscopy, and more.',
   alternates: { canonical: 'https://www.thechemsolver.com/icho' },
   openGraph: {
     title: 'IChO Prep — Simulations, Problems & Study Tools',
@@ -88,13 +92,6 @@ export default function IChOPage() {
           The world's most demanding chemistry competition. IChO spans all branches at undergraduate depth — physical, inorganic, organic, analytical — in a 5-hour theoretical exam. Prepare with free advanced simulators and official prep problems.
         </p>
 
-        <Link
-          href="/icho/strategy"
-          className="inline-flex items-center gap-2 text-xs font-semibold text-yellow-300 hover:text-yellow-200 bg-yellow-900/20 hover:bg-yellow-900/30 border border-yellow-700/30 rounded-full px-3.5 py-1.5 mb-6 transition-colors"
-        >
-          📊 See what IChO actually tests — real past-paper data →
-        </Link>
-
         {/* Exam format chips */}
         <div className="flex flex-wrap gap-3 mb-2">
           {EXAM_FORMAT.map(f => (
@@ -109,8 +106,58 @@ export default function IChOPage() {
         </div>
       </section>
 
+      {/* ── What IChO Actually Tests (real past-paper data) ─────────────── */}
+      <section className="px-5 pb-6 max-w-5xl mx-auto">
+        <div className="flex items-center gap-3 mb-4">
+          <span className="text-xs font-bold uppercase tracking-widest text-yellow-400">📊 Data-Driven Strategy</span>
+          <span className="text-white/20">·</span>
+          <span className="text-xs text-gray-500">261 official problems analyzed</span>
+        </div>
+        <div className="rounded-2xl bg-yellow-900/10 border border-yellow-700/20 p-5 mb-5">
+          <h2 className="text-sm font-bold text-yellow-300 mb-2">The single biggest finding</h2>
+          <p className="text-sm text-gray-300 leading-relaxed">
+            Physical chemistry — kinetics, thermodynamics, and electrochemistry combined — makes up
+            over <strong className="text-white">50%</strong> of every IChO problem set we analyzed.
+            Analytical chemistry alone is <strong className="text-white">~20%</strong> of preparatory
+            problems, while coordination chemistry — often assumed to be a headline IChO topic —
+            barely registers. If you're prioritizing study time, physical chemistry depth and
+            analytical technique matter far more than coordination chemistry memorization.
+          </p>
+        </div>
+        <div className="space-y-5">
+          <TopicBarChart title="IChO Preparatory Problems" subtitle="Official pre-competition problem sets, by domain" data={ICHO_PREP} accentHex={ICHO_YELLOW} />
+          <TopicBarChart title="IChO Compiled Volumes" subtitle="Multi-year compiled official problem collections" data={ICHO_VOLUMES} accentHex={ICHO_YELLOW} />
+        </div>
+      </section>
+
+      <section className="px-5 pb-12 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-5">
+            <div className="text-2xl mb-2">📊</div>
+            <div className="font-semibold text-sm mb-1.5">Analytical chemistry is the real gap</div>
+            <div className="text-gray-500 text-xs leading-relaxed">
+              Titrimetric/gravimetric methods, spectrophotometry, and electroanalytical technique
+              are heavily tested but rarely taught alongside general/organic chemistry. Our{' '}
+              <Link href="/ebook/advanced-chemistry" className="text-yellow-400 hover:text-yellow-300">Advanced Chemistry ebook</Link>{' '}
+              opens with exactly this chapter.
+            </div>
+          </div>
+          <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-5">
+            <div className="text-2xl mb-2">🔬</div>
+            <div className="font-semibold text-sm mb-1.5">Spectroscopy shows up as real technique, not trivia</div>
+            <div className="text-gray-500 text-xs leading-relaxed">
+              Spectrophotometry, IR, Raman, and mass spectrometry appear repeatedly as analytical
+              methods within larger problems. Our{' '}
+              <Link href="/labs" className="text-yellow-400 hover:text-yellow-300">simulators</Link>{' '}
+              for NMR, mass spec, and Beer-Lambert absorption cover exactly this.
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── 3 Gateway Cards ─────────────────────────── */}
       <section className="px-5 pb-16 max-w-5xl mx-auto">
+        <h2 className="text-lg font-bold mb-5">Ready to prepare?</h2>
         <div className="grid md:grid-cols-3 gap-5">
           {GATEWAY.map(g => (
             <Link

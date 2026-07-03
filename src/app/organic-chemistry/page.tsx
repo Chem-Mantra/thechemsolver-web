@@ -1,10 +1,15 @@
 import { Metadata } from 'next'
 import Link from 'next/link' // used by gateway card links
 import EmailCaptureForm from '../components/EmailCaptureForm'
+import TopicBarChart from '../components/TopicBarChart'
+import { ORGO1, ORGO2 } from '@/data/examTopicFrequency'
+
+const ORGO1_GREEN = '#10b981'
+const ORGO2_PURPLE = '#a855f7'
 
 export const metadata: Metadata = {
-  title: 'Organic Chemistry — Free Orgo 1 & 2 Tools',
-  description: 'Free Organic Chemistry tools for Orgo 1 & 2 students. Interactive simulations, free ebook covering all 22 chapters, and practice tests. Perfect for pre-med and MCAT prep. No login required.',
+  title: 'Organic Chemistry — Free Orgo 1 & 2 Tools & Real Exam Data',
+  description: 'Free Organic Chemistry tools for Orgo 1 & 2 students. Real topic-frequency data from 1,125 exam problems, interactive simulations, free ebook covering all 22 chapters, and practice tests. Perfect for pre-med and MCAT prep. No login required.',
   alternates: { canonical: 'https://www.thechemsolver.com/organic-chemistry' },
   openGraph: {
     title: 'Organic Chemistry — Free Orgo 1 & 2 Prep | TheChemSolver',
@@ -115,13 +120,6 @@ export default function OrganicChemistryPage() {
         <p className="text-gray-400 max-w-xl mb-8 leading-relaxed text-sm">
           The most feared pre-med course — made visual and interactive. Free simulations, a full interactive ebook for all 22 chapters, and timed practice sets. Whether you're in Orgo 1, Orgo 2, or prepping for the MCAT, everything is free.
         </p>
-        <p className="text-sm mb-2">
-          <Link href="/organic-chemistry/strategy" className="text-emerald-400 hover:text-emerald-300 font-semibold">
-            See what Orgo 1 & 2 exams actually test →
-          </Link>{' '}
-          <span className="text-gray-500">real data from 1,125 university exam problems</span>
-        </p>
-
         {/* Course info chips */}
         <div className="flex flex-wrap gap-3 mb-2">
           {COURSE_INFO.map(f => (
@@ -136,8 +134,46 @@ export default function OrganicChemistryPage() {
         </div>
       </section>
 
+      {/* ── What Orgo 1 & 2 Actually Test (real exam data) ─────────────── */}
+      <section className="px-5 pb-6 max-w-5xl mx-auto">
+        <div className="flex items-center gap-3 mb-4">
+          <span className="text-xs font-bold uppercase tracking-widest text-emerald-400">📊 Data-Driven Strategy</span>
+          <span className="text-white/20">·</span>
+          <span className="text-xs text-gray-500">1,125 real exam problems analyzed</span>
+        </div>
+        <div className="rounded-2xl bg-emerald-900/10 border border-emerald-700/20 p-5 mb-5">
+          <h2 className="text-sm font-bold text-emerald-300 mb-2">The single biggest finding</h2>
+          <p className="text-sm text-gray-300 leading-relaxed">
+            Two chapters — <strong className="text-white">Alkene Reactions</strong> (24.5%) and{' '}
+            <strong className="text-white">Stereochemistry</strong> (23.9%) — make up nearly{' '}
+            <strong className="text-white">half of every Orgo 1 exam</strong>. Add Acid-Base (17.8%)
+            and Functional Groups (13.7%) and four chapters account for roughly 80% of what's tested.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-3 mb-3 mt-6">
+          <span className="text-xs font-bold uppercase tracking-widest text-emerald-400 px-3 py-1 bg-emerald-900/20 border border-emerald-700/30 rounded-full">
+            Orgo 1 — Chapters 1–11
+          </span>
+        </div>
+        <TopicBarChart title="Orgo 1 Exams" subtitle="CU Boulder, Dartmouth, MNSU & compiled practice archives" data={ORGO1} accentHex={ORGO1_GREEN} />
+
+        <div className="flex items-center gap-3 mb-3 mt-6">
+          <span className="text-xs font-bold uppercase tracking-widest text-purple-400 px-3 py-1 bg-purple-900/20 border border-purple-700/30 rounded-full">
+            Orgo 2 — Chapters 12–22
+          </span>
+        </div>
+        <TopicBarChart title="Orgo 2 Exams" subtitle="Early sample · aromatic + carbonyl-heavy archives" data={ORGO2} accentHex={ORGO2_PURPLE} />
+        <p className="text-xs text-gray-600 mt-3 leading-relaxed">
+          Note: our Orgo 2 sample (66 problems) is much smaller than Orgo 1's (1,059) — most of the
+          free university archives we found so far skew toward Orgo 1. This will get more
+          representative as we source more Orgo 2 exams.
+        </p>
+      </section>
+
       {/* 3 Gateway Cards */}
       <section className="px-5 pb-16 max-w-5xl mx-auto">
+        <h2 className="text-lg font-bold mb-5">Ready to prepare?</h2>
         <div className="grid md:grid-cols-3 gap-5">
           {GATEWAY.map(g => (
             <Link

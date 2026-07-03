@@ -19,6 +19,15 @@ const nextConfig = {
     ],
   },
 
+  async redirects() {
+    // These /strategy pages were merged directly into their exam hub pages.
+    return [
+      { source: '/usnco/strategy',             destination: '/usnco',             permanent: true },
+      { source: '/icho/strategy',              destination: '/icho',              permanent: true },
+      { source: '/organic-chemistry/strategy', destination: '/organic-chemistry', permanent: true },
+    ]
+  },
+
   async headers() {
     const csp = [
       "default-src 'self'",
