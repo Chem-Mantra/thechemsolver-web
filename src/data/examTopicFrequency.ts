@@ -90,3 +90,34 @@ export const ICHO_VOLUMES: SourceFreq = {
     { topic: 'Other', count: 2, pct: 5.1 },
   ],
 }
+
+// Computed 2026-07-03 from Supabase QBankOrgo (chapter_title column), 1,125 real
+// exam problems from CU Boulder, Dartmouth, Michigan/Reusch, ACS sample, UDel,
+// UW Oshkosh, and MNSU Jasperse practice-test archives.
+export const ORGO1: SourceFreq = {
+  total: 1059,
+  topics: [
+    { topic: 'Alkenes — Reactions & Synthesis', count: 259, pct: 24.5 },
+    { topic: 'Stereochemistry', count: 253, pct: 23.9 },
+    { topic: 'Acids & Bases', count: 188, pct: 17.8 },
+    { topic: 'Functional Groups & Reactivity', count: 145, pct: 13.7 },
+    { topic: 'Alkyl Halides & Nucleophilic Substitution', count: 98, pct: 9.3 },
+    { topic: 'Bonding & Molecular Structure', count: 65, pct: 6.1 },
+    { topic: 'Other', count: 51, pct: 4.8 },
+  ],
+}
+
+// n=66 — thin sample (most sourced archives are Orgo1-heavy; see [[project_orgo_question_bank_extraction]]).
+// Shown with an explicit caveat on the strategy page rather than omitted.
+export const ORGO2: SourceFreq = {
+  total: 66,
+  topics: [
+    { topic: 'Aldehydes & Ketones', count: 40, pct: 60.6 },
+    { topic: 'Spectroscopy & Structure Determination', count: 11, pct: 16.7 },
+    { topic: 'Electrophilic Aromatic Substitution', count: 7, pct: 10.6 },
+    { topic: 'Alkenes — Reactions & Synthesis', count: 3, pct: 4.5 },
+    { topic: 'Functional Groups & Reactivity', count: 2, pct: 3.0 },
+    { topic: 'Acids & Bases', count: 2, pct: 3.0 },
+    { topic: 'Alkyl Halides & Nucleophilic Substitution', count: 1, pct: 1.5 },
+  ],
+}

@@ -1,5 +1,6 @@
 'use client'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 
 const NAV_EXAMS = [
@@ -27,7 +28,7 @@ export default function NavWrapper({ children }: { children: React.ReactNode }) 
     <div className="min-h-screen bg-[#060610] text-white flex flex-col">
       <nav className="border-b border-white/10 px-5 py-3 flex items-center justify-between sticky top-0 bg-[#060610]/95 backdrop-blur z-50">
           <Link href="/" className="flex items-center gap-2 shrink-0">
-            <span className="text-xl">⚗️</span>
+            <Image src="/logo.png" alt="TheChemSolver" width={28} height={28} className="rounded-full" />
             <span className="font-bold text-base tracking-tight">TheChemSolver</span>
             <span className="text-[10px] bg-green-500/20 text-green-400 border border-green-500/30 px-1.5 py-0.5 rounded-full">FREE</span>
           </Link>
@@ -56,7 +57,7 @@ export default function NavWrapper({ children }: { children: React.ReactNode }) 
 
       <footer className="border-t border-white/10 px-6 py-8 text-center text-sm text-gray-500">
         <div className="flex items-center justify-center gap-2 mb-2">
-          <span className="text-lg">⚗️</span>
+          <Image src="/logo.png" alt="TheChemSolver" width={22} height={22} className="rounded-full" />
           <span className="font-bold text-white text-sm">TheChemSolver.com</span>
           <span className="text-xs bg-green-500/20 text-green-400 border border-green-500/30 px-1.5 py-0.5 rounded-full">100% Free</span>
         </div>
@@ -74,7 +75,7 @@ export default function NavWrapper({ children }: { children: React.ReactNode }) 
           <Link href="/about"   className="hover:text-white transition-colors">About</Link>
           <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
           <Link href="/terms"   className="hover:text-white transition-colors">Terms</Link>
-          <a href="mailto:admin@thechemsolver.com" className="hover:text-white transition-colors">Contact</a>
+          <a href="mailto:support@thechemsolver.com" className="hover:text-white transition-colors">Contact</a>
         </div>
         <p className="text-[10px] text-gray-700 mt-4">
           © {new Date().getFullYear()} TheChemSolver. All rights reserved.

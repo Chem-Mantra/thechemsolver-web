@@ -38,8 +38,8 @@ export default function AboutPage() {
           <h2 className="text-lg font-bold text-white mt-8 mb-2">Contact</h2>
           <p>
             Questions, corrections, or feedback? Reach out at{' '}
-            <a href="mailto:admin@thechemsolver.com" className="text-purple-400 hover:text-purple-300">
-              admin@thechemsolver.com
+            <a href="mailto:support@thechemsolver.com" className="text-purple-400 hover:text-purple-300">
+              support@thechemsolver.com
             </a>.
           </p>
 

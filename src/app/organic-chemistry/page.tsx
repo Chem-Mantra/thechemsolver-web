@@ -115,6 +115,12 @@ export default function OrganicChemistryPage() {
         <p className="text-gray-400 max-w-xl mb-8 leading-relaxed text-sm">
           The most feared pre-med course — made visual and interactive. Free simulations, a full interactive ebook for all 22 chapters, and timed practice sets. Whether you're in Orgo 1, Orgo 2, or prepping for the MCAT, everything is free.
         </p>
+        <p className="text-sm mb-2">
+          <Link href="/organic-chemistry/strategy" className="text-emerald-400 hover:text-emerald-300 font-semibold">
+            See what Orgo 1 & 2 exams actually test →
+          </Link>{' '}
+          <span className="text-gray-500">real data from 1,125 university exam problems</span>
+        </p>
 
         {/* Course info chips */}
         <div className="flex flex-wrap gap-3 mb-2">

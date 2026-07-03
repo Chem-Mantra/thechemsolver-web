@@ -68,8 +68,8 @@ export default function TermsPage() {
           <h2 className="text-lg font-bold text-white mt-8 mb-2">Contact</h2>
           <p>
             Questions about these terms can be sent to{' '}
-            <a href="mailto:admin@thechemsolver.com" className="text-purple-400 hover:text-purple-300">
-              admin@thechemsolver.com
+            <a href="mailto:support@thechemsolver.com" className="text-purple-400 hover:text-purple-300">
+              support@thechemsolver.com
             </a>.
           </p>
         </div>

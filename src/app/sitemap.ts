@@ -32,6 +32,8 @@ export default function sitemap() {
     { url: `${base}/icho`,            lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 0.95 },
     { url: `${base}/icho/problems`,   lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 0.85 },
     { url: `${base}/icho/strategy`,   lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.85 },
+    { url: `${base}/organic-chemistry`,          lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 0.95 },
+    { url: `${base}/organic-chemistry/strategy`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.85 },
     { url: `${base}/ebook/ap-chemistry`,      lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.9 },
     { url: `${base}/ebook/organic-chemistry`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.9 },
     { url: `${base}/ebook/advanced-chemistry`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.85 },

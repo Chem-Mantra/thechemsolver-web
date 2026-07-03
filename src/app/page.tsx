@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import EmailCaptureForm from './components/EmailCaptureForm'
 
 export const metadata: Metadata = {
@@ -31,7 +32,7 @@ export default function USHomePage() {
       {/* Nav */}
       <nav className="border-b border-white/10 px-5 py-4 flex items-center justify-between sticky top-0 bg-[#060610]/95 backdrop-blur z-50">
         <div className="flex items-center gap-2">
-          <span className="text-2xl">⚗️</span>
+          <Image src="/logo.png" alt="TheChemSolver" width={32} height={32} className="rounded-full" priority />
           <span className="font-bold text-xl tracking-tight">TheChemSolver</span>
           <span className="text-xs bg-green-500/20 text-green-400 border border-green-500/30 px-2 py-0.5 rounded-full">100% FREE</span>
         </div>
@@ -189,7 +190,7 @@ export default function USHomePage() {
           <Link href="/about"   className="hover:text-white transition-colors">About</Link>
           <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
           <Link href="/terms"   className="hover:text-white transition-colors">Terms</Link>
-          <a href="mailto:admin@thechemsolver.com" className="hover:text-white transition-colors">Contact</a>
+          <a href="mailto:support@thechemsolver.com" className="hover:text-white transition-colors">Contact</a>
         </div>
         <p className="text-[10px] text-gray-700">© {new Date().getFullYear()} TheChemSolver. All rights reserved.</p>
       </footer>

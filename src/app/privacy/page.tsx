@@ -89,8 +89,8 @@ export default function PrivacyPage() {
           <p>
             Questions about this policy, or requests to remove your email from our list, can be sent
             to{' '}
-            <a href="mailto:admin@thechemsolver.com" className="text-purple-400 hover:text-purple-300">
-              admin@thechemsolver.com
+            <a href="mailto:support@thechemsolver.com" className="text-purple-400 hover:text-purple-300">
+              support@thechemsolver.com
             </a>.
           </p>
         </div>
