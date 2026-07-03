@@ -1,7 +1,8 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import Image from 'next/image'
 import EmailCaptureForm from './components/EmailCaptureForm'
+import AdSlot from './components/AdSlot'
+import HomeNav from './HomeNav'
 
 export const metadata: Metadata = {
   title: 'TheChemSolver — Free Chemistry Tools for AP Chem, Orgo & IChO',
@@ -16,40 +17,11 @@ export const metadata: Metadata = {
   },
 }
 
-function AdSlot({ className = '' }: { className?: string }) {
-  return (
-    <div className={`flex items-center justify-center bg-white/[0.02] border border-white/5 rounded-xl text-gray-700 text-xs ${className}`}>
-      {/* Replace with: <ins class="adsbygoogle" data-ad-client="ca-pub-XXXXXXXX" data-ad-slot="XXXXXXXX" /> */}
-      Advertisement
-    </div>
-  )
-}
-
 export default function USHomePage() {
   return (
     <div className="bg-[#060610] text-white">
 
-      {/* Nav */}
-      <nav className="border-b border-white/10 px-5 py-4 flex items-center justify-between sticky top-0 bg-[#060610]/95 backdrop-blur z-50">
-        <div className="flex items-center gap-2">
-          <Image src="/logo.png" alt="TheChemSolver" width={32} height={32} className="rounded-full" priority />
-          <span className="font-bold text-xl tracking-tight">TheChemSolver</span>
-          <span className="text-xs bg-green-500/20 text-green-400 border border-green-500/30 px-2 py-0.5 rounded-full">100% FREE</span>
-        </div>
-        <div className="hidden md:flex items-center gap-1 text-sm">
-          <Link href="/ap-chemistry" className="text-blue-400 hover:text-blue-300 font-semibold px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors">AP Chemistry</Link>
-          <Link href="/usnco" className="text-orange-400 hover:text-orange-300 font-semibold px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors">USNCO</Link>
-          <Link href="/icho" className="text-yellow-400 hover:text-yellow-300 font-semibold px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors">IChO</Link>
-          <span className="text-white/20 mx-1">|</span>
-          <Link href="/organic-chemistry" className="text-emerald-400 hover:text-emerald-300 font-semibold px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors">Orgo 1 & 2</Link>
-          <span className="text-white/20 mx-1">|</span>
-          <Link href="/labs" className="text-gray-400 hover:text-white px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors">All Labs</Link>
-          <Link href="/ebook/ap-chemistry" className="text-gray-400 hover:text-white px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors">Ebook</Link>
-        </div>
-        <Link href="/labs/nomenclature" className="bg-purple-600 hover:bg-purple-500 text-white text-sm px-4 py-2 rounded-lg transition-colors font-medium">
-          Try IUPAC Namer →
-        </Link>
-      </nav>
+      <HomeNav />
 
       {/* Hero */}
       <section className="px-5 py-20 md:py-28 text-center max-w-5xl mx-auto">

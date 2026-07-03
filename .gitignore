@@ -30,3 +30,25 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Capacitor native build artifacts (ios/ and android/ project files ARE committed)
+android/local.properties
+android/.gradle/
+android/app/build/
+android/build/
+android/captures/
+android/.cxx/
+ios/App/Pods/
+ios/App/build/
+ios/App/DerivedData/
+ios/.xcode.env.local
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+
+# Testing / audit output
+/playwright-report/
+/test-results/
+/blob-report/
+/reports/
+/screenshots/

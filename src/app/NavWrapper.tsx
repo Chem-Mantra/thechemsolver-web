@@ -1,7 +1,9 @@
 'use client'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
+import { Menu, X } from 'lucide-react'
 
 const NAV_EXAMS = [
   { label: 'AP Chemistry',   href: '/ap-chemistry',      color: 'text-blue-400' },
@@ -18,6 +20,10 @@ export default function NavWrapper({ children }: { children: React.ReactNode }) 
   const pathname = usePathname()
   const isHome = pathname === '/'
   const isEbook = pathname?.startsWith('/ebook/')
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  // Close the mobile menu on route change so it never lingers over new content.
+  useEffect(() => { setMenuOpen(false) }, [pathname])
 
   // Full-screen app routes: no nav, no footer, no flex-col wrapper
   if (isHome || isEbook) {
@@ -48,10 +54,42 @@ export default function NavWrapper({ children }: { children: React.ReactNode }) 
               </Link>
             ))}
           </div>
-          <Link href="/" className="text-xs bg-purple-600 hover:bg-purple-500 text-white px-3 py-1.5 rounded-lg transition-colors font-medium shrink-0">
-            Home
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link href="/" className="hidden md:inline-block text-xs bg-purple-600 hover:bg-purple-500 text-white px-3 py-1.5 rounded-lg transition-colors font-medium shrink-0">
+              Home
+            </Link>
+            <button
+              type="button"
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen(o => !o)}
+              className="md:hidden flex items-center justify-center w-11 h-11 -mr-1 rounded-md text-white/90 hover:bg-white/10 transition-colors"
+            >
+              {menuOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
+          </div>
         </nav>
+
+        {menuOpen && (
+          <div data-testid="mobile-menu" className="md:hidden border-b border-white/10 bg-[#060610]/98 backdrop-blur sticky top-[57px] z-50 px-5 py-3 flex flex-col gap-1">
+            {NAV_EXAMS.map(e => (
+              <Link key={e.href} href={e.href}
+                className={`text-sm ${e.color} font-semibold px-3 py-3 rounded-md hover:bg-white/5 transition-colors`}>
+                {e.label}
+              </Link>
+            ))}
+            <div className="border-t border-white/10 my-1" />
+            {NAV_TOOLS.map(t => (
+              <Link key={t.href} href={t.href}
+                className="text-sm text-gray-300 px-3 py-3 rounded-md hover:bg-white/5 transition-colors">
+                {t.label}
+              </Link>
+            ))}
+            <Link href="/" className="text-sm text-center bg-purple-600 text-white px-3 py-3 rounded-lg font-medium mt-1">
+              Home
+            </Link>
+          </div>
+        )}
 
       <div className="flex-1">{children}</div>
 

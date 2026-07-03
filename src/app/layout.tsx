@@ -1,15 +1,37 @@
-import type { Metadata } from 'next'
-import Script from 'next/script'
+import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import NavWrapper from './NavWrapper'
+import CapacitorNative from './CapacitorNative'
+import RegisterServiceWorker from './RegisterServiceWorker'
+import { AuthProvider } from './AuthProvider'
+import AdsGate from './AdsGate'
+import AuthCallbackListener from './AuthCallbackListener'
 import { Analytics } from '@vercel/analytics/next'
+// Monetization is paused for now — everything is free, including inside
+// the native app. Google sign-in (AuthProvider, AuthCallbackListener,
+// /account) stays active. To re-enable the paywall later: re-import and
+// re-wrap with NativeAccessGate, and re-add <AdFreePopup /> below — see
+// docs/RAZORPAY_SETUP.md.
 
 const ADSENSE_CLIENT = 'ca-pub-4376919875096457'
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover', // lets env(safe-area-inset-*) resolve inside the iOS app shell
+  themeColor: '#08020d',
+}
 
 export const metadata: Metadata = {
   title: {
     default: 'TheChemSolver — Free Chemistry Tools for AP, USNCO & IChO',
     template: '%s | TheChemSolver',
+  },
+  manifest: '/manifest.webmanifest',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'TheChemSolver',
   },
   other: {
     'google-adsense-account': ADSENSE_CLIENT,
@@ -58,14 +80,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }}
         />
-        <NavWrapper>{children}</NavWrapper>
-        <Analytics />
-        <Script
-          async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        <AuthProvider>
+          <CapacitorNative />
+          <AuthCallbackListener />
+          <NavWrapper>{children}</NavWrapper>
+          <Analytics />
+          <RegisterServiceWorker />
+          <AdsGate client={ADSENSE_CLIENT} />
+        </AuthProvider>
       </body>
     </html>
   )

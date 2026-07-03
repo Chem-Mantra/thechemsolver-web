@@ -72,6 +72,14 @@
   --r-md:  16px;
   --r-lg:  22px;
   --r-xl:  32px;
+
+  /* ── Safe area (iOS notch/Dynamic Island/home indicator) ─────
+     Requires viewport-fit=cover, set via the `viewport` export in
+     layout.tsx. Falls back to 0px in regular browsers. ────────── */
+  --safe-top:    env(safe-area-inset-top, 0px);
+  --safe-right:  env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left:   env(safe-area-inset-left, 0px);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -436,4 +444,69 @@
 }
 .forum-cat-link:hover {
   background: rgba(249,115,22,0.08) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NATIVE APP SHELL (Capacitor / installed PWA only)
+═══════════════════════════════════════════════════════════════ */
+
+/* Sticky nav / footer sit under the iOS status bar or home indicator
+   without this — applied everywhere but only nonzero on real devices. */
+[data-capacitor] nav.sticky {
+  padding-top: calc(0.75rem + var(--safe-top));
+}
+[data-capacitor] footer {
+  padding-bottom: calc(2rem + var(--safe-bottom));
+}
+
+.offline-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: #ea580c;
+  color: #fff;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px var(--safe-right) 6px var(--safe-left);
+  padding-top: calc(6px + var(--safe-top));
+}
+
+.rotate-hint {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 24px;
+  text-align: center;
+  background: rgba(8,2,13,0.94);
+  color: var(--text-primary, #f8fafc);
+}
+.rotate-hint-icon {
+  animation: rotate-hint-spin 1.8s ease-in-out infinite;
+}
+.rotate-hint p {
+  max-width: 26ch;
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+}
+@keyframes rotate-hint-spin {
+  0%, 20% { transform: rotate(0deg); }
+  50%, 70% { transform: rotate(-90deg); }
+  100% { transform: rotate(-90deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rotate-hint-icon { animation: none; transform: rotate(-90deg); }
+}
+/* Never show the hint once actually in landscape, even if a resize event
+   hasn't fired yet (belt and suspenders alongside the JS check). */
+@media (orientation: landscape) {
+  .rotate-hint { display: none; }
 }
