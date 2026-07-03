@@ -121,3 +121,35 @@ export const ORGO2: SourceFreq = {
     { topic: 'Alkyl Halides & Nucleophilic Substitution', count: 1, pct: 1.5 },
   ],
 }
+
+// Computed 2026-07-03 from Supabase QBankMCQ/QBankFRQ (source='AP_Official_MCQ'/
+// 'AP_Official_FRQ'), 361 real official/practice AP Chemistry Section I & II
+// questions from 2012, 2014, 2015, 2017-2019 (2013 excluded — extraction
+// incomplete, see [[project_ap_chemistry_official_mcq_extraction]]).
+export const AP_OFFICIAL_MCQ: SourceFreq = {
+  total: 325,
+  topics: [
+    { topic: 'Bonding', count: 49, pct: 15.1 },
+    { topic: 'Acids and Bases', count: 43, pct: 13.2 },
+    { topic: 'Equilibrium', count: 43, pct: 13.2 },
+    { topic: 'Thermodynamics', count: 36, pct: 11.1 },
+    { topic: 'Stoichiometry', count: 34, pct: 10.5 },
+    { topic: 'States of Matter', count: 31, pct: 9.5 },
+    { topic: 'Kinetics', count: 30, pct: 9.2 },
+    { topic: 'Solutions', count: 25, pct: 7.7 },
+    { topic: 'Atomic Structure', count: 21, pct: 6.5 },
+    { topic: 'Electrochemistry', count: 13, pct: 4.0 },
+  ],
+}
+
+export const AP_OFFICIAL_FRQ: SourceFreq = {
+  total: 36,
+  topics: [
+    { topic: 'Thermodynamics', count: 9, pct: 25.0 },
+    { topic: 'Equilibrium', count: 8, pct: 22.2 },
+    { topic: 'Intermolecular Forces', count: 4, pct: 11.1 },
+    { topic: 'Kinetics', count: 4, pct: 11.1 },
+    { topic: 'Electrochemistry', count: 4, pct: 11.1 },
+    { topic: 'Other', count: 7, pct: 19.4 },
+  ],
+}

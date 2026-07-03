@@ -1,10 +1,14 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import EmailCaptureForm from '../components/EmailCaptureForm'
+import TopicBarChart from '../components/TopicBarChart'
+import { AP_OFFICIAL_MCQ, AP_OFFICIAL_FRQ } from '@/data/examTopicFrequency'
+
+const AP_BLUE = '#3b82f6'
 
 export const metadata: Metadata = {
-  title: 'AP Chemistry — Free Prep Hub',
-  description: 'Free AP Chemistry prep on TheChemSolver. Interactive ebook for Units 1–9, 30+ simulators mapped to AP units, and MCQ/FRQ practice sets. No login required.',
+  title: 'AP Chemistry — Free Prep Hub, Real Exam Data & Tools',
+  description: 'Free AP Chemistry prep on TheChemSolver. Real topic-frequency data from 361 official exam questions, interactive ebook for Units 1–9, 30+ simulators mapped to AP units, and MCQ/FRQ practice sets. No login required.',
   alternates: { canonical: 'https://www.thechemsolver.com/ap-chemistry' },
   openGraph: {
     title: 'AP Chemistry Prep — Simulations, Ebook & Tests',
@@ -108,8 +112,39 @@ export default function APChemistryPage() {
         </div>
       </section>
 
+      {/* ── What AP Chemistry Actually Tests (real past-paper data) ─────── */}
+      <section className="px-5 pb-6 max-w-5xl mx-auto">
+        <div className="flex items-center gap-3 mb-4">
+          <span className="text-xs font-bold uppercase tracking-widest text-blue-400">📊 Data-Driven Strategy</span>
+          <span className="text-white/20">·</span>
+          <span className="text-xs text-gray-500">361 official exam questions analyzed</span>
+        </div>
+        <div className="rounded-2xl bg-blue-900/10 border border-blue-700/20 p-5 mb-5">
+          <h2 className="text-sm font-bold text-blue-300 mb-2">The single biggest finding</h2>
+          <p className="text-sm text-gray-300 leading-relaxed">
+            College Board's official unit weighting lists Unit 3 (Properties of Substances &
+            Mixtures) as the single largest chunk of the exam — but tagging real past MCQs shows{' '}
+            <strong className="text-white">Bonding (15.1%)</strong> is actually the most-tested
+            single topic, and <strong className="text-white">Acids and Bases</strong> and{' '}
+            <strong className="text-white">Equilibrium</strong> tie at 13.2% each. On the
+            free-response side, <strong className="text-white">Thermodynamics (25%)</strong> and{' '}
+            <strong className="text-white">Equilibrium (22.2%)</strong> alone account for nearly
+            half of all FRQ points — the highest-yield topics to master for writing full-credit answers.
+          </p>
+        </div>
+        <div className="space-y-5">
+          <TopicBarChart title="AP Official MCQ" subtitle="Section I · 2012, 2014-2019 official/practice exams" data={AP_OFFICIAL_MCQ} accentHex={AP_BLUE} />
+          <TopicBarChart title="AP Official FRQ" subtitle="Section II · free-response questions, same exams" data={AP_OFFICIAL_FRQ} accentHex={AP_BLUE} />
+        </div>
+        <p className="text-xs text-gray-600 mt-3 leading-relaxed">
+          2013's official exam is excluded — our extraction of that particular PDF is still
+          incomplete and will be added once resolved.
+        </p>
+      </section>
+
       {/* ── 3 Gateway Cards ─────────────────────────── */}
       <section className="px-5 pb-16 max-w-5xl mx-auto">
+        <h2 className="text-lg font-bold mb-5">Ready to prepare?</h2>
         <div className="grid md:grid-cols-3 gap-5">
           {GATEWAY.map(g => (
             <Link
