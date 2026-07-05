@@ -16,6 +16,7 @@ const nextConfig = {
     remotePatterns: [
       { protocol: 'https', hostname: '*.supabase.co' },
       { protocol: 'https', hostname: 'storage.googleapis.com' },
+      { protocol: 'https', hostname: '*.googleusercontent.com' }, // Google account avatars
     ],
   },
 
@@ -34,7 +35,7 @@ const nextConfig = {
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://securepubads.g.doubleclick.net https://tpc.googlesyndication.com https://*.google.com https://*.gstatic.com https://checkout.razorpay.com",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com data:",
-      "img-src 'self' data: blob: https://storage.googleapis.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.gstatic.com https://*.razorpay.com",
+      "img-src 'self' data: blob: https://storage.googleapis.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.gstatic.com https://*.razorpay.com https://*.googleusercontent.com",
       "connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://*.supabase.co https://pagead2.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.razorpay.com",
       "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://*.doubleclick.net https://*.google.com https://api.razorpay.com https://checkout.razorpay.com",
       "worker-src 'self'",

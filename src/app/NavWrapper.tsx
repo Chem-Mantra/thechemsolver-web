@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { Menu, X } from 'lucide-react'
+import AuthNavButton from './components/AuthNavButton'
 
 const NAV_EXAMS = [
   { label: 'AP Chemistry',   href: '/ap-chemistry',      color: 'text-blue-400' },
@@ -55,6 +56,7 @@ export default function NavWrapper({ children }: { children: React.ReactNode }) 
             ))}
           </div>
           <div className="flex items-center gap-2">
+            <AuthNavButton />
             <Link href="/" className="hidden md:inline-block text-xs bg-purple-600 hover:bg-purple-500 text-white px-3 py-1.5 rounded-lg transition-colors font-medium shrink-0">
               Home
             </Link>
@@ -85,6 +87,8 @@ export default function NavWrapper({ children }: { children: React.ReactNode }) 
                 {t.label}
               </Link>
             ))}
+            <div className="border-t border-white/10 my-1" />
+            <AuthNavButton variant="mobile" />
             <Link href="/" className="text-sm text-center bg-purple-600 text-white px-3 py-3 rounded-lg font-medium mt-1">
               Home
             </Link>

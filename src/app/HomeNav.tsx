@@ -3,6 +3,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Menu, X } from 'lucide-react'
+import AuthNavButton from './components/AuthNavButton'
 
 const HOME_NAV_LINKS = [
   { label: 'AP Chemistry',   href: '/ap-chemistry',      color: 'text-blue-400' },
@@ -35,6 +36,7 @@ export default function HomeNav() {
           <Link href="/ebook/ap-chemistry" className="text-gray-400 hover:text-white px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors">Ebook</Link>
         </div>
         <div className="flex items-center gap-2">
+          <AuthNavButton />
           <Link href="/labs/nomenclature" className="hidden sm:inline-block bg-purple-600 hover:bg-purple-500 text-white text-sm px-4 py-2 rounded-lg transition-colors font-medium">
             Try IUPAC Namer →
           </Link>
@@ -58,6 +60,8 @@ export default function HomeNav() {
               {l.label}
             </Link>
           ))}
+          <div className="border-t border-white/10 my-1" />
+          <AuthNavButton variant="mobile" />
           <Link href="/labs/nomenclature" onClick={() => setMenuOpen(false)}
             className="text-sm text-center bg-purple-600 text-white px-3 py-3 rounded-lg font-medium mt-1">
             Try IUPAC Namer →
