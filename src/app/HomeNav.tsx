@@ -23,7 +23,7 @@ export default function HomeNav() {
         <div className="flex items-center gap-2">
           <Image src="/logo.png" alt="TheChemSolver" width={32} height={32} className="rounded-full" priority />
           <span className="font-bold text-xl tracking-tight">TheChemSolver</span>
-          <span className="text-xs bg-green-500/20 text-green-400 border border-green-500/30 px-2 py-0.5 rounded-full">100% FREE</span>
+          <span className="text-xs bg-green-500/20 text-green-400 border border-green-500/30 px-2 py-0.5 rounded-full">FREE</span>
         </div>
         <div className="hidden md:flex items-center gap-1 text-sm">
           <Link href="/ap-chemistry" className="text-blue-400 hover:text-blue-300 font-semibold px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors">AP Chemistry</Link>

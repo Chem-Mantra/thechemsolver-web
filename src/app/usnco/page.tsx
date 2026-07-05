@@ -8,7 +8,7 @@ const USNCO_ORANGE = '#f97316'
 
 export const metadata: Metadata = {
   title: 'USNCO Prep — Free Tools, Real Exam Data & Practice',
-  description: 'Free USNCO prep on TheChemSolver. Real topic-frequency data from real past papers, interactive simulators, practice MCQ sets, and coming-soon ebook for Local and National exam levels. No login required.',
+  description: 'Free USNCO prep on TheChemSolver. Real topic-frequency data from real past papers, interactive simulators, practice MCQ sets, and coming-soon ebook for Local and National exam levels.',
   alternates: { canonical: 'https://www.thechemsolver.com/usnco' },
   openGraph: {
     title: 'USNCO Prep — Simulations, Ebook & Tests',

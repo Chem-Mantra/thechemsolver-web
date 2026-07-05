@@ -101,7 +101,7 @@ export default function NavWrapper({ children }: { children: React.ReactNode }) 
         <div className="flex items-center justify-center gap-2 mb-2">
           <Image src="/logo.png" alt="TheChemSolver" width={22} height={22} className="rounded-full" />
           <span className="font-bold text-white text-sm">TheChemSolver.com</span>
-          <span className="text-xs bg-green-500/20 text-green-400 border border-green-500/30 px-1.5 py-0.5 rounded-full">100% Free</span>
+          <span className="text-xs bg-green-500/20 text-green-400 border border-green-500/30 px-1.5 py-0.5 rounded-full">Free</span>
         </div>
         <p className="text-xs mb-3 max-w-md mx-auto">
           Free interactive chemistry tools for AP Chemistry, Organic Chemistry, IChO, and College Gen Chem students.

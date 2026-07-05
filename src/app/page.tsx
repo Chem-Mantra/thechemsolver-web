@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   keywords: 'AP chemistry tools free, organic chemistry solver, IChO chemistry, IUPAC namer, titration simulator, VSEPR, equilibrium calculator, chemistry virtual lab',
   openGraph: {
     title: 'TheChemSolver — Free Chemistry Solvers & Virtual Labs',
-    description: 'Free interactive chemistry tools for AP Chemistry, Orgo, and IChO students. No login, no subscription.',
+    description: 'Free interactive chemistry tools for AP Chemistry, Orgo, and IChO students.',
     url: 'https://www.thechemsolver.com',
     siteName: 'TheChemSolver',
     type: 'website',
@@ -26,7 +26,7 @@ export default function USHomePage() {
       {/* Hero */}
       <section className="px-5 py-20 md:py-28 text-center max-w-5xl mx-auto">
         <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-4 py-1.5 text-sm text-purple-300 mb-6">
-          🆓 Every tool is completely free — no account, no credit card
+          🆓 Every tool is free to use
         </div>
         <h1 className="text-5xl md:text-6xl font-black mb-5 leading-tight tracking-tight">
           Chemistry Tools for
@@ -115,12 +115,12 @@ export default function USHomePage() {
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-2xl font-bold mb-3">Why Is Everything Free?</h2>
           <p className="text-gray-400 leading-relaxed mb-6">
-            TheChemSolver is supported by non-intrusive display ads. You get full access to every tool, every simulation, every calculator — free forever.
-            No freemium. No paywalled features. No account required.
+            TheChemSolver is supported by non-intrusive display ads. You get full access to every tool, every simulation, every calculator, no paywalled features.
+            Prefer no ads? Sign in and go ad-free for $15/year.
           </p>
           <div className="grid grid-cols-3 gap-4 text-sm">
             {[
-              { icon: '🔓', label: 'No Login Required', desc: 'Open any tool and start immediately' },
+              { icon: '🚀', label: 'Start Instantly', desc: 'Open any tool and start immediately' },
               { icon: '♾️', label: 'Unlimited Use', desc: 'No daily limits or usage caps' },
               { icon: '📱', label: 'Works on Mobile', desc: 'Fully responsive on any device' },
             ].map(f => (

@@ -13,7 +13,7 @@ export const LAB_META: Record<string, LabMeta> = {
   titration: {
     name: 'Titration Curve Simulator',
     h1: 'Free Titration Curve Simulator — AP Chemistry & IChO',
-    description: 'Plot acid-base titration curves in real time. Supports strong/weak acid-base, polyprotic, and redox titrations. Equivalence point detection, pH at any volume, and indicator selection included. Free, no login required.',
+    description: 'Plot acid-base titration curves in real time. Supports strong/weak acid-base, polyprotic, and redox titrations. Equivalence point detection, pH at any volume, and indicator selection included.',
     keywords: ['titration curve simulator', 'ap chemistry titration', 'acid base titration calculator free', 'weak acid strong base titration', 'titration curve generator'],
     apUnits: ['Unit 8: Acids and Bases'],
     icho: true,
@@ -692,7 +692,7 @@ export function getLabBody(slug: string, meta: { h1: string; description: string
 
 This tool covers: ${meta.topics.join(', ')}. ${meta.apUnits.length > 0 ? `It maps to ${meta.apUnits.join(' and ')} in the College Board AP Chemistry framework.` : ''} Use it alongside your textbook to build hands-on intuition that goes beyond worked examples — seeing a simulation respond to your inputs reinforces conceptual understanding far more effectively than passive reading.
 
-All tools on TheChemSolver are 100% free with no account required, no time limits, and no paywalls. We believe quality chemistry education should be accessible to every student regardless of school resources. Whether you are preparing for the AP Chemistry exam in May, working through USNCO practice problems, or studying IChO preparatory materials, these simulators are designed to complement — not replace — rigorous study with textbooks and past exam papers.
+All tools on TheChemSolver are free to use, with no time limits and no paywalls. We believe quality chemistry education should be accessible to every student regardless of school resources. Whether you are preparing for the AP Chemistry exam in May, working through USNCO practice problems, or studying IChO preparatory materials, these simulators are designed to complement — not replace — rigorous study with textbooks and past exam papers.
 
 The interactive format is particularly valuable for topics that are hard to visualize from static diagrams alone. Experiment freely: change parameters, observe the system's response, and build the kind of physical intuition that separates top scorers from average performers on high-stakes chemistry exams.`
 }

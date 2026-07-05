@@ -173,7 +173,7 @@ export default function LabSEOShell({ slug, children }: { slug: string; children
               )}
               <div className="mt-3">
                 <div className="text-xs text-green-400 font-semibold mb-1">Access</div>
-                <div className="text-xs text-gray-400">100% free · No account · No time limit</div>
+                <div className="text-xs text-gray-400">Free · No time limit</div>
               </div>
             </div>
           </div>

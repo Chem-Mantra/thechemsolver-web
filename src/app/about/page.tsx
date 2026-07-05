@@ -24,8 +24,8 @@ export default function AboutPage() {
           <p>
             30+ interactive chemistry simulators (titration curves, equilibrium, kinetics, VSEPR,
             electrochemistry, quantum orbitals, and more), full interactive ebooks for AP Chemistry
-            and Organic Chemistry, and preparatory problem sets for USNCO and IChO — all free, with
-            no account, no paywall, and no time limit.
+            and Organic Chemistry, and preparatory problem sets for USNCO and IChO — all free to use,
+            with no paywall and no time limit.
           </p>
 
           <h2 className="text-lg font-bold text-white mt-8 mb-2">Why is it free?</h2>

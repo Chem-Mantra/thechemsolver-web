@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     'google-adsense-account': ADSENSE_CLIENT,
   },
   description:
-    'Free interactive chemistry simulators and practice tools for AP Chemistry, USNCO, and IChO students. 25+ labs, MCQ practice, FRQ viewer, and IChO prep problems. No login required.',
+    'Free interactive chemistry simulators and practice tools for AP Chemistry, USNCO, and IChO students. 25+ labs, MCQ practice, FRQ viewer, and IChO prep problems.',
   keywords: [
     'AP Chemistry tools free',
     'USNCO practice',
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'TheChemSolver — Free Chemistry Tools',
-    description: 'Interactive simulators for AP Chemistry, USNCO, and IChO. Free, no account needed.',
+    description: 'Interactive simulators for AP Chemistry, USNCO, and IChO.',
     url: 'https://www.thechemsolver.com',
     siteName: 'TheChemSolver',
     locale: 'en_US',
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'TheChemSolver — Free Chemistry Tools',
-    description: 'Interactive simulators for AP, USNCO, and IChO. Free forever.',
+    description: 'Interactive simulators for AP, USNCO, and IChO.',
   },
   robots: { index: true, follow: true },
 }

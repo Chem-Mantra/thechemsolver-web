@@ -22,11 +22,12 @@ export default function TermsPage() {
             agree, please don't use the site.
           </p>
 
-          <h2 className="text-lg font-bold text-white mt-8 mb-2">Free service, no account required</h2>
+          <h2 className="text-lg font-bold text-white mt-8 mb-2">Free service, optional account</h2>
           <p>
-            All simulators, ebooks, and practice tools on this site are provided free of charge, with
-            no account or payment required. We reserve the right to modify, suspend, or discontinue
-            any tool or feature at any time.
+            All simulators, ebooks, and practice tools on this site are provided free of charge to
+            every visitor, whether signed in or not. Signing in with Google is optional, and lets you
+            purchase an optional ad-free upgrade (see Payments below). We reserve the right to modify,
+            suspend, or discontinue any tool or feature at any time.
           </p>
 
           <h2 className="text-lg font-bold text-white mt-8 mb-2">Educational use only</h2>
@@ -57,6 +58,14 @@ export default function TermsPage() {
           <p>
             This site displays third-party advertising served through Google AdSense. We are not
             responsible for the content of ads shown by our advertising partners.
+          </p>
+
+          <h2 className="text-lg font-bold text-white mt-8 mb-2">Payments</h2>
+          <p>
+            Signed-in users may optionally purchase Ad-Free access for one year. Payments are
+            processed securely via Razorpay; we do not store your card details. This is a one-time
+            payment for one year of ad-free access, not an auto-renewing subscription — ads return
+            automatically once that year expires, with no further charge, unless you purchase again.
           </p>
 
           <h2 className="text-lg font-bold text-white mt-8 mb-2">Changes to these terms</h2>

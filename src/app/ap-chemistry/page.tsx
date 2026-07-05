@@ -8,7 +8,7 @@ const AP_BLUE = '#3b82f6'
 
 export const metadata: Metadata = {
   title: 'AP Chemistry — Free Prep Hub, Real Exam Data & Tools',
-  description: 'Free AP Chemistry prep on TheChemSolver. Real topic-frequency data from 361 official exam questions, interactive ebook for Units 1–9, 30+ simulators mapped to AP units, and MCQ/FRQ practice sets. No login required.',
+  description: 'Free AP Chemistry prep on TheChemSolver. Real topic-frequency data from 361 official exam questions, interactive ebook for Units 1–9, 30+ simulators mapped to AP units, and MCQ/FRQ practice sets.',
   alternates: { canonical: 'https://www.thechemsolver.com/ap-chemistry' },
   openGraph: {
     title: 'AP Chemistry Prep — Simulations, Ebook & Tests',
@@ -95,7 +95,7 @@ export default function APChemistryPage() {
           AP Chemistry
         </h1>
         <p className="text-gray-400 max-w-xl mb-8 leading-relaxed text-sm">
-          Everything you need in one place — an interactive ebook for all 9 units, 30+ simulators, and exam-style practice. All free, no login required.
+          Everything you need in one place — an interactive ebook for all 9 units, 30+ simulators, and exam-style practice. All free to use.
         </p>
 
         {/* Exam format chips */}

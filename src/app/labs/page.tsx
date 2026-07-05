@@ -69,7 +69,7 @@ export default function USLabsPage() {
     <div className="max-w-5xl mx-auto px-5 py-16">
       <div className="mb-10">
         <h1 className="text-3xl font-bold mb-2">All Free Chemistry Tools</h1>
-        <p className="text-gray-400">Every tool is free — no login, no account required</p>
+        <p className="text-gray-400">Every tool is free to use</p>
       </div>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
         {ALL_TOOLS.map(tool => (
