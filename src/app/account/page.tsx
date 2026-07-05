@@ -3,14 +3,13 @@
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { signInWithGoogle } from '@/lib/googleAuth'
+import { openRazorpayCheckout } from '@/lib/razorpayCheckout'
+import { AD_FREE_PRICE_USD, formatAdFreeChargeAmount } from '@/lib/pricing'
 import { useAuth } from '../AuthProvider'
 import GoogleIcon from '../components/GoogleIcon'
 
-// Monetization is paused for now — everything on TheChemSolver is free,
-// including inside the native app. This page just offers Google sign-in.
-// To bring back the $15/year ad-free purchase later, see docs/RAZORPAY_SETUP.md.
 export default function AccountPage() {
-  const { user, loading } = useAuth()
+  const { user, session, loading, premium, refreshPremium } = useAuth()
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -21,6 +20,20 @@ export default function AccountPage() {
       await signInWithGoogle()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not sign in with Google.')
+      setBusy(false)
+    }
+  }
+
+  async function handleGoAdFree() {
+    if (!session) return
+    setBusy(true)
+    setError(null)
+    try {
+      await openRazorpayCheckout(session.access_token)
+      await refreshPremium()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not complete checkout.')
+    } finally {
       setBusy(false)
     }
   }
@@ -57,9 +70,36 @@ export default function AccountPage() {
       <h1 className="text-xl font-bold mb-1">Your account</h1>
       <p className="text-sm text-gray-400 mb-6">{user.email}</p>
 
-      <div className="bg-white/5 border border-white/10 rounded-xl p-5">
-        <p className="text-sm text-gray-300">Everything on TheChemSolver is free right now — enjoy!</p>
-      </div>
+      {error && <p className="text-red-400 text-xs mb-3">{error}</p>}
+
+      {premium.loading ? (
+        <div className="bg-white/5 border border-white/10 rounded-xl p-5">
+          <p className="text-sm text-gray-300">Checking your plan…</p>
+        </div>
+      ) : premium.isPremium ? (
+        <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-5">
+          <p className="text-sm font-semibold text-purple-300 mb-1">✓ Ad-free</p>
+          <p className="text-xs text-gray-400">
+            {premium.expiresAt && `Active until ${new Date(premium.expiresAt).toLocaleDateString()}`}
+          </p>
+        </div>
+      ) : (
+        <div className="bg-white/5 border border-white/10 rounded-xl p-5">
+          <p className="text-sm font-semibold text-white mb-1">Go ad-free</p>
+          <p className="text-xs text-gray-400 mb-4">
+            Support the project — ${AD_FREE_PRICE_USD} for a full year, no ads anywhere on the site.
+          </p>
+          <button
+            onClick={handleGoAdFree} disabled={busy}
+            className="w-full bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white text-sm font-semibold rounded-lg px-4 py-3 transition-colors"
+          >
+            {busy ? 'Please wait…' : `Go ad-free — $${AD_FREE_PRICE_USD}/yr`}
+          </button>
+          <p className="text-[10px] text-gray-500 mt-2 text-center">
+            Charged as {formatAdFreeChargeAmount()} at checkout (incl. payment processing fee)
+          </p>
+        </div>
+      )}
 
       <button onClick={handleSignOut} className="text-xs text-gray-400 hover:text-white mt-6 underline">
         Sign out

@@ -5,13 +5,14 @@ import CapacitorNative from './CapacitorNative'
 import RegisterServiceWorker from './RegisterServiceWorker'
 import { AuthProvider } from './AuthProvider'
 import AdsGate from './AdsGate'
+import AdFreePopup from './AdFreePopup'
 import AuthCallbackListener from './AuthCallbackListener'
 import { Analytics } from '@vercel/analytics/next'
-// Monetization is paused for now — everything is free, including inside
-// the native app. Google sign-in (AuthProvider, AuthCallbackListener,
-// /account) stays active. To re-enable the paywall later: re-import and
-// re-wrap with NativeAccessGate, and re-add <AdFreePopup /> below — see
-// docs/RAZORPAY_SETUP.md.
+// The $15/year ad-free purchase is live (website only — see AdFreePopup.tsx
+// for why the native app never shows it). NativeAccessGate (a full-app
+// paywall for the native build) stays unmounted — that's a materially
+// different, higher-risk pattern under App Store guidelines, unrelated to
+// this website ad-removal feature; see docs/RAZORPAY_SETUP.md.
 
 const ADSENSE_CLIENT = 'ca-pub-4376919875096457'
 
@@ -84,6 +85,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <CapacitorNative />
           <AuthCallbackListener />
           <NavWrapper>{children}</NavWrapper>
+          <AdFreePopup />
           <Analytics />
           <RegisterServiceWorker />
           <AdsGate client={ADSENSE_CLIENT} />

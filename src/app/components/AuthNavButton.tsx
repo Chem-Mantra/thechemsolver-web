@@ -37,7 +37,8 @@ export default function AuthNavButton({ variant = 'nav' }: { variant?: 'nav' | '
     setBusy(true)
     try {
       await signInWithGoogle()
-    } catch {
+    } catch (err) {
+      console.error('Google sign-in failed:', err)
       setBusy(false)
     }
   }

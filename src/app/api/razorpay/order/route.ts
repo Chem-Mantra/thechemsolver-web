@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { razorpay, PAYMENT_CURRENCY, PAYMENT_AMOUNT_USD } from '@/lib/razorpay'
+import { razorpay, PAYMENT_CURRENCY, PAYMENT_AMOUNT_MINOR_UNITS } from '@/lib/razorpay'
 
 // Creates a Razorpay order for the signed-in user. The website is the only
 // caller — the native app never initiates a purchase; see
@@ -24,8 +24,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Sign in required.' }, { status: 401 })
   }
 
-  // Smallest currency unit — cents for USD, paise for INR.
-  const amount = PAYMENT_AMOUNT_USD * 100
+  const amount = PAYMENT_AMOUNT_MINOR_UNITS
 
   try {
     const order = await razorpay.orders.create({
