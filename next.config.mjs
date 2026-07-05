@@ -22,10 +22,18 @@ const nextConfig = {
 
   async redirects() {
     // These /strategy pages were merged directly into their exam hub pages.
+    // The /labs/organic-* ones were renamed slugs — previously handled with
+    // client-side `router.replace()` stub pages, which Search Console flagged
+    // as "Page with redirect" / "Duplicate without user-selected canonical"
+    // (a JS-driven redirect is a much weaker signal to crawlers than a real
+    // HTTP redirect, and the stub page itself had no canonical tag).
     return [
       { source: '/usnco/strategy',             destination: '/usnco',             permanent: true },
       { source: '/icho/strategy',              destination: '/icho',              permanent: true },
       { source: '/organic-chemistry/strategy', destination: '/organic-chemistry', permanent: true },
+      { source: '/labs/organic-sequence',           destination: '/labs/organic-mechanism', permanent: true },
+      { source: '/labs/organic-mechanism-sequence', destination: '/labs/mechanisms',        permanent: true },
+      { source: '/labs/organic-stereo',             destination: '/labs/stereochemistry',   permanent: true },
     ]
   },
 

@@ -4,6 +4,7 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'All Chemistry Tools — TheChemSolver',
   description: 'Free chemistry tools and virtual labs for AP Chemistry, Organic Chemistry, and IChO. Titration, equilibrium, VSEPR, IUPAC, kinetics, quantum, and more.',
+  alternates: { canonical: 'https://www.thechemsolver.com/labs' },
 }
 
 const ALL_TOOLS = [
