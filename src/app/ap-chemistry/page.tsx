@@ -3,6 +3,7 @@ import Link from 'next/link'
 import EmailCaptureForm from '../components/EmailCaptureForm'
 import TopicBarChart from '../components/TopicBarChart'
 import { AP_OFFICIAL_MCQ, AP_OFFICIAL_FRQ } from '@/data/examTopicFrequency'
+import { AP_UNITS } from '@/data/apUnits'
 
 const AP_BLUE = '#3b82f6'
 
@@ -66,18 +67,6 @@ const GATEWAY = [
     badge: 'Coming soon',
     badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
   },
-]
-
-const AP_UNITS = [
-  { n: '1', name: 'Atomic Structure & Properties', weight: '7–9%' },
-  { n: '2', name: 'Compound Structure & Properties', weight: '7–9%' },
-  { n: '3', name: 'Properties of Substances & Mixtures', weight: '18–22%' },
-  { n: '4', name: 'Chemical Reactions', weight: '7–9%' },
-  { n: '5', name: 'Kinetics', weight: '7–9%' },
-  { n: '6', name: 'Thermochemistry', weight: '7–9%' },
-  { n: '7', name: 'Equilibrium', weight: '7–9%' },
-  { n: '8', name: 'Acids & Bases', weight: '11–15%' },
-  { n: '9', name: 'Thermodynamics & Electrochemistry', weight: '7–9%' },
 ]
 
 export default function APChemistryPage() {
