@@ -31,7 +31,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return
     }
     // premium_access RLS policy restricts this to the caller's own row —
-    // see docs/RAZORPAY_SETUP.md for the exact SQL.
+    // see docs/PAYPAL_SETUP.md for the exact SQL.
     const { data } = await supabase.from('premium_access').select('expires_at').eq('user_id', userId).maybeSingle()
     const expiresAt = (data as { expires_at: string } | null)?.expires_at ?? null
     const isPremium = !!expiresAt && new Date(expiresAt).getTime() > Date.now()

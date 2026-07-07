@@ -1,23 +1,14 @@
-// Ad-Free plan pricing — grosses up the advertised $15/year price so that,
-// after Razorpay's international transaction fee (+ GST charged on that fee),
-// TheChemSolver still nets $15 per sale. Students see "$15" as the
-// advertised price; the actual checkout amount is slightly higher to absorb
-// these deductions automatically. All math is done in cents (integers) to
-// avoid floating-point rounding issues with real money.
+// Ad-Free plan pricing — checkout runs through a PayPal payment link/button
+// (see docs/PAYPAL_SETUP.md), which has a fixed amount set on PayPal's side.
+// Students see "$15" as the advertised price; $15.76 is what the PayPal
+// button is actually configured to charge (absorbs PayPal's processing
+// fee so the project nets $15). Keep these two numbers in sync with
+// whatever the PayPal button/link is actually set to charge.
 
 export const AD_FREE_PRICE_USD = 15 // advertised/net price, in whole dollars
+export const AD_FREE_CHARGE_USD = 15.76 // actual amount charged by the PayPal button
 
-const RAZORPAY_INTL_FEE_RATE = 0.03 // Razorpay's international-card transaction fee
-const GST_ON_FEE_RATE = 0.18        // GST charged on the Razorpay fee itself (not the sale price)
-const DEDUCTION_RATE = RAZORPAY_INTL_FEE_RATE * (1 + GST_ON_FEE_RATE)
-
-/** Amount actually charged at checkout, in cents — the smallest USD unit Razorpay expects. */
-export function getAdFreeChargeAmountCents(): number {
-  const netCents = AD_FREE_PRICE_USD * 100
-  return Math.ceil(netCents / (1 - DEDUCTION_RATE))
-}
-
-/** Same amount, formatted for display (e.g. "$15.56"). */
+/** Same amount, formatted for display (e.g. "$15.76"). */
 export function formatAdFreeChargeAmount(): string {
-  return `$${(getAdFreeChargeAmountCents() / 100).toFixed(2)}`
+  return `$${AD_FREE_CHARGE_USD.toFixed(2)}`
 }

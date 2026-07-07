@@ -4,14 +4,14 @@ import { useEffect, useState } from 'react'
 import { Capacitor } from '@capacitor/core'
 import { useAuth } from './AuthProvider'
 import { signInWithGoogle } from '@/lib/googleAuth'
-import { openRazorpayCheckout } from '@/lib/razorpayCheckout'
+import PayPalButton from './PayPalButton'
 import { AD_FREE_PRICE_USD, formatAdFreeChargeAmount } from '@/lib/pricing'
 
 const DISMISS_KEY = 'adfree-popup-dismissed-until'
 const DISMISS_DAYS = 7
 
 export default function AdFreePopup() {
-  const { user, session, premium, refreshPremium } = useAuth()
+  const { user, session, premium } = useAuth()
   const [dismissed, setDismissed] = useState(true) // start hidden until we've checked localStorage, avoids a flash
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -34,19 +34,13 @@ export default function AdFreePopup() {
     setDismissed(true)
   }
 
-  async function handleGoAdFree() {
+  async function handleSignIn() {
     setBusy(true)
     setError(null)
     try {
-      if (!user || !session) {
-        // Not signed in yet — sign in first, then land back here to finish.
-        await signInWithGoogle()
-        return
-      }
-      await openRazorpayCheckout(session.access_token)
-      await refreshPremium()
+      await signInWithGoogle()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not start checkout.')
+      setError(err instanceof Error ? err.message : 'Could not sign in with Google.')
     } finally {
       setBusy(false)
     }
@@ -72,14 +66,18 @@ export default function AdFreePopup() {
         Support the project — ${AD_FREE_PRICE_USD}, ad-free access for a full year.
       </p>
       {error && <p className="text-red-400 text-[11px] mb-2">{error}</p>}
-      <button
-        type="button"
-        onClick={handleGoAdFree}
-        disabled={busy}
-        className="inline-block bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white text-xs font-semibold px-3 py-2 rounded-lg transition-colors"
-      >
-        {busy ? 'Please wait…' : `Go ad-free — $${AD_FREE_PRICE_USD}/yr →`}
-      </button>
+      {!user || !session ? (
+        <button
+          type="button"
+          onClick={handleSignIn}
+          disabled={busy}
+          className="inline-block bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white text-xs font-semibold px-3 py-2 rounded-lg transition-colors"
+        >
+          {busy ? 'Please wait…' : 'Sign in with Google to continue →'}
+        </button>
+      ) : (
+        <PayPalButton />
+      )}
       <p className="text-[10px] text-gray-500 mt-2">
         Charged as {formatAdFreeChargeAmount()} at checkout (incl. payment processing fee)
       </p>

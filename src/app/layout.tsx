@@ -12,7 +12,7 @@ import { Analytics } from '@vercel/analytics/next'
 // for why the native app never shows it). NativeAccessGate (a full-app
 // paywall for the native build) stays unmounted — that's a materially
 // different, higher-risk pattern under App Store guidelines, unrelated to
-// this website ad-removal feature; see docs/RAZORPAY_SETUP.md.
+// this website ad-removal feature; see docs/PAYPAL_SETUP.md.
 
 const ADSENSE_CLIENT = 'ca-pub-4376919875096457'
 

@@ -6,7 +6,7 @@ const anon = process.env.NEXT_PUBLIC_THECHEMSOLVER_SUPABASE_ANON_KEY!
 // Browser-safe client (anon key, used in client components and API routes).
 // PKCE flow is required for the native app's Google sign-in: the OAuth
 // redirect returns a `code` via a custom URL scheme deep link, exchanged
-// for a session in AuthCallbackListener.tsx — see docs/RAZORPAY_SETUP.md.
+// for a session in AuthCallbackListener.tsx — see docs/PAYPAL_SETUP.md.
 export const supabase = createClient(url, anon, {
   auth: { flowType: 'pkce' },
 })

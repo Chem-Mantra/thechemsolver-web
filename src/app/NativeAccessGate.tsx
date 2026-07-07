@@ -13,7 +13,7 @@ import { useAuth } from './AuthProvider'
  * renders `children` once the signed-in account is confirmed premium.
  *
  * This is a deliberately stricter pattern than the website's ads-only
- * gating — see docs/RAZORPAY_SETUP.md for the App Store risk tradeoff.
+ * gating — see docs/PAYPAL_SETUP.md for the App Store risk tradeoff.
  */
 export default function NativeAccessGate({ children }: { children: React.ReactNode }) {
   const { user, loading, premium, refreshPremium } = useAuth()

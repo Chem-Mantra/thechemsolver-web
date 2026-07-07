@@ -63,7 +63,7 @@ export default function TermsPage() {
           <h2 className="text-lg font-bold text-white mt-8 mb-2">Payments</h2>
           <p>
             Signed-in users may optionally purchase Ad-Free access for one year. Payments are
-            processed securely via Razorpay; we do not store your card details. This is a one-time
+            processed securely via PayPal; we do not store your card or PayPal details. This is a one-time
             payment for one year of ad-free access, not an auto-renewing subscription — ads return
             automatically once that year expires, with no further charge, unless you purchase again.
           </p>

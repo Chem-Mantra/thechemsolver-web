@@ -6,7 +6,7 @@ import { supabase } from './supabase'
 // Must match the custom URL scheme registered in capacitor.config.ts,
 // ios/App/App/Info.plist, and android/app/src/main/AndroidManifest.xml —
 // and must be added to Supabase's Auth → URL Configuration → Redirect URLs
-// allowlist (see docs/RAZORPAY_SETUP.md).
+// allowlist (see docs/PAYPAL_SETUP.md).
 export const NATIVE_AUTH_REDIRECT = 'com.thechemsolver.app://auth-callback'
 
 /**

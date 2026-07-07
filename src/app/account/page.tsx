@@ -3,13 +3,13 @@
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { signInWithGoogle } from '@/lib/googleAuth'
-import { openRazorpayCheckout } from '@/lib/razorpayCheckout'
+import PayPalButton from '../PayPalButton'
 import { AD_FREE_PRICE_USD, formatAdFreeChargeAmount } from '@/lib/pricing'
 import { useAuth } from '../AuthProvider'
 import GoogleIcon from '../components/GoogleIcon'
 
 export default function AccountPage() {
-  const { user, session, loading, premium, refreshPremium } = useAuth()
+  const { user, session, loading, premium } = useAuth()
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -20,20 +20,6 @@ export default function AccountPage() {
       await signInWithGoogle()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not sign in with Google.')
-      setBusy(false)
-    }
-  }
-
-  async function handleGoAdFree() {
-    if (!session) return
-    setBusy(true)
-    setError(null)
-    try {
-      await openRazorpayCheckout(session.access_token)
-      await refreshPremium()
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not complete checkout.')
-    } finally {
       setBusy(false)
     }
   }
@@ -89,14 +75,11 @@ export default function AccountPage() {
           <p className="text-xs text-gray-400 mb-4">
             Support the project — ${AD_FREE_PRICE_USD} for a full year, no ads anywhere on the site.
           </p>
-          <button
-            onClick={handleGoAdFree} disabled={busy}
-            className="w-full bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white text-sm font-semibold rounded-lg px-4 py-3 transition-colors"
-          >
-            {busy ? 'Please wait…' : `Go ad-free — $${AD_FREE_PRICE_USD}/yr`}
-          </button>
+          <PayPalButton />
           <p className="text-[10px] text-gray-500 mt-2 text-center">
-            Charged as {formatAdFreeChargeAmount()} at checkout (incl. payment processing fee)
+            Charged as {formatAdFreeChargeAmount()} at checkout (incl. payment processing fee). Pay with the
+            same email as your Google sign-in — access unlocks automatically within a minute, and you&apos;ll
+            get an email confirmation.
           </p>
         </div>
       )}
