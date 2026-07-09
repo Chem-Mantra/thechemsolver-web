@@ -90,7 +90,68 @@ function chapterFrqToProblem(r: ChapterFRQRow): FRQProblem {
   }
 }
 
-type Mode = 'year' | 'chapter'
+// ── "Practice Exams by Year" types + row mappers (2012-2019 official set) ──
+
+interface ExamYear {
+  year: number
+  mcq_count: number
+  frq_count: number
+}
+
+interface ExamMCQRow {
+  id: number
+  question_number: number
+  stem: string
+  options: { A: string; B: string; C: string; D: string }
+  correct_answer: 'A' | 'B' | 'C' | 'D'
+  topic: string
+  subtopic: string | null
+  has_visual: boolean
+  image_url: string | null
+  year: number
+}
+
+interface ExamFRQRow {
+  id: number
+  problem_number: number
+  frq_type: string
+  context: string
+  parts: FRQPart[]
+  total_points: number | null
+  topic: string
+  has_visual: boolean
+  image_url: string | null
+  year: number
+}
+
+function examMcqToQuestion(r: ExamMCQRow): MCQQuestion {
+  return {
+    id: r.id,
+    stem: r.stem,
+    options: r.options,
+    answer: r.correct_answer,
+    unit: r.topic,
+    has_visual: r.has_visual,
+    image_url: r.image_url ?? undefined,
+  }
+}
+
+function examFrqToProblem(r: ExamFRQRow): FRQProblem {
+  return {
+    id: r.id,
+    year: r.year,
+    number: r.problem_number,
+    type: (r.frq_type === 'LEQ' ? 'LEQ' : 'SAQ') as 'LEQ' | 'SAQ',
+    total_points: r.total_points ?? (r.frq_type === 'LEQ' ? 10 : 4),
+    context: r.context ?? '',
+    parts: r.parts ?? [],
+    has_visual: r.has_visual,
+    image_url: r.image_url ?? undefined,
+    source: `AP Chemistry ${r.year} Official Practice Exam`,
+  }
+}
+
+type Mode = 'year' | 'exam' | 'chapter'
 
 export default function APPracticePage() {
   const [mode, setMode] = useState<Mode>('year')
@@ -162,7 +223,44 @@ export default function APPracticePage() {
       .finally(() => setChLoading(false))
   }, [selectedUnit])
 
+  // ── "Practice Exams by Year" state ─────────────────────────────────────
+  const [examYears, setExamYears]     = useState<ExamYear[]>([])
+  const [selectedExamYear, setExamYear] = useState<number | null>(null)
+  const [exSection, setExSection]     = useState<'mcq' | 'frq'>('mcq')
+  const [exStarted, setExStarted]     = useState(false)
+  const [exMcqQs, setExMcqQs]         = useState<MCQQuestion[]>([])
+  const [exFrqPs, setExFrqPs]         = useState<FRQProblem[]>([])
+  const [exLoading, setExLoading]     = useState(false)
+  const [exError, setExError]         = useState<string | null>(null)
+
+  useEffect(() => {
+    if (mode !== 'exam') return
+    fetch('/api/ap/official-years')
+      .then(r => r.json())
+      .then((data: ExamYear[]) => setExamYears(data))
+      .catch(() => setExError('Failed to load exam years'))
+  }, [mode])
+
+  useEffect(() => {
+    if (selectedExamYear === null) return
+    setExStarted(false)
+    setExLoading(true)
+    setExError(null)
+    Promise.all([
+      fetch(`/api/ap/official-years/${selectedExamYear}?type=mcq`).then(r => r.json()),
+      fetch(`/api/ap/official-years/${selectedExamYear}?type=frq`).then(r => r.json()),
+    ])
+      .then(([mcqData, frqData]: [ExamMCQRow[], ExamFRQRow[]]) => {
+        setExMcqQs(mcqData.map(examMcqToQuestion))
+        setExFrqPs(frqData.map(examFrqToProblem))
+        setExSection(mcqData.length > 0 ? 'mcq' : 'frq')
+      })
+      .catch(() => setExError('Failed to load questions for this year'))
+      .finally(() => setExLoading(false))
+  }, [selectedExamYear])
+
   const selectedUnitInfo = units.find(u => u.n === selectedUnit)
+  const selectedExamYearInfo = examYears.find(y => y.year === selectedExamYear)
 
   // ── Exam-mode renders ───────────────────────────────────────────────────
 
@@ -194,6 +292,25 @@ export default function APPracticePage() {
     )
   }
 
+  if (exStarted && exSection === 'mcq' && exMcqQs.length > 0) {
+    return (
+      <MCQExam
+        questions={exMcqQs}
+        examName={`AP Chemistry ${selectedExamYear} Practice Exam — Section I`}
+        mode="practice"
+        onExit={() => setExStarted(false)}
+      />
+    )
+  }
+  if (exStarted && exSection === 'frq' && exFrqPs.length > 0) {
+    return (
+      <FRQViewer
+        problems={exFrqPs}
+        examLabel={`AP Chemistry ${selectedExamYear} Practice Exam — Section II Free Response`}
+      />
+    )
+  }
+
   return (
     <div className="min-h-screen bg-[#060610] text-white flex flex-col items-center px-4 py-12">
       <div className="w-full max-w-lg">
@@ -211,6 +328,13 @@ export default function APPracticePage() {
               mode === 'year' ? 'text-blue-300 border-blue-500' : 'border-transparent text-gray-500 hover:text-white'
             }`}>
             By Year
+          </button>
+          <button
+            onClick={() => setMode('exam')}
+            className={`px-4 py-2.5 text-sm font-semibold border-b-2 transition-colors -mb-px ${
+              mode === 'exam' ? 'text-blue-300 border-blue-500' : 'border-transparent text-gray-500 hover:text-white'
+            }`}>
+            Practice Exams
           </button>
           <button
             onClick={() => setMode('chapter')}
@@ -291,6 +415,74 @@ export default function APPracticePage() {
               className="mt-5 w-full py-4 bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed rounded-2xl font-bold text-lg transition-colors">
               {loading ? 'Loading…' : `Start ${section === 'mcq' ? 'Section I — MCQ' : `Section II FRQ ${selectedYear}`} →`}
             </button>
+          </>
+        )}
+
+        {mode === 'exam' && (
+          <>
+            {selectedExamYear === null ? (
+              <>
+                <p className="text-center text-sm text-gray-500 mb-5">
+                  Full official practice exams (2012–2019) — real MCQ + FRQ sections, pick a year.
+                </p>
+                <div className="grid gap-2">
+                  {examYears.map(y => {
+                    const total = y.mcq_count + y.frq_count
+                    return (
+                      <button
+                        key={y.year}
+                        onClick={() => setExamYear(y.year)}
+                        disabled={total === 0}
+                        className="flex items-center gap-3 rounded-xl bg-white/[0.03] border border-white/10 px-4 py-3 text-left hover:border-blue-500/40 hover:bg-blue-600/5 disabled:opacity-30 disabled:cursor-not-allowed transition-all">
+                        <span className="text-xs font-bold text-blue-400 shrink-0 w-14">{y.year}</span>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium text-white truncate">AP Chemistry {y.year} Practice Exam</p>
+                        </div>
+                        <span className="text-xs text-gray-500 shrink-0">
+                          {y.mcq_count} MCQ · {y.frq_count} FRQ
+                        </span>
+                      </button>
+                    )
+                  })}
+                </div>
+                {exError && <div className="mt-4 text-red-400 text-sm text-center">{exError}</div>}
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => setExamYear(null)}
+                  className="text-sm text-gray-500 hover:text-white transition-colors mb-5 inline-block">
+                  ← All years
+                </button>
+                <h2 className="text-lg font-bold mb-5">AP Chemistry {selectedExamYearInfo?.year} Practice Exam</h2>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className={`border rounded-2xl p-6 cursor-pointer transition-all ${exSection === 'mcq' ? 'border-blue-500/50 bg-blue-600/10' : 'border-white/10 hover:border-white/20'} ${exMcqQs.length === 0 ? 'opacity-30 pointer-events-none' : ''}`}
+                    onClick={() => setExSection('mcq')}>
+                    <div className="font-bold mb-1">Section I — MCQ</div>
+                    <div className="text-sm text-gray-400">
+                      {exLoading ? 'Loading…' : `${exMcqQs.length} questions`}
+                    </div>
+                  </div>
+                  <div className={`border rounded-2xl p-6 cursor-pointer transition-all ${exSection === 'frq' ? 'border-blue-500/50 bg-blue-600/10' : 'border-white/10 hover:border-white/20'} ${exFrqPs.length === 0 ? 'opacity-30 pointer-events-none' : ''}`}
+                    onClick={() => setExSection('frq')}>
+                    <div className="font-bold mb-1">Section II — FRQ</div>
+                    <div className="text-sm text-gray-400">
+                      {exLoading ? 'Loading…' : `${exFrqPs.length} problems`}
+                    </div>
+                  </div>
+                </div>
+
+                {exError && <div className="mt-4 text-red-400 text-sm text-center">{exError}</div>}
+
+                <button
+                  disabled={exLoading || (exSection === 'mcq' ? exMcqQs.length === 0 : exFrqPs.length === 0)}
+                  onClick={() => setExStarted(true)}
+                  className="mt-5 w-full py-4 bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed rounded-2xl font-bold text-lg transition-colors">
+                  {exLoading ? 'Loading…' : `Start ${exSection === 'mcq' ? 'Section I — MCQ' : 'Section II — FRQ'} →`}
+                </button>
+              </>
+            )}
           </>
         )}
 
