@@ -18,6 +18,12 @@ const nextConfig = {
       { protocol: 'https', hostname: 'storage.googleapis.com' },
       { protocol: 'https', hostname: '*.googleusercontent.com' }, // Google account avatars
     ],
+    // Supabase Storage's public object endpoint always sends `cache-control:
+    // no-cache` regardless of upload metadata, forcing a revalidation round
+    // trip on every single image load. Question diagrams are immutable once
+    // published, so cache the optimizer's output for a year instead of the
+    // 60s default -- repeat views become instant from edge/browser cache.
+    minimumCacheTTL: 31536000,
   },
 
   async redirects() {

@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
+import NextImage from 'next/image'
 import ChemText from './ChemText'
 
 function ProblemImage({ src, alt }: { src: string; alt: string }) {
@@ -13,9 +14,12 @@ function ProblemImage({ src, alt }: { src: string; alt: string }) {
           <span className="text-xs text-gray-600">Loading diagram…</span>
         </div>
       )}
-      <img
+      <NextImage
         src={src} alt={alt}
+        width={900} height={675}
+        style={{ width: 'auto', height: 'auto', maxWidth: '100%' }}
         className={`max-h-72 rounded-xl border border-white/10 ${loaded ? 'block' : 'hidden'}`}
+        loading="lazy"
         onLoad={() => setLoaded(true)}
         onError={() => setError(true)}
       />

@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react'
+import Image from 'next/image'
 import ChemText from './ChemText'
 
 export interface MCQQuestion {
@@ -176,7 +177,11 @@ export default function MCQExam({ questions, examName, timeLimitSeconds = 6600, 
                   </span>
                 </div>
                 <ChemText text={q.stem} className="text-sm leading-relaxed mb-4 block" block />
-                {q.image_url && <img src={q.image_url} alt="Question diagram" className="max-h-48 mb-4 rounded-lg" />}
+                {q.image_url && (
+                  <Image src={q.image_url} alt="Question diagram" width={700} height={525}
+                    style={{ width: 'auto', height: 'auto', maxWidth: '100%' }}
+                    className="max-h-48 mb-4 rounded-lg" loading="lazy" />
+                )}
                 <div className="space-y-2">
                   {(['A', 'B', 'C', 'D'] as const).map(opt => {
                     const isCorrect = opt === q.answer
@@ -258,7 +263,9 @@ export default function MCQExam({ questions, examName, timeLimitSeconds = 6600, 
             {/* Stem */}
             <ChemText text={q.stem} className="text-base leading-relaxed mb-5 block" block />
             {q.image_url && (
-              <img src={q.image_url} alt="Diagram" className="max-h-64 mb-5 rounded-xl border border-white/10" />
+              <Image src={q.image_url} alt="Diagram" width={900} height={675}
+                style={{ width: 'auto', height: 'auto', maxWidth: '100%' }}
+                className="max-h-64 mb-5 rounded-xl border border-white/10" loading="lazy" />
             )}
 
             {/* Options */}
@@ -405,7 +412,9 @@ export default function MCQExam({ questions, examName, timeLimitSeconds = 6600, 
             {/* Stem */}
             <ChemText text={q.stem} className="text-base leading-relaxed mb-6 block" block />
             {q.image_url && (
-              <img src={q.image_url} alt="Diagram" className="max-h-64 mb-6 rounded-xl border border-white/10" />
+              <Image src={q.image_url} alt="Diagram" width={900} height={675}
+                style={{ width: 'auto', height: 'auto', maxWidth: '100%' }}
+                className="max-h-64 mb-6 rounded-xl border border-white/10" loading="lazy" />
             )}
 
             {/* Options */}
