@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 import ChemText from './ChemText'
+import RichText from './RichText'
 
 export interface MCQQuestion {
   id: number
@@ -203,7 +204,8 @@ export default function MCQExam({ questions, examName, timeLimitSeconds = 6600, 
                 </div>
                 {q.explanation && (
                   <div className="mt-4 bg-blue-900/20 border border-blue-700/30 rounded-xl p-4 text-xs text-blue-200 leading-relaxed">
-                    <span className="font-bold text-blue-400">Explanation: </span>{q.explanation}
+                    <span className="font-bold text-blue-400">Explanation: </span>
+                    <RichText text={q.explanation} />
                   </div>
                 )}
               </div>
@@ -317,7 +319,7 @@ export default function MCQExam({ questions, examName, timeLimitSeconds = 6600, 
                   </p>
                 )}
                 {q.explanation && (
-                  <p className="text-xs mt-2 text-blue-300 leading-relaxed">{q.explanation}</p>
+                  <RichText text={q.explanation} className="text-xs mt-2 text-blue-300 leading-relaxed" />
                 )}
               </div>
             )}

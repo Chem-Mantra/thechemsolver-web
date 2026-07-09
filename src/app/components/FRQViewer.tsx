@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import NextImage from 'next/image'
-import ChemText from './ChemText'
+import RichText from './RichText'
 
 function ProblemImage({ src, alt }: { src: string; alt: string }) {
   const [loaded, setLoaded] = useState(false)
@@ -124,7 +124,7 @@ export default function FRQViewer({ problems, examLabel }: Props) {
             {prob.context && (
               <div className="bg-white/[0.04] border border-white/10 rounded-2xl p-6 mb-6">
                 <div className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3">Given / Context</div>
-                <ChemText text={prob.context} className="text-sm leading-relaxed text-gray-200 whitespace-pre-line block" block />
+                <RichText text={prob.context} className="text-sm leading-relaxed text-gray-200" />
                 {prob.image_url && <ProblemImage src={prob.image_url} alt="Problem diagram" />}
               </div>
             )}
@@ -139,7 +139,7 @@ export default function FRQViewer({ problems, examLabel }: Props) {
                     </div>
                     <div className="flex-1">
                       <div className="flex items-start justify-between gap-3">
-                        <ChemText text={part.question} className="text-sm leading-relaxed block" block />
+                        <RichText text={part.question} className="text-sm leading-relaxed" />
                         <span className="text-xs text-gray-600 shrink-0 mt-0.5">{part.points} pt{part.points !== 1 ? 's' : ''}</span>
                       </div>
                       {part.image_url && <ProblemImage src={part.image_url} alt={`Part ${part.label} diagram`} />}
@@ -161,7 +161,7 @@ export default function FRQViewer({ problems, examLabel }: Props) {
                             <span className="text-xs font-bold text-green-400 uppercase tracking-widest">Model Answer</span>
                             <button onClick={() => toggleReveal(`${selected}-${pi}`)} className="text-[10px] text-gray-600 hover:text-gray-400">Hide</button>
                           </div>
-                          <ChemText text={part.model_answer} className="text-sm text-green-100 leading-relaxed whitespace-pre-line block" block />
+                          <RichText text={part.model_answer ?? ''} className="text-sm text-green-100 leading-relaxed" />
                         </div>
                       )}
                     </div>
