@@ -683,6 +683,447 @@ Elimination reactions (E1 and E2) compete with substitution. E2 is concerted: a 
 
 Electrophilic aromatic substitution (EAS) — halogenation, nitration, Friedel-Crafts — follows a two-step mechanism: electrophile attack forms an arenium ion (Wheland intermediate), then deprotonation restores aromaticity. This 3D mechanism viewer animates every step with curved arrows, helping you internalize the mechanistic logic rather than merely memorize reaction equations.`,
 
+  'ionic-equilibrium': `Buffer solutions resist changes in pH when small amounts of acid or base are added, making them essential in biological systems, industrial processes, and analytical chemistry. Understanding buffers requires connecting weak acid/base equilibrium to the Henderson-Hasselbalch equation, a core AP Chemistry Unit 8 topic and a recurring IChO calculation type.
+
+The Henderson-Hasselbalch equation, pH = pKa + log([A-]/[HA]), is derived directly from the Ka expression and lets you calculate buffer pH without solving a full ICE table every time. It reveals the key insight: when [A-] = [HA] (equal moles of acid and conjugate base), pH = pKa exactly — this is the center of the buffer region, where the buffer resists pH change most effectively.
+
+Buffer capacity — how much acid or base a buffer can absorb before its pH changes significantly — depends on the absolute concentrations of the acid/base pair, not just their ratio. A buffer made from 1 M acetic acid and 1 M acetate resists far more added strong acid than one made from 0.01 M concentrations, even though both start at the same pH.
+
+Salt hydrolysis explains why solutions of salts like NH4Cl or NaCH3COO are not neutral. The ammonium ion (conjugate acid of a weak base) hydrolyzes water to produce H3O+, making NH4Cl solutions acidic; acetate ion (conjugate base of a weak acid) hydrolyzes to produce OH-, making sodium acetate solutions basic. The common ion effect further suppresses ionization of a weak acid or base when its conjugate is already present in solution, a principle that directly explains why buffers work.
+
+This buffer and ionic equilibrium calculator lets you adjust acid/base concentrations, visualize the Henderson-Hasselbalch relationship in real time, and explore hydrolysis and common-ion scenarios — the exact calculation skill tested throughout AP Chemistry Unit 8 and IChO acid-base problems.`,
+
+  coordination: `Coordination compounds — complexes of a central metal ion surrounded by ligands — display distinctive colors, magnetic behavior, and reactivity that simple ionic bonding models cannot explain. Crystal field theory provides the electrostatic framework used throughout AP Chemistry, USNCO, and IChO to predict and explain these properties.
+
+When ligands approach a metal ion to form an octahedral complex, the five originally degenerate d orbitals split into two energy sets: a higher-energy eg set (dz² and dx²-y², pointing directly at the six ligands) and a lower-energy t2g set (dxy, dxz, dyz, pointing between ligands). The energy gap between them, the crystal field splitting parameter Δo, depends on both the ligand and the metal's oxidation state.
+
+Ligand field strength follows the spectrochemical series, roughly: I- < Br- < Cl- < F- < H2O < NH3 < en < CN- ≈ CO. Weak-field ligands produce a small Δo, favoring high-spin configurations where electrons occupy all five d orbitals singly before pairing (maximizing unpaired electrons, per Hund's rule). Strong-field ligands produce a large Δo large enough that electrons preferentially pair in the lower t2g set rather than jump the gap, giving low-spin configurations. Only d4 through d7 metal ions can actually show this high-spin/low-spin distinction — d1-d3 and d8-d10 configurations are unambiguous regardless of field strength.
+
+Color in coordination compounds arises because Δo often corresponds to a visible-light photon energy: an electron absorbs a photon to jump from t2g to eg, and the complex displays the complementary color of whatever wavelength was absorbed. Magnetic moment, measured experimentally, directly confirms the number of unpaired electrons predicted by the splitting diagram — a copper(II) complex with one unpaired d9 electron is paramagnetic, while a low-spin d6 complex like [Fe(CN)6]4- is diamagnetic.
+
+This crystal field simulator builds d-orbital splitting diagrams for any metal-ligand combination, calculates crystal field stabilization energy, and predicts high-spin versus low-spin behavior and magnetic moment — the complete coordination chemistry toolkit for IChO and advanced AP Chemistry preparation.`,
+
+  'radial-probability': `The radial probability distribution function answers a deceptively subtle question: at what distance from the nucleus is an electron most likely to be found? This IChO-level quantum chemistry topic goes beyond the simple orbital-shape pictures taught in introductory courses and requires distinguishing the wave function ψ(r) from the probability density ψ²(r)4πr².
+
+The wave function ψ(r) itself is largest at the nucleus for an s orbital — but that does not mean the electron is most likely to be found there. The radial probability distribution multiplies |ψ(r)|² by the volume of a thin spherical shell at radius r, which is proportional to 4πr². Near the nucleus this shell volume is nearly zero, so even though ψ² is large there, the probability of finding the electron in that vanishingly thin shell is also near zero. The most probable radius for a 1s electron in hydrogen turns out to be exactly one Bohr radius (52.9 pm), not r = 0.
+
+Radial nodes — spherical surfaces where the probability of finding the electron is exactly zero — occur where the radial wave function changes sign. The number of radial nodes for any orbital equals n - l - 1. A 1s orbital (n=1, l=0) has zero radial nodes; a 2s orbital (n=2, l=0) has one; a 3p orbital (n=3, l=1) has one as well. Counting nodes correctly is a frequent source of error on IChO quantum problems, especially distinguishing radial nodes from angular nodes (which depend only on l).
+
+Comparing radial distributions across orbitals reveals orbital penetration: a 3s electron, despite having higher average energy than a 3p or 3d electron, has significant probability density very close to the nucleus due to an inner lobe — this penetration effect is what causes the 4s orbital to fill before 3d in multi-electron atoms, explaining several periodic table exceptions.
+
+This radial probability simulator plots ψ(r) and ψ²(r)4πr² side by side for any hydrogen orbital from 1s through 4f, letting you directly see node positions, most probable radius, and orbital penetration — visualizations rarely available outside advanced physical chemistry coursework.`,
+
+  'atomic-evolution': `The hydrogen atom's emission spectrum was the experimental result that forced physicists to abandon classical mechanics and accept quantized energy levels — a foundational story in AP Chemistry Unit 1 and a frequent IChO atomic structure topic.
+
+When an electron in a hydrogen atom drops from a higher energy level ni to a lower one nf, it emits a photon with energy exactly equal to the difference between those two quantized levels. The Rydberg formula, 1/λ = R∞(1/nf² - 1/ni²), where R∞ = 1.097 × 10^7 m⁻¹, predicts the exact wavelength of every possible transition — and every wavelength predicted by this simple formula has been experimentally confirmed to extraordinary precision.
+
+Transitions are grouped into series by their final energy level. The Lyman series (transitions ending at n=1) falls entirely in the ultraviolet, since these are the largest possible energy gaps. The Balmer series (transitions ending at n=2) is the only series with lines in the visible spectrum — the four famous hydrogen emission lines at 656 nm (red), 486 nm (cyan), 434 nm (blue), and 410 nm (violet) all belong to this series and were the first spectral lines ever measured precisely, decades before quantum theory existed to explain them. The Paschen (n=3) and Brackett (n=4) series fall in the infrared.
+
+Because energy levels get closer together as n increases (En = -13.6 eV/n²), transitions from very high n converge toward a series limit — the ionization energy for that series' final state. Photon energy, frequency, and wavelength are related by E = hν = hc/λ, letting any one property be calculated from another. Absorption spectra show the reverse process: an atom absorbing exactly the photon energies needed to promote electrons upward, producing dark lines at the same wavelengths as the corresponding emission lines.
+
+This atomic spectra simulator lets you select any electron transition, instantly see the resulting photon's wavelength, frequency, and energy, and visualize which series and region of the electromagnetic spectrum it falls into — turning the abstract Rydberg formula into an interactive, visual tool.`,
+
+  hydrocarbon: `Hydrocarbons — compounds built purely from carbon and hydrogen — form the structural backbone of organic chemistry, and building them correctly by hand is the essential first skill before tackling reaction mechanisms or synthesis. This structure-building practice underlies AP Chemistry organic content and every subsequent IChO organic problem.
+
+Alkanes (CnH2n+2) contain only single bonds and are named by identifying the longest continuous carbon chain, then numbering it to give substituents the lowest possible locants. Alkenes (CnH2n) contain at least one C=C double bond, introducing geometric isomerism: when each carbon of the double bond has two different substituents, cis/trans (or the more rigorous E/Z, based on CIP priority) isomers exist as genuinely different compounds with different physical properties, not just different drawings of the same molecule.
+
+Alkynes (CnH2n-2) contain a C≡C triple bond and are named with the "-yne" suffix; because the triple bond is linear, alkynes cannot show cis/trans isomerism at that bond. Degree of unsaturation — calculated from molecular formula as DoU = (2C + 2 + N - H)/2 — tells you the total number of rings and pi bonds in a molecule before you even see its structure, a fast sanity check used throughout organic problem-solving.
+
+Cyclic hydrocarbons introduce ring strain considerations: cyclopropane and cyclobutane have significant angle strain from forcing bond angles far from the ideal 109.5°, while cyclohexane can adopt a chair conformation with zero angle strain. Aromatic hydrocarbons, built on the benzene ring, follow Hückel's rule (4n+2 pi electrons) for aromatic stabilization and undergo substitution reactions rather than the addition reactions typical of alkenes.
+
+This hydrocarbon builder lets you construct any structure by clicking to add carbons and bonds, automatically generates the correct IUPAC name, and displays structural, condensed, and bond-line formulas side by side — building the structural fluency that every later organic chemistry topic depends on.`,
+
+  'organic-mechanism': `Nucleophilic addition to carbonyl compounds is one of the most important reaction classes in organic chemistry, forming the mechanistic basis for a huge share of synthetic transformations tested on AP Chemistry, Orgo 1/2, and IChO exams. This mechanism viewer focuses on that addition chemistry alongside the substitution and elimination fundamentals.
+
+The carbonyl carbon (C=O) is electrophilic because oxygen's electronegativity pulls electron density away from carbon, leaving it partially positive and susceptible to nucleophilic attack. When a nucleophile attacks, the pi bond electrons move onto oxygen, generating a tetrahedral alkoxide intermediate — the single most common curved-arrow step in organic mechanisms. What happens next depends on the nucleophile and conditions: with water or alcohols under acid catalysis, this leads to hemiacetal and eventually acetal formation; with cyanide, it forms a cyanohydrin; with organometallic nucleophiles like Grignard reagents, it forms new carbon-carbon bonds en route to alcohols.
+
+Acid catalysis accelerates carbonyl addition by protonating the carbonyl oxygen first, making the carbon even more electrophilic and allowing weaker nucleophiles to attack effectively — this is why acetal formation requires acid rather than proceeding readily under neutral conditions. Base catalysis works differently, typically generating a stronger, more reactive nucleophile (such as deprotonating an alcohol to an alkoxide) before it attacks the carbonyl.
+
+This viewer also covers the SN1/SN2/E1/E2 substitution and elimination framework and electrophilic aromatic substitution, giving arrow-by-arrow animation for each — but its distinguishing strength is walking through carbonyl addition step by step: pi-bond attack, tetrahedral intermediate formation, and the acid- or base-catalyzed pathway that determines the final product. Click through each animated step to see exactly where electrons move and why the reaction proceeds the way it does — essential preparation for any exam that asks you to draw a full mechanism, not just predict a product.`,
+
+  'periodic-table': `The periodic table is chemistry's single most information-dense reference tool, and knowing how to actually read element-specific data from it — not just recite trend directions — is what separates surface-level familiarity from exam-ready fluency for AP Chemistry, USNCO, and IChO.
+
+Every element's position encodes real physical data: atomic mass (the weighted average of naturally occurring isotopes), electron configuration (which follows directly from an element's group and period position via the Aufbau principle), and a full set of measured properties including electronegativity, ionization energy, and atomic radius. Being able to look up any element and immediately see its full data profile — rather than deriving it from scratch each time — is essential for working through multi-step problems quickly under exam time pressure.
+
+Color-coded overlays make trends visually obvious across the entire table simultaneously, rather than one group or period at a time. An electronegativity overlay immediately shows fluorine as the most electronegative element (3.98 on the Pauling scale) sitting in the top-right corner, while francium and cesium — the least electronegative — sit in the bottom-left, illustrating the diagonal trend that increases up and to the right. The same visual logic applies to ionization energy and atomic radius overlays, each revealing the underlying pattern of increasing effective nuclear charge across a period and increasing shielding down a group.
+
+Electron configuration display for every element, including the notable exceptions like chromium ([Ar]3d⁵4s¹ instead of the "expected" [Ar]3d⁴4s²) and copper ([Ar]3d¹⁰4s¹), reinforces that half-filled and fully-filled d subshells carry extra stability — a detail frequently tested precisely because it breaks the naive pattern-matching approach.
+
+This interactive periodic table lets you click any of all 118 elements to view its complete property profile, switch between color-coded trend overlays, and compare multiple elements side by side — a full element-by-element reference built for fast lookup during problem sets and exam review.`,
+
+  hybridization: `Orbital hybridization explains why carbon, nitrogen, and other atoms form bonds at angles that pure atomic s and p orbitals could never produce on their own — a core AP Chemistry Unit 2 concept and prerequisite for understanding both VSEPR geometry and organic reactivity.
+
+Hybridization mixes atomic orbitals on a single atom into new, equivalent hybrid orbitals suited to the bonding geometry actually observed. sp hybridization mixes one s and one p orbital into two sp orbitals arranged linearly (180°), seen in molecules like BeCl2 and any carbon with two pi bonds, such as the central carbon in CO2. sp² hybridization mixes one s and two p orbitals into three orbitals in a trigonal planar arrangement (120°), leaving one unhybridized p orbital available for pi bonding — exactly the geometry of every carbon in a C=C double bond or a benzene ring.
+
+sp³ hybridization, the most common in organic chemistry, mixes one s and three p orbitals into four equivalent orbitals pointing toward the corners of a tetrahedron (109.5°), the geometry of methane and every sp³ carbon. Expanding beyond the octet, sp³d hybridization (trigonal bipyramidal, 90°/120°) and sp³d² hybridization (octahedral, 90°) describe central atoms like phosphorus in PCl5 and sulfur in SF6, which require d-orbital involvement to accommodate five or six bonding domains.
+
+Lone pairs occupy hybrid orbitals just like bonding pairs but exert slightly greater repulsion, compressing observed bond angles below the idealized values — this is why water's H-O-H angle is 104.5° rather than the tetrahedral 109.5°, despite oxygen being sp³ hybridized with two lone pairs.
+
+This hybridization explorer lets you select any hybridization state from sp through sp³d², see the corresponding 3D orbital mixing diagram and geometry, and view real example molecules for each — connecting the abstract orbital math directly to the molecular shapes you're asked to predict on exams.`,
+
+  'projection-formula': `Two-dimensional representations of three-dimensional molecular structure — Fischer projections, Newman projections, sawhorse diagrams, and wedge-dash notation — are essential tools for communicating stereochemistry on paper, and fluently converting between them is heavily tested on both USNCO and IChO exams.
+
+Fischer projections represent a molecule as a cross: horizontal lines project toward the viewer, vertical lines project away. This convention, developed originally for sugars, makes it fast to assign D/L configuration by checking whether the lowest carbon on the chain has the reference group on the right (D) or left (L) — distinct from, though often correlated with, the CIP R/S system. Rotating a Fischer projection by 180° in the plane of the page preserves its meaning, but rotating it 90° inverts the apparent configuration, a classic exam trap.
+
+Newman projections view a molecule directly down a specific carbon-carbon bond, showing the front atom's substituents as lines from a center point and the back atom's substituents as lines from a surrounding circle. This projection is ideal for analyzing conformational analysis: eclipsed conformations (front and back substituents aligned) are higher energy due to torsional strain, while staggered conformations are lower energy, with the anti conformation (largest groups 180° apart) typically most stable of all, and gauche conformations (60° apart) intermediate.
+
+Sawhorse diagrams show the same C-C bond from a angled perspective rather than end-on, making it easier to see the full 3D shape of both carbons simultaneously. Wedge-dash notation — solid wedges toward the viewer, dashed wedges away — is the standard for showing stereocenters in ordinary structural drawings, and correctly assigning R/S configuration from a wedge-dash structure using CIP priority rules is a fundamental stereochemistry skill.
+
+This projection formula lab lets you draw a molecule once and instantly interconvert between all four representations, assign R/S configuration step by step, and practice D/L notation for carbohydrates — building fluency across every projection style you'll encounter on exams.`,
+
+  electrochemistry: `Electrochemistry connects two of chemistry's biggest ideas — thermodynamics and redox reactions — into a single framework that predicts spontaneity, calculates cell voltage, and quantifies electrolysis. This complete electrochemistry lab walks through galvanic cells, electrolytic cells, and Faraday's law together, covering the full scope of AP Chemistry Unit 9 and IChO electrochemistry.
+
+A galvanic (voltaic) cell harnesses a spontaneous redox reaction to generate electrical current: electrons flow from the anode (oxidation, negative terminal) through an external circuit to the cathode (reduction, positive terminal), with a salt bridge maintaining charge balance. Standard cell potential is calculated as E°cell = E°cathode - E°anode using tabulated standard reduction potentials, and a positive E°cell confirms the reaction is spontaneous as written.
+
+Electrolytic cells run the opposite direction: an external power source forces a non-spontaneous reaction to proceed, and the electrode polarity conventions flip — the anode becomes positive and the cathode negative, the reverse of a galvanic cell. This sign-convention reversal is one of the most commonly missed points on exams, since students often assume anode = negative always holds.
+
+Faraday's laws quantify exactly how much product forms during electrolysis: charge Q = It (current times time), moles of electrons = Q/F (where F = 96,485 C/mol), and mass deposited follows directly from the half-reaction stoichiometry. This is the calculation behind real industrial processes like the Hall-Héroult process for aluminum refining and electroplating.
+
+Corrosion, particularly of iron, is itself a spontaneous electrochemical process — iron acts as the anode, oxygen and water act as the cathode reaction, and understanding this framework explains why sacrificial anodes (zinc coating on galvanized steel) protect iron from rusting.
+
+This simulator lets you build both galvanic and electrolytic cells, calculate EMF from standard potentials, apply Faraday's law to electrolysis problems, and explore corrosion as a real-world application — the complete electrochemistry toolkit in one tool.`,
+
+  electrochemical: `When AP Chemistry, USNCO, and IChO exams ask you to compare galvanic and electrolytic cells, the fastest path to the right answer is a clear side-by-side mental model — which is exactly what this comparison-focused electrochemical cell lab is built for, rather than walking through every electrochemistry topic in sequence.
+
+The defining difference is spontaneity: a galvanic cell converts a spontaneous redox reaction (ΔG < 0, E°cell > 0) directly into electrical energy, while an electrolytic cell uses an external electrical energy source to force a non-spontaneous reaction (ΔG > 0, E°cell < 0) to occur. Every other difference between the two cell types follows from this one fact.
+
+Electrode polarity is the single most commonly confused point: in a galvanic cell, the anode is negative and the cathode is positive, because electrons are being pushed out of the anode by the spontaneous reaction itself. In an electrolytic cell, the external power source forces electrons in the opposite direction, making the anode positive and the cathode negative. In both cell types, though, oxidation always occurs at the anode and reduction always occurs at the cathode — that identification never changes, only the sign.
+
+The Nernst equation, E = E° - (RT/nF)ln Q, extends standard-condition calculations to real, non-standard concentrations, and applies identically to both cell types. As a galvanic cell discharges, Q increases and E decreases toward zero (equilibrium); running the same reaction electrolytically in reverse, sufficient applied voltage can force the reaction against its natural direction entirely.
+
+This lab displays both cell types side by side with synchronized concentration sliders, letting you watch cell potential respond to the Nernst equation in real time while directly comparing the wiring, electrode signs, and spontaneity of each — purpose-built for the classic "compare and contrast galvanic and electrolytic cells" exam question.`,
+
+  periodic: `Periodic trends explain why elements behave the way they do based purely on their position in the periodic table, and being able to predict — not just memorize — a trend's direction is one of the highest-leverage skills for AP Chemistry Unit 1 and 3, USNCO, and IChO.
+
+Atomic radius decreases across a period (left to right) because each added proton increases effective nuclear charge on a roughly constant number of shielding inner-shell electrons, pulling the outer electrons in tighter. Atomic radius increases down a group because each successive element adds an entirely new principal energy level, and the increase in shell number outweighs the increase in nuclear charge.
+
+First ionization energy — the energy required to remove the outermost electron from a gaseous atom — generally increases across a period for the same effective-nuclear-charge reason that shrinks radius, and decreases down a group as the outermost electron sits farther from the nucleus and is more shielded. Two systematic exceptions are frequently tested: ionization energy dips slightly from Group 2 to Group 13 (removing an electron from a filled s subshell to a half-empty p subshell is easier than the trend predicts) and from Group 15 to Group 16 (removing an electron from a half-filled p subshell, which has extra stability, to a paired p subshell is easier than expected).
+
+Successive ionization energies within the same atom always increase, but jump dramatically once you cross from valence electrons into core electrons — the enormous jump between an element's nth and (n+1)th ionization energy directly reveals how many valence electrons it has, a classic identification technique.
+
+Electronegativity and electron affinity trends largely parallel ionization energy, both increasing up and to the right toward fluorine, though electron affinity has more numerous and chemically-meaningful exceptions among individual elements.
+
+This periodic properties simulator lets you plot any single trend as a continuous curve across a chosen period or down a chosen group, directly visualizing the increases, decreases, and exceptions that define periodic law — a focused complement to full element-by-element lookup tools.`,
+
+  'organic-synthesis': `Multi-step organic synthesis is where individual named reactions stop being isolated facts to memorize and become tools you combine strategically to build a target molecule — the culminating skill tested in IChO organic problems and advanced Orgo coursework.
+
+Working backward from the target molecule (retrosynthetic analysis) is usually more productive than working forward: identify the final bond or functional group that needs to be installed, ask what reagent could install it, and repeat until you reach available starting materials. The classic benzene-to-aniline route illustrates this clearly: aniline (an amine on a benzene ring) cannot be made by direct amination, so the actual route goes through nitration (installing -NO2 via electrophilic aromatic substitution with HNO3/H2SO4) followed by reduction (converting -NO2 to -NH2, typically with H2/Pd or Sn/HCl).
+
+The benzene-to-phenol route via diazonium chemistry showcases a different strategy entirely: aniline is first converted to a diazonium salt (ArN2+) using NaNO2/HCl at low temperature, and this diazonium intermediate is a remarkably versatile synthetic handle — hydrolysis gives phenol, but the same intermediate can instead undergo azo coupling with another aromatic ring to build dyes, or a Sandmeyer reaction with CuCl/CuBr/CuCN to install halogens or nitriles that are otherwise difficult to introduce directly onto a benzene ring.
+
+Grignard reagents (RMgX) are the workhorse for forming new carbon-carbon bonds: they attack the electrophilic carbon of an aldehyde or ketone, and after aqueous workup, produce secondary or tertiary alcohols. Aldol condensation is the other major carbon-carbon bond-forming strategy, where an enolate (formed by deprotonating alpha to a carbonyl) attacks a second carbonyl compound, ultimately eliminating water to form an alpha,beta-unsaturated carbonyl product.
+
+This synthesis pathway tool breaks each multi-step route into individual steps with the specific reagents and conditions required, showing exactly how reagent and condition choice at each stage determines whether the target molecule is actually reached.`,
+
+  'gas-laws': `The gas laws describe some of the most reliably predictable behavior in all of chemistry, which is exactly why they appear so often on AP Chemistry Unit 3, USNCO, and IChO exams — the ideal gas law and its historical special cases let you calculate any gas property from any other with high confidence.
+
+The ideal gas law, PV = nRT, unifies pressure, volume, moles, and temperature into a single equation (R = 0.0821 L·atm/mol·K, or 8.314 J/mol·K in SI units). Historically, this was discovered piecewise: Boyle's law (P1V1 = P2V2, at constant n and T) established that pressure and volume are inversely proportional; Charles's law (V1/T1 = V2/T2, at constant n and P) established that volume and absolute temperature are directly proportional; and Gay-Lussac's law (P1/T1 = P2/T2, at constant n and V) established the same direct relationship between pressure and temperature. All three are special cases of the ideal gas law with one variable held fixed.
+
+Real gases deviate from ideal behavior, especially at high pressure and low temperature, because the ideal gas law assumes gas particles have zero volume and experience no intermolecular attraction — both assumptions break down under those conditions. The van der Waals equation, (P + an²/V²)(V - nb) = nRT, corrects for this: the a term accounts for intermolecular attraction reducing the pressure gas particles actually exert on the container walls, and the b term accounts for the finite volume the gas particles themselves occupy, reducing the space available for particle motion.
+
+Molar volume at STP (0°C, 1 atm, using the older definition, or the current IUPAC 0°C, 1 bar) is 22.4 L/mol for any ideal gas — a useful shortcut, but only valid exactly at STP; problems at non-standard conditions require the full PV = nRT calculation.
+
+This gas laws simulator lets you manipulate pressure, volume, temperature, and moles interactively, compare Boyle's, Charles's, and combined gas law scenarios, and overlay van der Waals real-gas isotherms against ideal behavior — making the deviation between theory and reality directly visible.`,
+
+  'colligative-properties': `Colligative properties depend only on the number of dissolved solute particles, not on what those particles chemically are — a distinction that makes this one of the more conceptually elegant topics in AP Chemistry Unit 3 and a reliable source of IChO calculation problems.
+
+Boiling point elevation (ΔTb = iKbm) and freezing point depression (ΔTf = iKfm) both follow directly from the same underlying cause: dissolved solute particles disrupt the solvent's ability to form its ordered solid phase or escape into its gas phase, requiring a temperature shift to compensate. Kb and Kf are solvent-specific constants (for water, Kb = 0.512°C·kg/mol and Kf = 1.86°C·kg/mol), and m is molality — moles of solute per kilogram of solvent, deliberately chosen over molarity because molality doesn't change with temperature as the solution expands or contracts.
+
+The van't Hoff factor i accounts for how many particles a formula unit actually produces in solution: a nonelectrolyte like glucose has i = 1, while an electrolyte like NaCl ideally has i = 2 (it fully dissociates into Na+ and Cl-) and CaCl2 ideally has i = 3. Real solutions show i values somewhat below these ideal integers due to ion pairing, especially at higher concentrations — a frequently tested subtlety.
+
+Osmotic pressure (π = iMRT, using molarity M here rather than molality) describes the pressure needed to prevent osmosis — the net flow of solvent across a semipermeable membrane into the more concentrated solution. Because even dilute solutions produce measurable osmotic pressure, it's the most sensitive colligative property for determining molar mass of large molecules like proteins.
+
+Vapor pressure lowering follows Raoult's law: the vapor pressure of a solution equals the mole fraction of solvent times the pure solvent's vapor pressure, explaining directly why boiling point rises (more energy needed to reach atmospheric pressure) and freezing point falls in tandem.
+
+This calculator lets you adjust solute identity, molality, and van't Hoff factor to see all four colligative properties respond simultaneously — reinforcing that they are one phenomenon viewed four ways, not four separate topics to memorize.`,
+
+  'phase-diagram': `A phase diagram compresses an enormous amount of information about a substance's behavior into a single pressure-temperature plot, and correctly reading one is a frequently tested AP Chemistry Unit 3 and IChO skill that goes well beyond memorizing "solid, liquid, gas."
+
+Each region of a phase diagram represents the pressure-temperature conditions under which one phase is thermodynamically stable, and the lines separating regions represent conditions where two phases coexist in equilibrium — cross a line and the substance undergoes a phase transition. The triple point is the unique pressure-temperature combination where all three phases (solid, liquid, gas) coexist simultaneously; for water, this occurs at 0.01°C and 0.006 atm, a fixed reference point precise enough that it was historically used to define the Kelvin scale itself.
+
+The critical point marks the end of the liquid-gas boundary line: above the critical temperature and pressure, the distinction between liquid and gas disappears entirely, and the substance becomes a supercritical fluid with properties of both. Beyond the critical point, no amount of additional pressure will condense the gas back into a distinct liquid phase.
+
+Water's phase diagram contains a famous anomaly: the solid-liquid boundary line has a negative slope, meaning increasing pressure on ice at a fixed temperature near the triple point can melt it — a direct consequence of ice being less dense than liquid water. Nearly every other substance shows a positive slope here, because their solid phase is denser than their liquid phase, so increasing pressure favors the more compact solid.
+
+Carbon dioxide's phase diagram explains a familiar phenomenon directly: at normal atmospheric pressure (1 atm), the CO2 triple point pressure (5.1 atm) is never reached, so solid CO2 (dry ice) sublimates straight to gas without ever passing through a liquid phase at ordinary pressure.
+
+This phase diagram explorer lets you trace paths through pressure-temperature space for both water and CO2, directly identifying the triple point, critical point, and phase boundaries you'll be asked to read on exams.`,
+
+  'unit-cell': `Crystal structure determines the density, hardness, and packing efficiency of metallic and ionic solids, and calculating these properties from a unit cell is a core AP Chemistry Unit 2 and IChO solid-state chemistry skill that rewards spatial reasoning over memorization.
+
+A unit cell is the smallest repeating 3D block that, stacked in all directions, reproduces the entire crystal lattice. Simple cubic (SC) packing places atoms only at the eight corners of a cube, each shared among 8 adjacent cells, giving exactly 1 atom per unit cell and a packing efficiency of just 52% — the least efficient common packing arrangement, with a coordination number of only 6.
+
+Body-centered cubic (BCC) adds one atom at the exact center of the cube in addition to the corner atoms, giving 2 atoms per unit cell (1 from corners + 1 full center atom), 68% packing efficiency, and coordination number 8. Face-centered cubic (FCC) instead places an atom at the center of each of the six faces (each shared between 2 cells) in addition to the corners, giving 4 atoms per unit cell, 74% packing efficiency — the maximum possible for spheres of equal size — and coordination number 12.
+
+Density is calculated directly from unit cell geometry: ρ = (Z × M)/(NA × Vcell), where Z is atoms per unit cell, M is molar mass, NA is Avogadro's number, and Vcell is the unit cell volume calculated from the edge length, which itself relates to atomic radius differently for each packing type (a = 2r for SC, a = 4r/√3 for BCC, a = 2r√2 for FCC). Getting the correct radius-to-edge-length relationship for each structure is the step most often missed.
+
+This simulator renders SC, BCC, and FCC unit cells in interactive 3D, calculates packing efficiency and coordination number automatically, and lets you compute crystal density from atomic radius and molar mass — connecting an abstract geometric model directly to measurable bulk properties.`,
+
+  'mo-diagram': `Molecular orbital theory succeeds precisely where simple Lewis structures fail — most famously in explaining why O2 is paramagnetic despite textbook Lewis structures showing all electrons paired in a clean double bond. This makes MO theory a favorite AP Chemistry and IChO topic for testing genuine conceptual understanding over memorized rules.
+
+When two atomic orbitals combine, they form two molecular orbitals: a lower-energy bonding orbital (constructive overlap, electron density concentrated between the nuclei) and a higher-energy antibonding orbital, marked with an asterisk (destructive overlap, a node between the nuclei). Sigma (σ) orbitals form from head-on overlap along the internuclear axis; pi (π) orbitals form from side-on overlap of parallel p orbitals, always occurring in pairs (πx and πy) at equal energy.
+
+Bond order — a direct measure of bond strength and stability — is calculated as (bonding electrons - antibonding electrons)/2. For H2, both electrons occupy the bonding σ1s orbital, giving bond order 1 (a stable single bond); for He2, the bonding σ1s and antibonding σ1s* orbitals are both filled, giving bond order 0 — correctly predicting that He2 does not exist as a stable molecule, something Lewis theory has no mechanism to explain at all.
+
+For period 2 diatomics, orbital energy ordering actually differs between the lighter elements (Li2 through N2) and the heavier ones (O2, F2, Ne2) due to s-p orbital mixing — a subtlety that changes which orbital fills first and is a common point of confusion. Filling the correct MO diagram for O2 reveals two unpaired electrons in the degenerate π2p* antibonding orbitals, correctly predicting paramagnetism (attraction to a magnetic field) that a simple Lewis structure entirely misses.
+
+This MO diagram builder lets you fill molecular orbitals for any homonuclear diatomic from H2 through Ne2 (plus select heteronuclear examples), automatically calculates bond order, and flags paramagnetism from unpaired electrons — making visible exactly what Lewis structures cannot show.`,
+
+  'lewis-structure': `Drawing a correct Lewis structure is the foundation every subsequent structural concept — VSEPR geometry, hybridization, molecular polarity — builds on, which is why getting formal charge and octet rules right by hand is emphasized so heavily in AP Chemistry Unit 2 and tested constantly on IChO.
+
+Formal charge, calculated as (valence electrons) - (lone pair electrons) - ½(bonding electrons), identifies which of several possible Lewis structures for the same molecular formula is actually the best representation. The preferred structure minimizes formal charges overall and places any necessary negative formal charge on the more electronegative atom — this single rule resolves most ambiguous cases students encounter.
+
+The octet rule (eight electrons around each atom, achieved through bonding and lone pairs) holds reliably for period 2 elements, but period 3 and beyond elements like phosphorus, sulfur, and chlorine can expand beyond the octet using available d orbitals, forming structures like PCl5 (10 electrons around P) or SF6 (12 electrons around S) that would be impossible to draw correctly under a strict octet assumption.
+
+Resonance structures arise when a single Lewis structure cannot adequately represent a molecule's actual bonding — the true structure is a weighted average (resonance hybrid) of all valid contributing structures, not an equilibrium flipping between them. Ozone (O3) and the carbonate ion (CO3²⁻) are classic examples: experimentally, all bonds in these species are equal length, intermediate between single and double bond lengths, exactly as the resonance hybrid concept predicts.
+
+Radical species, with an odd total electron count, cannot satisfy the octet rule on every atom no matter how electrons are arranged — one atom is left with an unpaired electron, and identifying which atom should bear that radical (typically the least electronegative, most stable position) requires the same formal-charge reasoning used elsewhere.
+
+This Lewis structure builder gives real-time formal charge and octet-rule feedback as you place bonds and lone pairs, handles expanded octets and radicals correctly, and helps you find the lowest-formal-charge structure among multiple resonance contributors.`,
+
+  'bond-polarity': `Bond polarity is the single most useful predictive tool in introductory chemistry — from it alone you can predict molecular polarity, intermolecular force type, boiling point trends, and solubility behavior, which is why AP Chemistry Unit 2 treats electronegativity difference as a starting point for so many other topics.
+
+Electronegativity, on the Pauling scale, measures an atom's tendency to attract shared electrons in a covalent bond. The electronegativity difference (ΔEN) between two bonded atoms determines bond character along a continuum: ΔEN below about 0.4 is considered nonpolar covalent (electrons shared essentially equally, as in a C-H bond, ΔEN ≈ 0.4), ΔEN between 0.4 and 1.7 is polar covalent (electrons shared unequally, creating partial charges), and ΔEN above 1.7 is considered ionic (electron transfer rather than sharing, as in NaCl, ΔEN ≈ 2.1).
+
+In a polar covalent bond, the more electronegative atom pulls electron density toward itself, acquiring a partial negative charge (δ-), while the less electronegative atom is left with a partial positive charge (δ+). The dipole arrow convention points from δ+ toward δ-, representing the direction of unequal electron sharing — and correctly drawing this arrow is a prerequisite for later predicting overall molecular polarity from bond geometry.
+
+A critical distinction that trips up many students: bond polarity and molecular polarity are not the same thing. CO2 contains two highly polar C=O bonds, but the molecule itself is nonpolar overall because its linear geometry causes the two bond dipoles to point in exactly opposite directions and cancel. Predicting molecular polarity correctly requires combining bond polarity (from electronegativity) with molecular geometry (from VSEPR) — neither alone is sufficient.
+
+This bond polarity visualizer lets you select any two elements, instantly calculates ΔEN and classifies the bond as nonpolar, polar, or ionic, and displays the dipole arrow with δ+/δ- labeling — building the electronegativity intuition that later molecular-polarity and intermolecular-force topics depend on.`,
+
+  'imf-comparator': `Predicting which of two substances has the higher boiling point is a deceptively rich question that requires correctly identifying and ranking intermolecular forces — a core AP Chemistry Unit 3 skill, since stronger IMFs directly mean more energy (higher temperature) is required to separate molecules into the gas phase.
+
+London dispersion forces exist between all molecules, arising from temporary, instantaneous dipoles created by random electron movement — and despite being the "weakest" force in a simplified ranking, dispersion forces actually dominate boiling point for large nonpolar molecules, since dispersion force strength increases with molecular size and surface area (more electrons, more polarizability). This is why nonpolar iodine (I2) is a solid at room temperature while nonpolar fluorine (F2) is a gas — same force type, vastly different magnitude due to size.
+
+Dipole-dipole interactions occur between polar molecules, where the permanent partial positive end of one molecule aligns with the permanent partial negative end of another. These are generally stronger than dispersion forces between molecules of similar size, but the comparison inverts for very large nonpolar molecules versus small polar ones.
+
+Hydrogen bonding is a particularly strong subset of dipole-dipole interaction, occurring specifically when hydrogen is bonded directly to nitrogen, oxygen, or fluorine — the three most electronegative, smallest elements capable of the tight, highly polarized N-H, O-H, or F-H bond that hydrogen bonding requires. This explains the classic exam comparison: HF (boiling point 19.5°C) boils higher than the larger, heavier HCl (boiling point -85°C) purely because HF can hydrogen bond and HCl cannot — a direct demonstration that IMF type can override molecular size.
+
+Ethanol versus dimethyl ether is an equally revealing comparison: both share the identical molecular formula C2H6O, yet ethanol (boiling point 78°C, capable of hydrogen bonding through its O-H) boils dramatically higher than dimethyl ether (boiling point -24°C, no O-H bond, only dipole-dipole forces) — proof that molecular formula alone never determines boiling point; structure and IMF type do.
+
+This comparator lets you select any two of 26 real molecules, identifies each substance's dominant IMF type, and predicts which has the higher boiling point with full reasoning — turning IMF ranking from a memorized rule into a checkable prediction.`,
+
+  'beer-lambert': `The Beer-Lambert law is the quantitative foundation of nearly all spectrophotometric analysis, letting chemists determine an unknown concentration from nothing more than how much light a colored solution absorbs — a core analytical technique in AP Chemistry Unit 3 and IChO analytical chemistry.
+
+The law states A = εbc, where A is absorbance (unitless), ε is the molar absorptivity or extinction coefficient (a constant specific to the substance and wavelength used, in L/mol·cm), b is the path length light travels through the solution (in cm, typically 1 cm for a standard cuvette), and c is molar concentration. Because absorbance is directly proportional to concentration, doubling concentration doubles absorbance — a linear relationship that makes calibration straightforward.
+
+Absorbance and transmittance are related but different quantities: transmittance T is the fraction of light that passes through the sample unabsorbed, while A = -log(T), or equivalently T = 10^(-A). This logarithmic relationship means absorbance, not transmittance, is the quantity that scales linearly with concentration — which is why spectrophotometers report and chemists work with absorbance for quantitative analysis.
+
+Building a calibration curve is the standard workflow: prepare several solutions of known concentration, measure each one's absorbance, and plot absorbance versus concentration — the result should be a straight line through (or near) the origin, with slope equal to εb. Once this line exists, measuring the absorbance of an unknown sample and reading its concentration off the calibration curve (or calculating it from the line's equation) gives a fast, accurate concentration determination without needing to know ε independently.
+
+Path length matters directly and linearly: doubling the cuvette path length doubles absorbance at the same concentration, which is why standardized 1 cm cuvettes are used — comparing absorbance values measured at different path lengths without correcting for b produces meaningless results.
+
+This lab lets you adjust concentration and watch the simulated cuvette visually darken as absorbance increases in real time, build a calibration curve from several data points, and solve for an unknown sample's concentration — the complete Beer-Lambert analytical workflow in one interactive tool.`,
+
+  chromatography: `Paper chromatography separates a mixture into its individual components based on a simple physical principle — different substances travel at different rates through the same stationary phase — and calculating the resulting Rf value is a standard AP Chemistry Unit 3 analytical technique.
+
+As solvent climbs a paper strip by capillary action, each dissolved substance in a spotted mixture is carried along at a rate determined by its relative affinity for the stationary phase (the paper itself, or more precisely the water trapped in its cellulose fibers) versus the mobile phase (the moving solvent). Less polar substances, which interact more weakly with the polar paper and more strongly with a less polar solvent, travel farther and faster; more polar substances cling more tightly to the paper and lag behind.
+
+The retention factor, Rf = (distance traveled by the spot) / (distance traveled by the solvent front), is a normalized value between 0 and 1 that should, in principle, be reproducible for a given substance under fixed solvent and paper conditions — making Rf values useful for identifying unknown components by comparison to known standards run under the same conditions.
+
+Chlorophyll extraction is a classic worked example: a leaf pigment extract separates into several visibly distinct bands with characteristically different Rf values — carotene (the least polar pigment, giving carrots their orange color) travels farthest and shows the highest Rf, followed by chlorophyll a, then chlorophyll b, with xanthophyll (the most polar, oxygen-containing pigment) traveling the shortest distance and showing the lowest Rf. This consistent ordering, driven entirely by relative polarity, is one of the most commonly performed real chromatography labs in introductory chemistry courses.
+
+Black ink separation demonstrates the same principle on a mixture most people don't realize is a mixture at all — common black ink is actually a blend of several different dyes, each with distinct polarity, which paper chromatography visibly resolves into individual colored bands.
+
+This chromatography simulator animates the separation in real time as solvent climbs the paper, calculates Rf values live for each component, and includes real pigment and ink datasets — turning a physical wet-lab technique into a repeatable, instant interactive demonstration.`,
+
+  'reaction-classifier': `Correctly classifying a chemical reaction into one of five standard types is a foundational AP Chemistry Unit 4 skill that pays off throughout the course — knowing a reaction's type immediately tells you what kind of products to expect, before you've even balanced the equation.
+
+Synthesis (combination) reactions combine two or more simpler substances into one more complex product: A + B → AB. Decomposition reactions run this in reverse, breaking one compound into two or more simpler products: AB → A + B, as seen when limestone (CaCO3) decomposes under heat into CaO and CO2.
+
+Single replacement reactions occur when one element displaces another element from a compound: A + BC → AC + B, following activity series rules that predict whether the displacement actually occurs — zinc metal reacting with hydrochloric acid (Zn + 2HCl → ZnCl2 + H2) is a textbook single replacement, since zinc is more reactive than hydrogen and displaces it. Double replacement reactions swap the cations (or anions) between two ionic compounds: AB + CD → AD + CB, and typically proceed forward only when a precipitate, gas, or water forms — a solubility-rules judgment call.
+
+Combustion reactions involve a fuel (usually a hydrocarbon) reacting with O2 to produce CO2 and H2O (for complete combustion) plus a large release of energy — recognizable by O2 always appearing as a reactant regardless of what specific fuel is burning. The industrial Haber process (N2 + 3H2 → 2NH3) is a synthesis reaction of major real-world significance, producing the ammonia that underlies most nitrogen fertilizer production worldwide.
+
+Some reactions genuinely overlap categories or resist easy classification, and recognizing when a reaction is, for example, both a combustion and technically also fits no other category cleanly is itself part of building real classification fluency rather than pattern-matching on superficial equation shape.
+
+This classifier presents 25 real balanced equations, asks you to identify the reaction type, and gives instant feedback with explanation for each — reinforcing the classification logic through repetition rather than memorized examples alone.`,
+
+  'net-ionic-equation': `Writing a net ionic equation — stripping away everything that doesn't actually participate in a reaction — reveals the true chemistry happening in solution, and this skill is tested throughout AP Chemistry Unit 4 (reaction types) and Unit 8 (acid-base chemistry).
+
+The process starts with a complete molecular equation, which is then rewritten as a complete ionic equation by dissociating every soluble strong electrolyte into its constituent ions — using solubility rules to correctly identify which compounds actually dissociate (soluble ionic compounds and strong acids/bases) versus which remain as intact formula units (insoluble precipitates, weak acids/bases, water, and molecular gases).
+
+Spectator ions are ions that appear identically on both the reactant and product side of the complete ionic equation, meaning they don't actually undergo any chemical change — they're simply present in solution as bystanders. Canceling spectator ions from both sides leaves the net ionic equation: the species that actually react.
+
+Precipitation reactions are the clearest illustration: mixing AgNO3 and NaCl solutions, the complete ionic equation shows Ag+, NO3-, Na+, and Cl- ions on the reactant side, but Na+ and NO3- remain unchanged as spectators — the net ionic equation is simply Ag+(aq) + Cl-(aq) → AgCl(s), correctly showing that silver and chloride ions are what actually combine to form the solid precipitate, regardless of which soluble silver and chloride salts were originally used.
+
+Acid-base neutralization between any strong acid and strong base reduces to the same net ionic equation every time: H+(aq) + OH-(aq) → H2O(l) — a powerful generalization showing that the "identity" of the acid and base (HCl vs HNO3, NaOH vs KOH) is chemically irrelevant to the net reaction, since those counterions are always spectators in a strong acid-strong base reaction. Gas-forming reactions, like a carbonate reacting with acid to release CO2, follow the same spectator-ion-removal logic.
+
+This builder shows the complete ionic equation and lets you click spectator ions to cancel them, revealing the net ionic equation step by step across precipitation, acid-base, and gas-forming reaction types.`,
+
+  'limiting-reagent': `Limiting reagent problems are where stoichiometry stops being pure arithmetic and starts requiring genuine reasoning about which reactant actually constrains a reaction — one of the highest-value AP Chemistry Unit 4 skills, since almost every real synthesis and industrial process runs with reactants in non-stoichiometric ratios.
+
+In any reaction with more than one reactant, the reactants are essentially never present in the exact mole ratio the balanced equation calls for. The limiting reagent is whichever reactant runs out first, and it alone determines the maximum amount of product that can form — once it's gone, the reaction stops, regardless of how much of the other reactant (the excess reagent) remains unreacted.
+
+Identifying the limiting reagent requires converting both reactant quantities to moles, then dividing each by its stoichiometric coefficient in the balanced equation — whichever reactant gives the smaller resulting value is limiting. A common error is comparing raw mole amounts directly without accounting for the stoichiometric ratio; a reaction requiring 3 moles of H2 per mole of N2 (N2 + 3H2 → 2NH3) can be limited by N2 even if fewer total moles of N2 than H2 are present, because each mole of N2 demands three moles of H2 to fully react.
+
+Once the limiting reagent is identified, theoretical yield of product is calculated using only the limiting reagent's initial amount and the balanced equation's mole ratio — the excess reagent's quantity is irrelevant to this calculation, only to how much of it is left over afterward.
+
+Visualizing the reaction as molecules pairing up one-by-one according to the stoichiometric ratio — rather than as an abstract mole calculation — makes the concept concrete: watching N2 and H2 molecules pair up 1-to-3 until one species is exhausted shows directly, visually, which one ran out first and why.
+
+This visualizer lets you adjust initial moles of each reactant for real reactions like N2 + H2 → NH3 and H2 + O2 → H2O, and watches molecules pair up by stoichiometric ratio in real time — making limiting reagent identification visually obvious rather than purely computational.`,
+
+  'stoichiometry-mapper': `Stoichiometry is the calculation backbone of AP Chemistry Unit 4, and nearly every quantitative reaction problem — regardless of what's actually being asked — reduces to the same core sequence of conversions, commonly called the mole road map.
+
+Starting from grams of a given substance, dividing by molar mass converts to moles — the universal "chemical currency" that lets different substances be compared on equal footing regardless of how much any one of them weighs. From moles of the given substance, multiplying by the mole ratio taken directly from the balanced equation's coefficients converts to moles of any other substance in the reaction — this single step is where the actual chemistry (which reaction, which coefficients) enters the calculation; every other step is pure unit conversion.
+
+From moles of the target substance, multiplying by its molar mass converts back to grams, giving a mass-to-mass calculation overall. Alternatively, multiplying moles by Avogadro's number (6.022 × 10²³) converts to a count of individual particles — atoms, molecules, or formula units — useful when a problem asks "how many molecules" rather than "how many grams."
+
+The power of the mole road map is that it handles any starting and ending unit combination using the exact same logical structure: grams-to-grams, grams-to-particles, particles-to-moles, or any other combination is just a different entry and exit point on the same map, never a fundamentally different calculation. Most stoichiometry errors come not from any individual conversion step being wrong, but from skipping the mole ratio step entirely and trying to convert directly between grams of two different substances — which is dimensionally meaningless without first passing through moles and the balanced equation's ratio.
+
+This mapper displays every conversion factor explicitly and live as you work through a problem — molar mass, Avogadro's number, and the mole ratio from the balanced equation — turning the often-memorized "mole map" diagram into a tool that shows its work at every single step.`,
+
+  'hess-law': `Hess's law states that the total enthalpy change of a reaction is independent of the pathway taken to get from reactants to products — a direct consequence of enthalpy being a state function, and the basis for calculating otherwise hard-to-measure ΔH values throughout AP Chemistry Unit 6.
+
+Because ΔH is path-independent, any target reaction can be constructed by algebraically combining a series of other reactions with known ΔH values, as long as those reactions sum (after any needed manipulation) to exactly the target equation. Two manipulation rules govern how ΔH transforms alongside the equation: reversing a reaction flips the sign of its ΔH (since going backward releases what going forward absorbed, or vice versa), and multiplying a reaction by any factor scales its ΔH by that same factor.
+
+Standard enthalpies of formation are the most common building blocks for Hess's law calculations, since ΔHf° values for a huge range of compounds are tabulated and can be combined to calculate ΔH for reactions that were never directly measured. Combustion enthalpies serve the same building-block role for organic compounds specifically, since combustion reactions are experimentally convenient to measure calorimetrically.
+
+The formation of acetylene (C2H2) from its elements is a classic Hess's law puzzle precisely because it cannot be measured directly — carbon and hydrogen don't cleanly combine to form pure acetylene under laboratory conditions — but by combining the known combustion enthalpies of carbon, hydrogen, and acetylene itself (reversing the acetylene combustion equation, since we want acetylene as a product, not a reactant), the target formation enthalpy, ΔHf ≈ +226.7 kJ/mol, can be calculated exactly, revealing acetylene as an unusually high-energy, endothermic-to-form molecule.
+
+This Hess's law builder presents a target equation and a set of given reaction steps, and lets you reverse or scale each step until they sum correctly to the target — with ΔH tracked automatically through every manipulation, reinforcing exactly how the sign and magnitude rules work rather than just stating them.`,
+
+  calorimetry: `Calorimetry is the experimental technique for measuring heat flow directly, and the calculation behind it — conservation of energy applied to two substances reaching a shared equilibrium temperature — is one of the more intuitive quantitative topics in AP Chemistry Unit 6.
+
+The core equation, q = mcΔT, relates heat transferred (q) to mass (m), specific heat capacity (c, the amount of energy needed to raise one gram of a substance by one degree Celsius), and temperature change (ΔT). When two substances at different starting temperatures are mixed and allowed to reach thermal equilibrium, conservation of energy requires that heat lost by the hotter substance exactly equals heat gained by the cooler one: m1c1ΔT1 = m2c2ΔT2 (with appropriate sign conventions, since one ΔT is negative).
+
+Solving this relationship for the final equilibrium temperature gives Tf = (m1c1T1 + m2c2T2)/(m1c1 + m2c2) — a weighted average where each substance's contribution is weighted by its heat capacity (mass times specific heat), not just its mass alone. This is why mixing a small amount of very hot metal with a large amount of room-temperature water barely changes the water's temperature: water's specific heat (4.184 J/g°C) is dramatically higher than most metals (aluminum 0.897, iron 0.449, copper 0.385, gold 0.129 J/g°C), so water dominates the weighted average despite the metal starting much hotter.
+
+Water's unusually high specific heat has real environmental and biological significance: large bodies of water moderate coastal climate by absorbing and releasing enormous amounts of heat with relatively small temperature swings, and the same property helps organisms maintain stable internal temperature.
+
+Coffee-cup calorimetry (constant pressure, measuring ΔH directly) and bomb calorimetry (constant volume, sealed and pressurized, measuring ΔE) are the two standard experimental setups, differing in exactly what thermodynamic quantity they measure directly.
+
+This calorimetry lab lets you mix two substances with adjustable mass, specific heat, and starting temperature, and calculates the equilibrium temperature live using real specific heat data for eight common materials.`,
+
+  'bond-energy': `Estimating reaction enthalpy from bond energies offers a genuinely different calculation route than Hess's law or formation enthalpies — one grounded directly in the energy cost of breaking and forming individual chemical bonds — and is a standard AP Chemistry Unit 6 technique for reactions where tabulated ΔHf values aren't convenient.
+
+The governing equation, ΔH = Σ(bonds broken) - Σ(bonds formed), reflects a simple physical truth: breaking any chemical bond always requires an energy input (endothermic), while forming any chemical bond always releases energy (exothermic). A reaction's overall enthalpy change is the net balance between the total energy spent breaking all reactant bonds and the total energy recovered forming all product bonds.
+
+This framework lets you predict whether a reaction is exothermic or endothermic before doing any arithmetic at all, just by reasoning about relative bond strength: if the bonds being formed are collectively stronger than the bonds being broken, more energy is released than absorbed, and the reaction is exothermic — ΔH will come out negative once calculated. H2 + Cl2 → 2HCl is a clean illustration: breaking one H-H bond and one Cl-Cl bond costs energy, but forming two H-Cl bonds (each individually strong) releases more, giving a net exothermic result.
+
+Average bond energies are tabulated values representing a typical bond strength across many different molecules containing that bond type — which is precisely why bond-energy calculations give only an estimate of ΔH, not an exact value the way Hess's law from measured formation enthalpies does. A specific C-H bond in methane doesn't have identically the same energy as a C-H bond in a more complex molecule, so bond-energy ΔH calculations carry inherent approximation that Hess's law calculations from directly measured data do not.
+
+Methane combustion (CH4 + 2O2 → CO2 + 2H2O) and ammonia synthesis (N2 + 3H2 → 2NH3) are standard worked examples, each requiring careful bond-by-bond accounting of exactly which bonds break in the reactants and which form in the products.
+
+This calculator walks through bond-by-bond energy accounting for real reactions, letting you predict exothermic or endothermic behavior before revealing the full calculation.`,
+
+  'enthalpy-diagram': `A reaction coordinate (enthalpy) diagram visually unifies two topics that are often taught separately — kinetics (activation energy, reaction rate) and thermodynamics (ΔH, spontaneity) — making it a genuinely cross-cutting tool spanning AP Chemistry Units 5 and 6.
+
+The diagram plots energy on the vertical axis against reaction progress on the horizontal axis, with three key points: the reactants' energy level, a peak representing the transition state (the highest-energy, least stable arrangement of atoms during the reaction), and the products' energy level. Activation energy for the forward reaction, Ea(forward), is the energy gap between reactants and the transition state peak; activation energy for the reverse reaction, Ea(reverse), is the gap between products and that same peak.
+
+Overall reaction enthalpy, ΔH = E(products) - E(reactants), is read directly from the diagram's shape: if products sit lower than reactants, the reaction is exothermic (ΔH negative) and released net energy overall; if products sit higher, the reaction is endothermic (ΔH positive) and absorbed net energy. Critically, ΔH depends only on the reactant and product energy levels — the height and shape of the transition-state peak in between has zero effect on ΔH.
+
+This last point is exactly why catalysts work the way they do, and it's the single most heavily tested fact from this topic: a catalyst provides an alternative reaction pathway with a lower-energy transition state, lowering both Ea(forward) and Ea(reverse) by the same amount — but it does not change the energy of either the reactants or the products, so ΔH remains completely unchanged. A catalyst speeds up how fast a reaction reaches equilibrium; it has no effect whatsoever on where that equilibrium ends up or how much energy the reaction releases overall.
+
+This plotter lets you drag reactant, transition state, and product energy levels to build a custom reaction coordinate diagram, then add a catalyst and watch both activation energies drop while ΔH stays fixed — making the catalyst distinction visually unmistakable rather than just a memorized rule.`,
+
+  'electrolytic-cell': `Electrolysis calculations are where electrochemistry becomes concrete, quantitative chemistry — given a current and a time, Faraday's law tells you exactly how many grams of a specific product will form at each electrode, a calculation type that appears throughout AP Chemistry Unit 9 and real industrial chemistry.
+
+The calculation chain starts with charge: Q = It, where I is current in amperes and t is time in seconds, giving charge in coulombs. Dividing charge by Faraday's constant (F = 96,485 C per mole of electrons) converts coulombs directly to moles of electrons transferred — the bridge between an electrical measurement and a chemical quantity. From moles of electrons, the relevant half-reaction's stoichiometry (n, the number of electrons per formula unit deposited or produced) converts to moles of product, and multiplying by molar mass gives the final mass: m = (MIt)/(nF).
+
+Electrode wiring conventions in an electrolytic cell are the reverse of a galvanic cell: because an external power source is forcing the reaction, the anode connects to the positive terminal and the cathode to the negative terminal — oxidation still occurs at the anode and reduction still occurs at the cathode, but which electrode is "positive" flips compared to a spontaneous galvanic cell.
+
+Molten NaCl electrolysis (the Downs process) produces sodium metal at the cathode and chlorine gas at the anode — industrially essential since sodium cannot be isolated by any chemical reduction method, only electrolysis. Electrolysis of water splits H2O into H2 gas at the cathode and O2 gas at the anode in a 2:1 volume ratio, directly reflecting the reaction stoichiometry. CuSO4 electroplating deposits a controlled thickness of copper metal onto a cathode object, with thickness directly calculable from current and time via Faraday's law. The Hall-Héroult process uses the same underlying calculation to extract aluminum metal from molten alumina at industrial scale.
+
+This simulator lets you set current and time for real electrolysis scenarios and calculates exactly how much product forms at each electrode using Faraday's law — connecting an abstract equation to real, checkable industrial-scale numbers.`,
+
+  'photoelectric-effect': `The photoelectric effect provided the decisive experimental evidence that light behaves as discrete particles (photons) rather than a purely continuous wave — Einstein's explanation of it, not his relativity work, earned him the Nobel Prize, and it remains a cornerstone AP Chemistry Unit 1 topic precisely because it cannot be explained without quantum theory.
+
+When light of sufficient frequency strikes a metal surface, electrons are ejected — but classical wave theory predicted this should depend on light intensity (brighter light, more energetic electrons), and experiments showed the opposite: ejected electron kinetic energy depends only on light frequency, not intensity at all. Einstein's equation, KE = hν - φ, resolves this: each photon carries energy hν (h = Planck's constant), and φ (the work function) is the minimum energy needed to free an electron from that specific metal's surface. Any photon energy beyond φ becomes the ejected electron's kinetic energy.
+
+Below the threshold frequency ν0 = φ/h, no electrons are ejected regardless of how intense the light is — even an enormously bright beam of low-frequency light simply cannot eject a single electron, because no individual photon carries enough energy, and photons don't combine their energy together to eject one electron collectively. Above threshold frequency, increasing intensity increases the number of electrons ejected per second (more photons arriving means more individual ejection events) but does not increase each electron's kinetic energy — intensity and photon energy are independent variables.
+
+Stopping voltage provides the standard experimental measurement: an opposing electric field is increased until it just stops the highest-energy ejected electrons from reaching a detector, and Vs = KE/e directly gives the maximum kinetic energy from an easily measured voltage.
+
+Different metals have different work functions (sodium and potassium have low work functions, ejecting electrons even with visible light; platinum and gold require higher-energy UV light) — a direct, measurable consequence of how tightly each metal's electrons are held.
+
+This simulator lets you adjust light frequency and intensity on real metals from sodium through platinum, directly visualizing threshold frequency, ejected electron kinetic energy, and stopping voltage as Einstein's equation predicts them.`,
+
+  'h-emission-spectrum': `Clicking two energy levels and instantly seeing the resulting photon's exact wavelength and color turns the Rydberg formula from an equation to memorize into a relationship you can verify directly — core AP Chemistry Unit 1 content built entirely from the hydrogen atom's quantized energy levels.
+
+Every electron transition in hydrogen, from any initial level ni down to any final level nf, releases a photon whose wavelength is given exactly by the Rydberg formula: 1/λ = R∞(1/nf² - 1/ni²), with R∞ = 1.097 × 10⁷ m⁻¹. Because hydrogen's energy levels follow En = -13.6 eV/n², larger transitions (bigger gap between ni and nf) release higher-energy, shorter-wavelength photons, while transitions between adjacent, high-n levels release lower-energy, longer-wavelength photons.
+
+The four series are distinguished entirely by their final level: the Lyman series (nf = 1) has the largest possible energy gaps and falls entirely in the ultraviolet, invisible to the human eye. The Balmer series (nf = 2) is uniquely important because it's the only series with lines in the visible spectrum — these are the classic red, cyan, blue, and violet hydrogen emission lines visible directly in a spectroscope, historically the first spectral lines ever measured with precision. The Paschen series (nf = 3) and Brackett series (nf = 4) both fall in the infrared, invisible but detectable with appropriate instruments.
+
+Because every transition within a series shares the same final level, series members converge as ni increases — the energy gap between consecutive transitions shrinks, and the series approaches (but never quite reaches) a series limit corresponding to complete ionization from that final level.
+
+Photon energy, frequency, and wavelength are three ways of describing the same quantity: E = hν = hc/λ, so any transition's photon can be characterized in whichever unit a specific problem asks for, all derived from the same underlying energy-level difference.
+
+This tool lets you click any initial and final energy level from n=1 through n=6, instantly calculates the resulting photon's wavelength, frequency, and energy, and identifies which series and spectral region it belongs to.`,
+
+  'electron-config': `Building electron configurations correctly, with the three governing rules enforced simultaneously, is a foundational AP Chemistry Unit 1 skill — and the handful of elements that violate the naive pattern are exactly where exams concentrate their hardest questions.
+
+The Aufbau principle states that electrons fill available orbitals starting from the lowest energy level upward, following the (n+l) ordering that explains why 4s fills before 3d despite 3 being a smaller principal quantum number — a frequent point of confusion since it seems to violate simple shell-by-shell filling. The Pauli exclusion principle limits any single orbital to a maximum of two electrons, and only if they have opposite spin — no two electrons in the same atom can share an identical set of all four quantum numbers.
+
+Hund's rule governs how electrons fill a set of degenerate (equal-energy) orbitals, such as the three p orbitals or five d orbitals within the same subshell: electrons occupy separate orbitals singly, with parallel spin, before any pairing occurs. This is why nitrogen's three 2p electrons occupy px, py, and pz individually rather than doubling up in just two of the three — minimizing electron-electron repulsion and maximizing total spin, which is genuinely lower in energy.
+
+Chromium and copper are the two most commonly tested Aufbau exceptions in period 4: chromium's actual ground-state configuration is [Ar]3d⁵4s¹ rather than the "expected" [Ar]3d⁴4s², and copper's is [Ar]3d¹⁰4s¹ rather than [Ar]3d⁹4s² — both violations exist because a half-filled (d⁵) or completely filled (d¹⁰) d subshell carries extra stability from favorable exchange energy, enough to make promoting one 4s electron into the d subshell energetically worthwhile.
+
+Whether an atom or ion is diamagnetic (all electrons paired, weakly repelled by a magnetic field) or paramagnetic (one or more unpaired electrons, attracted to a magnetic field) follows directly and unambiguously from its completed electron configuration.
+
+This builder lets you fill electrons into subshells with Aufbau, Pauli, and Hund's rule enforced live for any element, correctly handles the Cr/Cu exceptions, and displays magnetism directly from the resulting configuration.`,
+
+  'pes-spectrum': `Photoelectron spectroscopy (PES) gives chemists a direct experimental window into electron configuration — rather than inferring configuration purely from periodic table position, PES measures it, and correctly reading a PES spectrum is an AP Chemistry Unit 1 skill that tests real data interpretation rather than memorized rules.
+
+In PES, high-energy photons eject electrons from an atom, and the kinetic energy of each ejected electron is measured; subtracting from the known photon energy gives the binding energy of the subshell that electron came from. Because different subshells hold their electrons with characteristically different binding energies, a PES spectrum — plotted as peak position (binding energy) versus peak height (relative electron count) — is essentially a fingerprint of an atom's full electron configuration.
+
+Peak position tells you which subshell a given peak corresponds to: core electrons, held very tightly by the nucleus with little shielding, produce peaks at very high binding energy, while valence electrons, more shielded and farther from the nucleus, produce peaks at much lower binding energy. Peak height directly reflects how many electrons occupy that subshell — a 2s peak is always shorter than a 2p peak's neighboring peaks in an element with a full 2p⁶ subshell, since 2s holds only 2 electrons versus 2p's 6.
+
+Reading a complete electron configuration from a PES spectrum works in reverse from the usual Aufbau-based approach: rather than filling orbitals theoretically, you identify each peak's binding energy, assign it to the correct subshell based on that binding energy scale, and read off the relative electron count from peak height directly — reconstructing the actual measured configuration rather than a predicted one.
+
+Mystery element identification is the natural culminating exercise: given only a PES spectrum with no other information, correctly counting subshells and electrons from peak position and height identifies the unknown element unambiguously, testing whether the underlying logic is genuinely understood rather than pattern-matched from familiar elements.
+
+This reader lets you explore real PES spectra for known elements or attempt mystery-element identification, distinguishing core from valence electrons purely from spectral data.`,
+
+  'isotope-mass-spec': `Atomic mass values on the periodic table are never whole numbers, and understanding exactly why requires connecting isotope abundance data to a weighted average calculation — a core AP Chemistry Unit 1 skill demonstrated directly through real mass spectrometry data.
+
+A mass spectrometer separates isotopes of an element by mass-to-charge ratio (m/z), producing a spectrum with a distinct peak for each naturally occurring isotope, where peak height represents that isotope's relative abundance in a natural sample. Because different isotopes of the same element have different numbers of neutrons (and therefore different mass) but occur in fixed, characteristic natural proportions, each element's mass spectrum has a signature pattern of peaks.
+
+The atomic mass reported on the periodic table is a weighted average: atomic mass = Σ(isotope mass × fractional abundance), summed across every naturally occurring isotope. Chlorine is the textbook example: Cl-35 (mass ≈ 34.97, abundance ≈ 75.8%) and Cl-37 (mass ≈ 36.97, abundance ≈ 24.2%) combine to a weighted average of approximately 35.45 — matching the periodic table value exactly, and explaining directly why chlorine's atomic mass isn't close to a whole number despite each individual isotope having a mass very near a whole number.
+
+Copper shows the same principle with Cu-63 (abundance ≈ 69.2%) and Cu-65 (abundance ≈ 30.8%), weighting to approximately 63.55 — and because Cu-63 is more abundant, the weighted average sits closer to 63 than to 65, illustrating that the weighted average is always pulled toward whichever isotope is more common, not simply the midpoint between isotope masses.
+
+Verifying a calculated weighted average against the accepted IUPAC atomic weight is a useful self-check built directly into working through these problems, confirming the calculation was set up correctly rather than just producing a plausible-looking number.
+
+This tool displays real isotope mass and abundance data as mass spectra for 30 elements, lets you read m/z peaks directly, and calculates the weighted average atomic mass for comparison against the periodic table value.`,
+
+  'nmr-predictor': `Proton NMR spectroscopy lets chemists determine an organic molecule's structure by reading how hydrogen atoms in different chemical environments absorb radio-frequency energy differently — a technique covered in both AP Chemistry and IChO organic chemistry, and one of the most information-rich structure-determination tools available.
+
+Chemical shift (δ, measured in parts per million) indicates a hydrogen atom's electronic environment: hydrogens near electronegative atoms or functional groups are deshielded (their electron density is pulled away) and appear farther downfield (higher δ), while hydrogens in electron-rich environments are shielded and appear upfield (lower δ). Tetramethylsilane (TMS) is universally used as the zero-point reference, since its twelve equivalent hydrogens are unusually shielded and appear far upfield of nearly everything else measured.
+
+Characteristic shift ranges let you assign structural fragments directly from a spectrum: alkyl CH3 hydrogens typically appear around 0.9-1.5 ppm, CH2 hydrogens adjacent to a carbonyl or similar group shift further downfield to roughly 2-2.5 ppm, hydroxyl (O-H) protons appear in a broad, variable range around 3-5 ppm (their exact position shifts with concentration and hydrogen bonding), and aromatic ring hydrogens appear characteristically far downfield, around 7-8 ppm, due to the ring current effect unique to aromatic systems.
+
+The n+1 splitting rule governs peak multiplicity: a hydrogen (or equivalent set of hydrogens) with n neighboring, chemically non-equivalent hydrogens on adjacent carbons splits into n+1 peaks — a hydrogen next to a CH3 group (3 neighbors) splits into a quartet, while a hydrogen next to a CH2 group (2 neighbors) splits into a triplet, giving direct structural information about what's connected to what.
+
+Integration — the relative area under each peak — is directly proportional to the number of equivalent hydrogens producing that peak, letting you determine the ratio of different hydrogen environments even without knowing the molecule's total hydrogen count in advance.
+
+This predictor generates realistic ¹H NMR spectra for classic teaching molecules like ethanol, acetone, diethyl ether, and acetic acid, showing chemical shift, splitting, and integration together as an integrated structure-determination exercise.`,
+
+  'mass-spec': `Electron-ionization mass spectrometry fragments organic molecules in predictable, chemically meaningful ways, and reading the resulting fragmentation pattern to identify a molecule's structure is a genuinely advanced organic chemistry skill covered in IChO and upper-level coursework.
+
+Bombarding a molecule with high-energy electrons knocks out one electron, forming a radical cation called the molecular ion (M+•), whose mass-to-charge ratio directly gives the molecule's molar mass — the single most immediately useful piece of information a mass spectrum provides, assuming the molecular ion peak survives to be detected at all.
+
+The molecular ion is often unstable and fragments further along predictable pathways. Alpha-cleavage — breaking a C-C bond immediately adjacent to a heteroatom (like the oxygen in a ketone or alcohol) — is favored because the resulting fragment can be stabilized by resonance donation from that heteroatom's lone pair, making this one of the most commonly observed fragmentation patterns in oxygen-containing organic molecules.
+
+The tropylium cation, appearing characteristically at m/z = 91, arises when a benzylic C-C bond cleaves and the resulting cation rearranges into the remarkably stable, fully aromatic seven-membered tropylium ring — its distinctive stability means this peak, when present, is often unusually intense and immediately suggests a benzyl-containing structure in the original molecule.
+
+McLafferty rearrangement is a more complex fragmentation specific to carbonyl compounds with a gamma hydrogen: the molecule undergoes an internal hydrogen transfer through a six-membered transition state, cleaving a C-C bond and producing a distinct fragment mass shift that's diagnostic once recognized.
+
+Isotope patterns provide additional structural clues independent of fragmentation: chlorine and bromine each produce a characteristic M+2 peak (from the ³⁷Cl or ⁸¹Br isotope) at roughly the intensity ratio expected from natural isotope abundance, immediately signaling the presence of that halogen even before any other structural analysis.
+
+This simulator shows the molecular ion, common fragmentation pathways, and base peak identification for classic organic molecules, building the pattern-recognition skill mass spectrum interpretation actually requires.`,
+
+  'sn1-sn2-e1-e2': `Predicting which mechanism — SN1, SN2, E1, or E2 — actually dominates for a given set of reaction conditions is one of organic chemistry's genuinely decision-tree-shaped skills, and this predictor is built specifically around that decision framework rather than mechanism animation itself.
+
+Substrate class is the first and often most decisive factor: primary substrates strongly favor SN2 (the backside nucleophilic attack has no steric hindrance) and essentially never proceed through SN1 or E1 (a primary carbocation is far too unstable to form). Tertiary substrates favor the opposite: SN2 is sterically blocked entirely by three bulky substituents crowding the backside approach, so tertiary substrates react exclusively through SN1/E1 pathways via a relatively stable tertiary carbocation intermediate. Secondary substrates are genuinely ambiguous and can go either way depending on the other three factors.
+
+Nucleophile/base strength is the second major factor: strong nucleophiles favor the bimolecular SN2 and E2 pathways (which require the nucleophile or base to directly attack in the rate-determining step), while weak nucleophiles favor the unimolecular SN1 and E1 pathways (where the rate-determining step is simply the substrate ionizing on its own, independent of nucleophile strength). Whether the reagent acts primarily as a nucleophile (attacking carbon) or a base (removing a proton) further determines substitution versus elimination.
+
+Solvent polarity governs the third factor: polar aprotic solvents (like DMSO or acetone, which cannot hydrogen bond to the nucleophile) leave nucleophiles "naked" and highly reactive, favoring SN2; polar protic solvents (like water or alcohols, which hydrogen bond to and stabilize both the nucleophile and any carbocation intermediate) favor SN1/E1 by stabilizing the ionization step.
+
+Temperature is the final tiebreaker between substitution and elimination pathways specifically: higher temperature favors elimination (entropically favored, producing more product particles) over substitution when both are mechanistically plausible for a given substrate.
+
+This predictor lets you select substrate class, nucleophile/base strength, solvent polarity, and temperature, then predicts the dominant mechanism with full step-by-step reasoning — turning a four-variable decision into a checkable, explainable prediction rather than memorized case-by-case rules.`,
 }
 
 // Fallback for labs without a custom seoBody

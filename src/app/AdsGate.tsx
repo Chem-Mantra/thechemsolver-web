@@ -1,14 +1,12 @@
-'use client'
-
 import Script from 'next/script'
-import { useAuth } from './AuthProvider'
 
-/** Loads the AdSense script only for non-premium visitors. */
+/** Loads the AdSense script unconditionally. There are no live <ins
+ * class="adsbygoogle"> units yet (see the AdSlot placeholders in
+ * LabSEOShell.tsx) — once real ad units are added, gate premium users out
+ * at that <ins> level instead of here, so the base script tag stays
+ * reliably present for crawlers (including AdSense's own review crawler)
+ * regardless of auth/premium state. */
 export default function AdsGate({ client }: { client: string }) {
-  const { premium } = useAuth()
-
-  if (premium.loading || premium.isPremium) return null
-
   return (
     <Script
       async

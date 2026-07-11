@@ -194,13 +194,19 @@ export default function LabSEOShell({ slug, children }: { slug: string; children
           <AdSlot className="h-24" label="728×90 Below Article" />
         </div>
 
-        {/* Related tools */}
+        {/* Related tools — rotated per-page so every tool accumulates internal
+            inlinks over time instead of only the first 8 declared in LAB_META. */}
         <div className="max-w-4xl mx-auto mt-8 pt-6 border-t border-white/10">
           <h2 className="font-bold text-sm text-gray-300 mb-4 uppercase tracking-wider">More Free Chemistry Tools</h2>
           <div className="flex flex-wrap gap-2">
-            {Object.entries(LAB_META)
-              .filter(([s]) => s !== slug)
-              .slice(0, 8)
+            {(() => {
+              const allSlugs = Object.keys(LAB_META)
+              const offset = allSlugs.indexOf(slug)
+              const others = allSlugs.filter(s => s !== slug)
+              const start = ((offset < 0 ? 0 : offset) * 7) % others.length
+              const rotated = [...others.slice(start), ...others.slice(0, start)]
+              return rotated.slice(0, 10).map(s => [s, LAB_META[s]] as const)
+            })()
               .map(([s, m]) => (
                 <Link
                   key={s}

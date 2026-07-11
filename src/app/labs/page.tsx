@@ -13,6 +13,7 @@ const ALL_TOOLS = [
   { name: 'Hydrocarbon Structure Builder', slug: 'hydrocarbon', cat: 'Organic', tag: 'AP Unit 1 · Orgo 1', color: '#a855f7' },
   { name: 'SN1 / SN2 / E1 / E2 Predictor', slug: 'sn1-sn2-e1-e2', cat: 'Organic', tag: 'AP · Orgo 2 · IChO', color: '#a855f7' },
   { name: 'Organic Reaction Mechanisms', slug: 'organic-mechanism', cat: 'Organic', tag: 'AP · Orgo 2 · IChO', color: '#a855f7' },
+  { name: '3D Reaction Mechanism Viewer', slug: 'mechanisms', cat: 'Organic', tag: 'AP · Orgo 2 · IChO', color: '#a855f7' },
   { name: 'Organic Synthesis Pathways', slug: 'organic-synthesis', cat: 'Organic', tag: 'IChO · Orgo 2', color: '#a855f7' },
   { name: 'Stereochemistry & R/S Solver', slug: 'stereochemistry', cat: 'Organic', tag: 'AP · IChO · Orgo 2', color: '#a855f7' },
   { name: 'Projection Formula Lab', slug: 'projection-formula', cat: 'Organic', tag: 'AP · IChO', color: '#a855f7' },
@@ -36,6 +37,8 @@ const ALL_TOOLS = [
   // Electrochemistry
   { name: 'Electrochemical Cell Simulator', slug: 'electrochemical-potentials', cat: 'Electrochemistry', tag: 'AP Unit 9 · IChO', color: '#f97316' },
   { name: 'Electrolytic Cell Simulator', slug: 'electrolytic-cell', cat: 'Electrochemistry', tag: 'AP Unit 9 · IChO', color: '#f97316' },
+  { name: 'Electrochemistry Simulator', slug: 'electrochemistry', cat: 'Electrochemistry', tag: 'AP Unit 9 · IChO', color: '#f97316' },
+  { name: 'Electrochemical Cell Lab', slug: 'electrochemical', cat: 'Electrochemistry', tag: 'AP Unit 9 · IChO', color: '#f97316' },
   // Stoichiometry / Reactions
   { name: 'Stoichiometry Mapper', slug: 'stoichiometry-mapper', cat: 'Stoichiometry', tag: 'AP Unit 4', color: '#f97316' },
   { name: 'Limiting Reagent Visualizer', slug: 'limiting-reagent', cat: 'Stoichiometry', tag: 'AP Unit 4', color: '#f97316' },
