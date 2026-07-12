@@ -1,4 +1,5 @@
-export const dynamic = 'force-static'
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 const LAB_SLUGS = [
   'titration', 'nomenclature', 'equilibrium', 'ionic-equilibrium',
@@ -15,10 +16,57 @@ const LAB_SLUGS = [
   'isotope-mass-spec', 'nmr-predictor', 'mass-spec', 'sn1-sn2-e1-e2',
 ]
 
-export default function sitemap() {
+// Maps each Supabase table to the /q/[type]/[id] URL segment used in
+// src/app/q/[type]/[id]/page.tsx.
+const QUESTION_TABLES: { table: string; urlType: string }[] = [
+  { table: 'QBankMCQ', urlType: 'mcq' },
+  { table: 'APChapterMCQ', urlType: 'ap-mcq' },
+  { table: 'QBankFRQ', urlType: 'frq' },
+  { table: 'APChapterFRQ', urlType: 'ap-frq' },
+  { table: 'QBankIChO', urlType: 'icho' },
+]
+
+const SUPABASE_PAGE_SIZE = 1000 // Supabase/PostgREST's default row cap per request
+
+async function fetchAllRows(table: string) {
+  const { supabase } = await import('@/lib/supabase')
+  const rows: { id: number; created_at: string | null }[] = []
+  let from = 0
+  while (true) {
+    const { data, error } = await supabase
+      .from(table)
+      .select('id, created_at')
+      .range(from, from + SUPABASE_PAGE_SIZE - 1)
+    if (error || !data) break
+    rows.push(...data)
+    if (data.length < SUPABASE_PAGE_SIZE) break
+    from += SUPABASE_PAGE_SIZE
+  }
+  return rows
+}
+
+async function getQuestionPages(base: string) {
+  try {
+    const results = await Promise.all(QUESTION_TABLES.map(({ table }) => fetchAllRows(table)))
+    return results.flatMap((rows, i) => {
+      const { urlType } = QUESTION_TABLES[i]
+      return rows.map(row => ({
+        url: `${base}/q/${urlType}/${row.id}`,
+        lastModified: row.created_at ? new Date(row.created_at) : new Date(),
+        changeFrequency: 'monthly' as const,
+        priority: 0.8,
+      }))
+    })
+  } catch {
+    // DB unavailable — sitemap still returns the static shell below.
+    return []
+  }
+}
+
+export default async function sitemap() {
   const base = 'https://www.thechemsolver.com'
 
-  return [
+  const staticPages = [
     { url: base,                      lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 1.0  },
     { url: `${base}/labs`,            lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 0.9  },
     { url: `${base}/about`,           lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.3  },
@@ -41,4 +89,8 @@ export default function sitemap() {
       priority: 0.9,
     })),
   ]
+
+  const questionPages = await getQuestionPages(base)
+
+  return [...staticPages, ...questionPages]
 }
