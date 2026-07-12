@@ -7,6 +7,7 @@ import { AuthProvider } from './AuthProvider'
 import AdsGate from './AdsGate'
 import AdFreePopup from './AdFreePopup'
 import AuthCallbackListener from './AuthCallbackListener'
+import GoogleOneTap from './GoogleOneTap'
 import { Analytics } from '@vercel/analytics/next'
 // The $15/year ad-free purchase is live (website only — see AdFreePopup.tsx
 // for why the native app never shows it). NativeAccessGate (a full-app
@@ -84,6 +85,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AuthProvider>
           <CapacitorNative />
           <AuthCallbackListener />
+          <GoogleOneTap />
           <NavWrapper>{children}</NavWrapper>
           <AdFreePopup />
           <Analytics />
