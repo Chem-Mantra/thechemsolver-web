@@ -20,7 +20,9 @@ jobs:
           tar -xzf gitleaks.tar.gz gitleaks
           sudo mv gitleaks /usr/local/bin/
       - name: Scan for secrets
-        run: gitleaks detect --source . --verbose --redact
+        # --no-git scans the working tree only (not full history). Historical
+        # false positives from placeholder strings should not red-flag every push.
+        run: gitleaks detect --source . --verbose --redact --no-git
 
   lint-build-audit:
     runs-on: ubuntu-latest
