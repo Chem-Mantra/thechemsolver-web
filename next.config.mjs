@@ -7,10 +7,10 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
-  // Pre-existing lab/content lint noise (unescaped entities, unused vars)
-  // was blocking production deploys of SEO fixes. Re-enable after lab cleanup.
+  // ESLint runs during `next build`. Rules tuned in .eslintrc.json so content
+  // apostrophes / intentional hook deps don't fail production (see CI).
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
   poweredByHeader: false,
 
