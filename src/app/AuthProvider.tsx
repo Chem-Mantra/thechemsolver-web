@@ -74,6 +74,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     )
 
     // Bootstrap server trial once (idempotent). Only if no row yet.
+    // Pass local trial start so signing in continues the same 15-day clock
+    // (no fresh 15 days after browsing as a guest).
     if (!data) {
       try {
         const res = await fetch('/api/access/ensure-trial', {
@@ -82,6 +84,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             Authorization: `Bearer ${sess.access_token}`,
             'Content-Type': 'application/json',
           },
+          body: JSON.stringify({
+            localTrialStartedAt: localStarted ?? undefined,
+          }),
         })
         if (res.ok) {
           const body = await res.json()

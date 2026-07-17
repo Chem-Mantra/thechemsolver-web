@@ -9,10 +9,11 @@ import AdFreePopup from './AdFreePopup'
 import AuthCallbackListener from './AuthCallbackListener'
 import GoogleOneTap from './GoogleOneTap'
 import { Analytics } from '@vercel/analytics/next'
+import NativeAccessGate from './NativeAccessGate'
 // Freemium: 15-day free trial, then $15/year full access (PayPal on web).
 // AccessGate wraps interactive tools; AdFreePopup nags near/after trial end.
-// NativeAccessGate stays unmounted here — mount it in the Capacitor shell
-// only if you want a hard native gate (App Store rules: no external IAP link).
+// NativeAccessGate is a no-op on the website; on Capacitor it requires
+// sign-in + trial/paid access and points users to the web for PayPal.
 
 const ADSENSE_CLIENT = 'ca-pub-4376919875096457'
 
@@ -88,14 +89,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }}
         />
         <AuthProvider>
-          <CapacitorNative />
-          <AuthCallbackListener />
-          <GoogleOneTap />
-          <NavWrapper>{children}</NavWrapper>
-          <AdFreePopup />
-          <Analytics />
-          <RegisterServiceWorker />
-          <AdsGate client={ADSENSE_CLIENT} />
+          <NativeAccessGate>
+            <CapacitorNative />
+            <AuthCallbackListener />
+            <GoogleOneTap />
+            <NavWrapper>{children}</NavWrapper>
+            <AdFreePopup />
+            <Analytics />
+            <RegisterServiceWorker />
+            <AdsGate client={ADSENSE_CLIENT} />
+          </NativeAccessGate>
         </AuthProvider>
       </body>
     </html>

@@ -6,9 +6,13 @@ import { isPaidCaptureId, snapshotFromPremiumRow } from '@/lib/access'
 /**
  * Start (or report) the signed-in student's free trial.
  *
- * - No row yet → insert a 15-day server trial (`paypal_capture_id = 'trial'`).
- * - Existing active paid or trial → return as-is (never restarts).
- * - Expired trial without payment → return expired (no free re-trial).
+ * Single clock (no double-dip):
+ * - Client may send `localTrialStartedAt` (ms epoch) from the anonymous
+ *   localStorage trial. The server trial ends at localStart + 15 days —
+ *   even if that is already in the past — so signing in never resets a
+ *   burned free period.
+ * - If no local clock was sent, trial starts now and lasts FREE_TRIAL_DAYS.
+ * - Existing row → return as-is (never restarts).
  *
  * Requires `Authorization: Bearer <supabase access_token>`.
  */
@@ -26,7 +30,26 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Sign in required.' }, { status: 401 })
   }
 
-  // Validate the user JWT with the anon client (does not need service role).
+  let localTrialStartedAt: number | null = null
+  try {
+    const body = await req.json().catch(() => ({}))
+    const raw = (body as { localTrialStartedAt?: unknown })?.localTrialStartedAt
+    if (typeof raw === 'number' && Number.isFinite(raw) && raw > 0) {
+      localTrialStartedAt = raw
+    } else if (typeof raw === 'string' && /^\d+$/.test(raw)) {
+      localTrialStartedAt = Number(raw)
+    }
+  } catch {
+    // empty body is fine
+  }
+
+  // Reject absurd timestamps (future > 1 day, or older than 2 years).
+  const nowMs = Date.now()
+  if (localTrialStartedAt != null) {
+    if (localTrialStartedAt > nowMs + 24 * 60 * 60 * 1000) localTrialStartedAt = null
+    if (localTrialStartedAt < nowMs - 2 * 365 * 24 * 60 * 60 * 1000) localTrialStartedAt = null
+  }
+
   const userClient = createClient(supabaseUrl, anonKey, {
     global: { headers: { Authorization: `Bearer ${token}` } },
     auth: { persistSession: false, autoRefreshToken: false },
@@ -61,22 +84,23 @@ export async function POST(req: NextRequest) {
     })
   }
 
-  const now = new Date()
-  const expires = new Date(now.getTime() + FREE_TRIAL_DAYS * 24 * 60 * 60 * 1000)
+  // Align server trial to the anonymous local clock when present.
+  const trialStartMs = localTrialStartedAt ?? nowMs
+  const purchasedAt = new Date(trialStartMs)
+  const expiresAt = new Date(trialStartMs + FREE_TRIAL_DAYS * 24 * 60 * 60 * 1000)
 
   const { data: inserted, error: insertErr } = await admin
     .from('premium_access')
     .insert({
       user_id: userId,
-      purchased_at: now.toISOString(),
-      expires_at: expires.toISOString(),
+      purchased_at: purchasedAt.toISOString(),
+      expires_at: expiresAt.toISOString(),
       paypal_capture_id: 'trial',
     })
     .select('expires_at, paypal_capture_id, purchased_at')
     .single()
 
   if (insertErr) {
-    // Race: another request may have inserted between our read and write.
     if (insertErr.code === '23505') {
       const { data: raced } = await admin
         .from('premium_access')
@@ -91,5 +115,9 @@ export async function POST(req: NextRequest) {
   }
 
   const snap = snapshotFromPremiumRow(inserted)
-  return NextResponse.json({ created: true, ...snap })
+  return NextResponse.json({
+    created: true,
+    alignedToLocal: localTrialStartedAt != null,
+    ...snap,
+  })
 }

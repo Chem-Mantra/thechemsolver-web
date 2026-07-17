@@ -100,8 +100,8 @@ export default function AccessGate({
                 {busy ? 'Please wait…' : 'Sign in with Google to continue'}
               </button>
               <p className="text-[11px] text-gray-500">
-                Sign-in is free. New accounts get a {FREE_TRIAL_DAYS}-day trial automatically if you
-                haven&apos;t used one yet — otherwise you&apos;ll see checkout next.
+                Sign-in is free. Your remaining free days carry over from this browser — signing in
+                does not restart the {FREE_TRIAL_DAYS}-day trial.
               </p>
             </>
           ) : (

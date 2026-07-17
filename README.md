@@ -33,9 +33,11 @@ rotate hint on the web (iOS Safari never supported orientation lock).
 ## Student access plan (freemium)
 
 - **15-day free trial** — anonymous visitors get a local trial clock; Google
-  sign-in starts a server-side trial on `premium_access` (so it follows the
-  student across devices).
+  sign-in writes the same window to `premium_access` (aligned to the local
+  start — no second free period). Paid/trial status then follows the account
+  across devices.
 - **Then $15/year** — PayPal hosted button unlocks full access for one year
   (labs, practice, ebooks). Webhook: `/api/paypal/webhook`.
 - Marketing/SEO pages stay public; only interactive tools are gated via
-  `AccessGate`. See **[docs/PAYPAL_SETUP.md](docs/PAYPAL_SETUP.md)**.
+  `AccessGate`. Native app uses `NativeAccessGate` (web PayPal for checkout).
+  See **[docs/PAYPAL_SETUP.md](docs/PAYPAL_SETUP.md)**.
