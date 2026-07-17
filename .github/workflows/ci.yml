@@ -40,8 +40,8 @@ jobs:
           THECHEMSOLVER_SUPABASE_SERVICE_KEY: ${{ secrets.THECHEMSOLVER_SUPABASE_SERVICE_KEY }}
         run: |
           export NEXT_PUBLIC_THECHEMSOLVER_SUPABASE_URL="${NEXT_PUBLIC_THECHEMSOLVER_SUPABASE_URL:-https://placeholder.supabase.co}"
-          export NEXT_PUBLIC_THECHEMSOLVER_SUPABASE_ANON_KEY="${NEXT_PUBLIC_THECHEMSOLVER_SUPABASE_ANON_KEY:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.placeholder}"
-          export THECHEMSOLVER_SUPABASE_SERVICE_KEY="${THECHEMSOLVER_SUPABASE_SERVICE_KEY:-placeholder-service-key}"
+          export NEXT_PUBLIC_THECHEMSOLVER_SUPABASE_ANON_KEY="${NEXT_PUBLIC_THECHEMSOLVER_SUPABASE_ANON_KEY:-ci-placeholder-anon-key}"
+          export THECHEMSOLVER_SUPABASE_SERVICE_KEY="${THECHEMSOLVER_SUPABASE_SERVICE_KEY:-ci-placeholder-service-key}"
           npm run build
       # Advisory only — do not fail the pipeline on transitive vulns while
       # we keep Next on the patched 14.2.x line used in production.
