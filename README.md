@@ -30,11 +30,12 @@ Lab simulation pages (`/labs/*`) lock to landscape orientation on mobile —
 natively via `@capacitor/screen-orientation` in the app, best-effort plus a
 rotate hint on the web (iOS Safari never supported orientation lock).
 
-## Google sign-in (monetization paused)
+## Student access plan (freemium)
 
-Everything on TheChemSolver is free right now, including inside the native
-app — the $15/year ad-free purchase and the native app's payment gate are
-both built but currently unmounted, pending a decision on monetization
-based on traffic. `/account` still offers optional Google sign-in. See
-**[docs/RAZORPAY_SETUP.md](docs/RAZORPAY_SETUP.md)** for the full paused
-system and how to re-enable it later.
+- **15-day free trial** — anonymous visitors get a local trial clock; Google
+  sign-in starts a server-side trial on `premium_access` (so it follows the
+  student across devices).
+- **Then $15/year** — PayPal hosted button unlocks full access for one year
+  (labs, practice, ebooks). Webhook: `/api/paypal/webhook`.
+- Marketing/SEO pages stay public; only interactive tools are gated via
+  `AccessGate`. See **[docs/PAYPAL_SETUP.md](docs/PAYPAL_SETUP.md)**.

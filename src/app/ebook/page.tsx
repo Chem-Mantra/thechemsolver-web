@@ -1,3 +1,4 @@
+import AccessGate from '@/app/AccessGate'
 import type { Metadata } from 'next'
 import ChemEbook, { EbookUnit } from '@/app/components/ChemEbook'
 
@@ -364,10 +365,13 @@ The E/Z system (CIP rules) supersedes cis/trans for alkenes when the two groups 
 
 export default function EbookPage() {
   return (
-    <ChemEbook
-      title="Chemistry Study Guide"
-      subtitle="AP Chemistry · USNCO · IChO"
-      units={UNITS}
-    />
+    <AccessGate title="Continue the study guide">
+      <ChemEbook
+        title="Chemistry Study Guide"
+        subtitle="AP Chemistry · USNCO · IChO"
+        units={UNITS}
+      />
+    </AccessGate>
   )
 }
+

@@ -26,7 +26,7 @@ export default function USHomePage() {
       {/* Hero */}
       <section className="px-5 py-20 md:py-28 text-center max-w-5xl mx-auto">
         <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-4 py-1.5 text-sm text-purple-300 mb-6">
-          🆓 Every tool is free to use
+          🆓 15-day free trial · then $15/year
         </div>
         <h1 className="text-5xl md:text-6xl font-black mb-5 leading-tight tracking-tight">
           Chemistry Tools for
@@ -35,7 +35,7 @@ export default function USHomePage() {
           </span>
         </h1>
         <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-          Free interactive labs and simulators purpose-built for each exam — from AP Chemistry Units 1–9 to IChO-level coordination chemistry and multi-step synthesis.
+          Explore every interactive lab and simulator free for 15 days — purpose-built for AP Chemistry Units 1–9 through IChO-level coordination chemistry. After that, full access is $15/year for students.
         </p>
 
         {/* Exam hub cards */}
@@ -72,10 +72,10 @@ export default function USHomePage() {
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
           {[
-            { v: '30+', l: 'Free Simulators' },
-            { v: '$0', l: 'Forever Free' },
-            { v: '3', l: 'Exam Tracks' },
-            { v: '0', l: 'Login Required' },
+            { v: '30+', l: 'Simulators' },
+            { v: '15d', l: 'Free Trial' },
+            { v: '$15', l: 'Per Year' },
+            { v: '4', l: 'Exam Tracks' },
           ].map(s => (
             <div key={s.l} className="bg-white/5 border border-white/10 rounded-2xl p-4">
               <div className="text-2xl font-black text-white mb-0.5">{s.v}</div>

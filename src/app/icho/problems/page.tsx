@@ -1,4 +1,6 @@
 'use client'
+
+import AccessGate from '@/app/AccessGate'
 import { useState, useEffect } from 'react'
 import IChOProblemViewer, { IChOProblem, IChOPart, IChOSubPart } from '@/app/components/IChOProblemViewer'
 import type { IChORow } from '@/lib/supabase'
@@ -33,7 +35,7 @@ function rowToProblem(r: IChORow, idx: number): IChOProblem {
 
 type Source = 'IChO_Prep' | 'IChO_Volumes'
 
-export default function IChOProblemsPage() {
+function IChOProblemsPageInner() {
   const [source, setSource]         = useState<Source>('IChO_Prep')
   const [years, setYears]           = useState<number[]>([])
   const [selectedYear, setYear]     = useState<number | null>(null)
@@ -156,5 +158,13 @@ export default function IChOProblemsPage() {
         </button>
       </div>
     </div>
+  )
+}
+
+export default function IChOProblemsPage() {
+  return (
+    <AccessGate title='Keep practicing IChO problems'>
+      <IChOProblemsPageInner />
+    </AccessGate>
   )
 }

@@ -6,24 +6,22 @@ import { Capacitor } from '@capacitor/core'
 import { supabase } from '@/lib/supabase'
 import { signInWithGoogle } from '@/lib/googleAuth'
 import { useAuth } from './AuthProvider'
+import { ACCESS_PRICE_USD, FREE_TRIAL_DAYS } from '@/lib/pricing'
 
 /**
- * Full-app access gate — native only. The website itself is unaffected
- * (free, with ads/upsell, for every browser visitor); this component only
- * renders `children` once the signed-in account is confirmed premium.
- *
- * This is a deliberately stricter pattern than the website's ads-only
- * gating — see docs/PAYPAL_SETUP.md for the App Store risk tradeoff.
+ * Full-app access gate — native only. Website traffic uses AccessGate on
+ * individual tools instead. Allows paid OR active free trial; after trial,
+ * points students to the web account page for PayPal (App Store rules).
  */
 export default function NativeAccessGate({ children }: { children: React.ReactNode }) {
-  const { user, loading, premium, refreshPremium } = useAuth()
+  const { user, loading, access, refreshAccess } = useAuth()
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [checking, setChecking] = useState(false)
 
   if (!Capacitor.isNativePlatform()) return <>{children}</>
 
-  if (loading || premium.loading) {
+  if (loading || access.loading) {
     return (
       <GateShell>
         <p className="text-sm text-gray-400">Loading…</p>
@@ -44,7 +42,7 @@ export default function NativeAccessGate({ children }: { children: React.ReactNo
 
   async function handleCheckAgain() {
     setChecking(true)
-    await refreshPremium()
+    await refreshAccess()
     setChecking(false)
   }
 
@@ -57,7 +55,8 @@ export default function NativeAccessGate({ children }: { children: React.ReactNo
       <GateShell>
         <h1 className="text-lg font-bold mt-2 mb-2">Sign in to continue</h1>
         <p className="text-sm text-gray-400 mb-6 max-w-xs">
-          Use the same Google account you registered with at thechemsolver.com.
+          New students get a free {FREE_TRIAL_DAYS}-day trial. Use the same Google account you use on
+          thechemsolver.com.
         </p>
         {error && <p className="text-red-400 text-xs mb-3 max-w-xs">{error}</p>}
         <button
@@ -72,32 +71,32 @@ export default function NativeAccessGate({ children }: { children: React.ReactNo
     )
   }
 
-  if (!premium.isPremium) {
-    return (
-      <GateShell>
-        <h1 className="text-lg font-bold mt-2 mb-2">Access required</h1>
-        <p className="text-sm text-gray-400 mb-1 max-w-xs">
-          <strong className="text-white">{user.email}</strong> hasn&apos;t purchased access yet.
-        </p>
-        <p className="text-sm text-gray-400 mb-6 max-w-xs">
-          Visit <strong className="text-white">thechemsolver.com</strong>, register and pay with this same Google
-          account, then come back here and sign in again.
-        </p>
-        <button
-          onClick={handleCheckAgain}
-          disabled={checking}
-          className="w-full max-w-xs bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white text-sm font-semibold rounded-lg px-4 py-3 transition-colors mb-3"
-        >
-          {checking ? 'Checking…' : "I've paid — check again"}
-        </button>
-        <button onClick={handleSwitchAccount} className="text-xs text-gray-500 hover:text-white underline">
-          Sign in with a different account
-        </button>
-      </GateShell>
-    )
+  if (access.hasAccess) {
+    return <>{children}</>
   }
 
-  return <>{children}</>
+  return (
+    <GateShell>
+      <h1 className="text-lg font-bold mt-2 mb-2">Trial ended</h1>
+      <p className="text-sm text-gray-400 mb-1 max-w-xs">
+        <strong className="text-white">{user.email}</strong> needs full access (${ACCESS_PRICE_USD}/year).
+      </p>
+      <p className="text-sm text-gray-400 mb-6 max-w-xs">
+        Visit <strong className="text-white">thechemsolver.com/account</strong> in a browser, pay with
+        this same Google account, then come back here.
+      </p>
+      <button
+        onClick={handleCheckAgain}
+        disabled={checking}
+        className="w-full max-w-xs bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white text-sm font-semibold rounded-lg px-4 py-3 transition-colors mb-3"
+      >
+        {checking ? 'Checking…' : "I've paid — check again"}
+      </button>
+      <button onClick={handleSwitchAccount} className="text-xs text-gray-500 hover:text-white underline">
+        Sign in with a different account
+      </button>
+    </GateShell>
+  )
 }
 
 function GoogleIcon() {

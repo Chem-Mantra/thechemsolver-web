@@ -1,3 +1,4 @@
+import AccessGate from '@/app/AccessGate'
 import type { Metadata } from 'next'
 import EbookClient from './EbookClient'
 
@@ -42,7 +43,7 @@ export default function OrganicChemistryEbookPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(courseLd) }}
       />
-      <EbookClient />
+      <AccessGate title="Continue the interactive ebook"><EbookClient /></AccessGate>
     </>
   )
 }

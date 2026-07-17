@@ -9,11 +9,10 @@ import AdFreePopup from './AdFreePopup'
 import AuthCallbackListener from './AuthCallbackListener'
 import GoogleOneTap from './GoogleOneTap'
 import { Analytics } from '@vercel/analytics/next'
-// The $15/year ad-free purchase is live (website only — see AdFreePopup.tsx
-// for why the native app never shows it). NativeAccessGate (a full-app
-// paywall for the native build) stays unmounted — that's a materially
-// different, higher-risk pattern under App Store guidelines, unrelated to
-// this website ad-removal feature; see docs/PAYPAL_SETUP.md.
+// Freemium: 15-day free trial, then $15/year full access (PayPal on web).
+// AccessGate wraps interactive tools; AdFreePopup nags near/after trial end.
+// NativeAccessGate stays unmounted here — mount it in the Capacitor shell
+// only if you want a hard native gate (App Store rules: no external IAP link).
 
 const ADSENSE_CLIENT = 'ca-pub-4376919875096457'
 

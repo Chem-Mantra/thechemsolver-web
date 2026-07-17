@@ -2,12 +2,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
 
-// PayPal webhook — the sole source of truth for granting one year of
-// ad-free access, since checkout runs through a dashboard-configured
-// Hosted Button/Payment Link (no per-purchase custom_id we control). We
-// match the payer's PayPal email back to a signed-in Supabase account by
-// email, which is why students are required to sign in with Google before
-// paying and asked to pay with that same email — see docs/PAYPAL_SETUP.md.
+// PayPal webhook — the sole source of truth for upgrading a student from
+// free trial → paid full access (1 year), since checkout runs through a
+// dashboard-configured Hosted Button/Payment Link (no per-purchase
+// custom_id we control). We match the payer's PayPal email back to a
+// signed-in Supabase account by email, which is why students must sign in
+// with Google before paying and use that same email — see docs/PAYPAL_SETUP.md.
 export async function POST(req: NextRequest) {
   const clientId = process.env.PAYPAL_CLIENT_ID
   const clientSecret = process.env.PAYPAL_CLIENT_SECRET
@@ -124,6 +124,8 @@ async function grantAdFreeAccess(email: string, captureId: string): Promise<bool
   const expiresAt = new Date()
   expiresAt.setFullYear(expiresAt.getFullYear() + 1)
 
+  // Upsert replaces any active free-trial row (paypal_capture_id = 'trial')
+  // with a real paid year of access.
   await admin.from('premium_access').upsert({
     user_id: userId,
     paypal_capture_id: captureId,
@@ -141,15 +143,15 @@ async function sendConfirmationEmail(email: string) {
   if (!apiKey || !from) return
 
   const resend = new Resend(apiKey)
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://thechemsolver.com'
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thechemsolver.com'
 
   await resend.emails.send({
     from,
     to: email,
-    subject: "You're ad-free on TheChemSolver 🎉",
+    subject: "You're unlocked on TheChemSolver 🎉",
     html: `
-      <p>Thanks for your purchase! Your payment has been received and ad-free access is now active on your account for one year.</p>
-      <p><a href="${siteUrl}/account">Go to TheChemSolver</a></p>
+      <p>Thanks for your purchase! Full access is now active on your account for one year — every lab, practice set, and ebook.</p>
+      <p><a href="${siteUrl}/account">Go to your account</a></p>
     `,
   })
 }

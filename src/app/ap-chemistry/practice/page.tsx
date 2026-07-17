@@ -1,4 +1,6 @@
 'use client'
+
+import AccessGate from '@/app/AccessGate'
 import { useState, useEffect } from 'react'
 import MCQExam, { MCQQuestion } from '@/app/components/MCQExam'
 import FRQViewer, { FRQProblem, FRQPart } from '@/app/components/FRQViewer'
@@ -153,7 +155,7 @@ function examFrqToProblem(r: ExamFRQRow): FRQProblem {
 
 type Mode = 'year' | 'exam' | 'chapter'
 
-export default function APPracticePage() {
+function APPracticePageInner() {
   const [mode, setMode] = useState<Mode>('year')
 
   // ── "By Year" state (unchanged behavior) ──────────────────────────────
@@ -557,5 +559,13 @@ export default function APPracticePage() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function APPracticePage() {
+  return (
+    <AccessGate title='Keep practicing AP Chemistry'>
+      <APPracticePageInner />
+    </AccessGate>
   )
 }

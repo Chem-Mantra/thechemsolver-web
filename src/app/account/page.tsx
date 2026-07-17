@@ -4,12 +4,17 @@ import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { signInWithGoogle } from '@/lib/googleAuth'
 import PayPalButton from '../PayPalButton'
-import { AD_FREE_PRICE_USD, formatAdFreeChargeAmount } from '@/lib/pricing'
+import {
+  ACCESS_PRICE_USD,
+  FREE_TRIAL_DAYS,
+  formatAccessChargeAmount,
+  trialHeadline,
+} from '@/lib/pricing'
 import { useAuth } from '../AuthProvider'
 import GoogleIcon from '../components/GoogleIcon'
 
 export default function AccountPage() {
-  const { user, session, loading, premium } = useAuth()
+  const { user, session, loading, access, refreshAccess } = useAuth()
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -37,7 +42,8 @@ export default function AccountPage() {
       <Shell>
         <h1 className="text-xl font-bold mb-1">Sign in</h1>
         <p className="text-sm text-gray-400 mb-6">
-          Everything on TheChemSolver is free — signing in with Google is optional.
+          Create a free account to start your {FREE_TRIAL_DAYS}-day trial of every lab, practice set,
+          and ebook. After that it&apos;s ${ACCESS_PRICE_USD}/year.
         </p>
         {error && <p className="text-red-400 text-xs mb-3">{error}</p>}
         <button
@@ -47,6 +53,7 @@ export default function AccountPage() {
           <GoogleIcon />
           Continue with Google
         </button>
+        <p className="text-[11px] text-gray-500 mt-4 text-center">{trialHeadline()}</p>
       </Shell>
     )
   }
@@ -58,29 +65,53 @@ export default function AccountPage() {
 
       {error && <p className="text-red-400 text-xs mb-3">{error}</p>}
 
-      {premium.loading ? (
+      {access.loading ? (
         <div className="bg-white/5 border border-white/10 rounded-xl p-5">
           <p className="text-sm text-gray-300">Checking your plan…</p>
         </div>
-      ) : premium.isPremium ? (
+      ) : access.isPaid ? (
         <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-5">
-          <p className="text-sm font-semibold text-purple-300 mb-1">✓ Ad-free</p>
+          <p className="text-sm font-semibold text-purple-300 mb-1">✓ Full access</p>
           <p className="text-xs text-gray-400">
-            {premium.expiresAt && `Active until ${new Date(premium.expiresAt).toLocaleDateString()}`}
+            {access.expiresAt && `Active until ${new Date(access.expiresAt).toLocaleDateString()}`}
+          </p>
+        </div>
+      ) : access.isTrial && access.hasAccess ? (
+        <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-5">
+          <p className="text-sm font-semibold text-emerald-300 mb-1">
+            Free trial · {access.daysLeft ?? '—'} day{(access.daysLeft ?? 0) === 1 ? '' : 's'} left
+          </p>
+          <p className="text-xs text-gray-400 mb-4">
+            {access.expiresAt &&
+              `Trial ends ${new Date(access.expiresAt).toLocaleDateString()}. Then ${ACCESS_PRICE_USD}/year keeps everything unlocked.`}
+          </p>
+          <PayPalButton label={`Unlock early · $${ACCESS_PRICE_USD}/year`} />
+          <p className="text-[10px] text-gray-500 mt-2 text-center">
+            Charged as {formatAccessChargeAmount()} at checkout (incl. processing).
           </p>
         </div>
       ) : (
         <div className="bg-white/5 border border-white/10 rounded-xl p-5">
-          <p className="text-sm font-semibold text-white mb-1">Go ad-free</p>
+          <p className="text-sm font-semibold text-white mb-1">Trial ended</p>
           <p className="text-xs text-gray-400 mb-4">
-            Support the project — ${AD_FREE_PRICE_USD} for a full year, no ads anywhere on the site.
+            Unlock every lab, practice set, and ebook for ${ACCESS_PRICE_USD}/year.
           </p>
-          <PayPalButton />
-          <p className="text-[10px] text-gray-500 mt-2 text-center">
-            Charged as {formatAdFreeChargeAmount()} at checkout (incl. payment processing fee). Pay with the
-            same email as your Google sign-in — access unlocks automatically within a minute, and you&apos;ll
-            get an email confirmation.
-          </p>
+          {session ? (
+            <>
+              <PayPalButton label={`Unlock · $${ACCESS_PRICE_USD}/year`} />
+              <p className="text-[10px] text-gray-500 mt-2 text-center">
+                Charged as {formatAccessChargeAmount()} at checkout. Pay with the same email as your
+                Google sign-in — access unlocks automatically within a minute.
+              </p>
+              <button
+                type="button"
+                onClick={() => refreshAccess()}
+                className="block mx-auto mt-3 text-xs text-purple-300 hover:text-white underline"
+              >
+                I&apos;ve paid — check again
+              </button>
+            </>
+          ) : null}
         </div>
       )}
 
