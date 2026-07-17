@@ -24,7 +24,10 @@ export const viewport: Viewport = {
   themeColor: '#08020d',
 }
 
+const SITE_URL = 'https://www.thechemsolver.com'
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: 'TheChemSolver — Free Chemistry Tools for AP, USNCO & IChO',
     template: '%s | TheChemSolver',
@@ -49,10 +52,13 @@ export const metadata: Metadata = {
     'equilibrium lab',
     'electrochemistry simulator',
   ],
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
     title: 'TheChemSolver — Free Chemistry Tools',
     description: 'Interactive simulators for AP Chemistry, USNCO, and IChO.',
-    url: 'https://www.thechemsolver.com',
+    url: SITE_URL,
     siteName: 'TheChemSolver',
     locale: 'en_US',
     type: 'website',

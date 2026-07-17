@@ -33,6 +33,9 @@ const nextConfig = {
     // as "Page with redirect" / "Duplicate without user-selected canonical"
     // (a JS-driven redirect is a much weaker signal to crawlers than a real
     // HTTP redirect, and the stub page itself had no canonical tag).
+    //
+    // Host-level www/non-www + http→https is handled in src/middleware.ts
+    // (Next path redirects cannot rewrite Host).
     return [
       { source: '/usnco/strategy',             destination: '/usnco',             permanent: true },
       { source: '/icho/strategy',              destination: '/icho',              permanent: true },
