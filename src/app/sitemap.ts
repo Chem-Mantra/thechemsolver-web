@@ -70,6 +70,8 @@ export default async function sitemap() {
     { url: base,                      lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 1.0  },
     { url: `${base}/labs`,            lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 0.9  },
     { url: `${base}/about`,           lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.3  },
+    { url: `${base}/contact`,         lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.4  },
+    { url: `${base}/blog`,            lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 0.7  },
     { url: `${base}/privacy`,         lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.2  },
     { url: `${base}/terms`,           lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.2  },
     { url: `${base}/ap-chemistry`,    lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 0.95 },
@@ -90,7 +92,15 @@ export default async function sitemap() {
     })),
   ]
 
+  const { POSTS } = await import('@/lib/blog')
+  const blogPages = POSTS.map((p) => ({
+    url: `${base}/blog/${p.slug}`,
+    lastModified: new Date(p.date),
+    changeFrequency: 'monthly' as const,
+    priority: 0.75,
+  }))
+
   const questionPages = await getQuestionPages(base)
 
-  return [...staticPages, ...questionPages]
+  return [...staticPages, ...blogPages, ...questionPages]
 }

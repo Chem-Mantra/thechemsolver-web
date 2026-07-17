@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { signInWithGoogle } from '@/lib/googleAuth'
 import PayPalButton from '../PayPalButton'
@@ -12,6 +12,7 @@ import {
 } from '@/lib/pricing'
 import { useAuth } from '../AuthProvider'
 import GoogleIcon from '../components/GoogleIcon'
+import { trackEvent, TCSEvents } from '@/lib/analytics'
 
 export default function AccountPage() {
   const { user, session, loading, access, refreshAccess } = useAuth()
@@ -70,12 +71,7 @@ export default function AccountPage() {
           <p className="text-sm text-gray-300">Checking your plan…</p>
         </div>
       ) : access.isPaid ? (
-        <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-5">
-          <p className="text-sm font-semibold text-purple-300 mb-1">✓ Full access</p>
-          <p className="text-xs text-gray-400">
-            {access.expiresAt && `Active until ${new Date(access.expiresAt).toLocaleDateString()}`}
-          </p>
-        </div>
+        <PaidCard expiresAt={access.expiresAt} />
       ) : access.isTrial && access.hasAccess ? (
         <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-5">
           <p className="text-sm font-semibold text-emerald-300 mb-1">
@@ -98,7 +94,11 @@ export default function AccountPage() {
           </p>
           {session ? (
             <>
-              <PayPalButton label={`Unlock · $${ACCESS_PRICE_USD}/year`} />
+              <div
+                onClick={() => trackEvent(TCSEvents.beginCheckout, { value: ACCESS_PRICE_USD, currency: 'USD' })}
+              >
+                <PayPalButton label={`Unlock · $${ACCESS_PRICE_USD}/year`} />
+              </div>
               <p className="text-[10px] text-gray-500 mt-2 text-center">
                 Charged as {formatAccessChargeAmount()} at checkout. Pay with the same email as your
                 Google sign-in — access unlocks automatically within a minute.
@@ -119,6 +119,23 @@ export default function AccountPage() {
         Sign out
       </button>
     </Shell>
+  )
+}
+
+function PaidCard({ expiresAt }: { expiresAt: string | null }) {
+  useEffect(() => {
+    const key = 'tcs_purchase_tracked'
+    if (sessionStorage.getItem(key)) return
+    sessionStorage.setItem(key, '1')
+    trackEvent(TCSEvents.purchase, { value: ACCESS_PRICE_USD, currency: 'USD' })
+  }, [])
+  return (
+    <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-5">
+      <p className="text-sm font-semibold text-purple-300 mb-1">✓ Full access</p>
+      <p className="text-xs text-gray-400">
+        {expiresAt && `Active until ${new Date(expiresAt).toLocaleDateString()}`}
+      </p>
+    </div>
   )
 }
 

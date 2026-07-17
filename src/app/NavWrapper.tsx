@@ -15,6 +15,8 @@ const NAV_EXAMS = [
 const NAV_TOOLS = [
   { label: 'All Labs',   href: '/labs' },
   { label: 'Ebook',      href: '/ebook/ap-chemistry' },
+  { label: 'Blog',       href: '/blog' },
+  { label: 'Contact',    href: '/contact' },
 ]
 
 export default function NavWrapper({ children }: { children: React.ReactNode }) {
@@ -115,7 +117,9 @@ export default function NavWrapper({ children }: { children: React.ReactNode }) 
           <span className="text-white/20">|</span>
           <Link href="/labs"    className="hover:text-white transition-colors">All Labs</Link>
           <Link href="/ebook"   className="hover:text-white transition-colors">Study Guide</Link>
+          <Link href="/blog"    className="hover:text-white transition-colors">Blog</Link>
           <Link href="/about"   className="hover:text-white transition-colors">About</Link>
+          <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
           <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
           <Link href="/terms"   className="hover:text-white transition-colors">Terms</Link>
           <a href="mailto:support@thechemsolver.com" className="hover:text-white transition-colors">Contact</a>

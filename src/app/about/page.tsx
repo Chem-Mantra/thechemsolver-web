@@ -24,20 +24,23 @@ export default function AboutPage() {
           <p>
             30+ interactive chemistry simulators (titration curves, equilibrium, kinetics, VSEPR,
             electrochemistry, quantum orbitals, and more), full interactive ebooks for AP Chemistry
-            and Organic Chemistry, and preparatory problem sets for USNCO and IChO — all free to use,
-            with no paywall and no time limit.
+            and Organic Chemistry, and preparatory problem sets for USNCO and IChO.
           </p>
 
-          <h2 className="text-lg font-bold text-white mt-8 mb-2">Why is it free?</h2>
+          <h2 className="text-lg font-bold text-white mt-8 mb-2">Free trial, then $15/year</h2>
           <p>
-            TheChemSolver is supported by display advertising. We believe strong chemistry
-            preparation shouldn't depend on a student's or school's budget, so every tool, every
-            simulation, and every practice set stays free and unlocked.
+            Explore every lab, practice set, and ebook free for <strong>15 days</strong>. After that,
+            full student access is <strong>$15/year</strong> via PayPal — no auto-renew surprise; one
+            year of access per purchase. Marketing pages and study guides stay free to browse.
           </p>
 
           <h2 className="text-lg font-bold text-white mt-8 mb-2">Contact</h2>
           <p>
-            Questions, corrections, or feedback? Reach out at{' '}
+            Questions, corrections, or feedback? Visit our{' '}
+            <Link href="/contact" className="text-purple-400 hover:text-purple-300">
+              contact page
+            </Link>{' '}
+            or email{' '}
             <a href="mailto:support@thechemsolver.com" className="text-purple-400 hover:text-purple-300">
               support@thechemsolver.com
             </a>.

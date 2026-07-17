@@ -8,8 +8,9 @@ import AdsGate from './AdsGate'
 import AdFreePopup from './AdFreePopup'
 import AuthCallbackListener from './AuthCallbackListener'
 import GoogleOneTap from './GoogleOneTap'
-import { Analytics } from '@vercel/analytics/next'
+import { Analytics as VercelAnalytics } from '@vercel/analytics/next'
 import NativeAccessGate from './NativeAccessGate'
+import Analytics from './Analytics'
 // Freemium: 15-day free trial, then $15/year full access (PayPal on web).
 // AccessGate wraps interactive tools; AdFreePopup nags near/after trial end.
 // NativeAccessGate is a no-op on the website; on Capacitor it requires
@@ -96,6 +97,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <NavWrapper>{children}</NavWrapper>
             <AdFreePopup />
             <Analytics />
+            <VercelAnalytics />
             <RegisterServiceWorker />
             <AdsGate client={ADSENSE_CLIENT} />
           </NativeAccessGate>
