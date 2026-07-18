@@ -35,7 +35,8 @@ export function middleware(request: NextRequest) {
     url.protocol = 'https:'
     url.hostname = CANONICAL_HOST
     url.port = ''
-    return NextResponse.redirect(url, 308)
+    // 301 = permanent (stronger SEO signal than 308 for host consolidation)
+    return NextResponse.redirect(url, 301)
   }
 
   return NextResponse.next()

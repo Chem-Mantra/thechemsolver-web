@@ -9,10 +9,12 @@ export const metadata: Metadata = {
   title: 'TheChemSolver — Free Chemistry Tools for AP Chem, Orgo & IChO',
   description: 'Free interactive chemistry solvers and virtual labs for AP Chemistry, Organic Chemistry, and IChO. IUPAC namer, titration simulator, VSEPR, equilibrium, kinetics, electrochemistry and more.',
   keywords: 'AP chemistry tools free, organic chemistry solver, IChO chemistry, IUPAC namer, titration simulator, VSEPR, equilibrium calculator, chemistry virtual lab',
+  // Explicit www homepage canonical — GSC was preferring non-www when userCanonical was missing.
+  alternates: { canonical: 'https://www.thechemsolver.com/' },
   openGraph: {
     title: 'TheChemSolver — Free Chemistry Solvers & Virtual Labs',
     description: 'Free interactive chemistry tools for AP Chemistry, Orgo, and IChO students.',
-    url: 'https://www.thechemsolver.com',
+    url: 'https://www.thechemsolver.com/',
     siteName: 'TheChemSolver',
     type: 'website',
   },
