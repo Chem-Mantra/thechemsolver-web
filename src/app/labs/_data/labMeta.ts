@@ -1133,7 +1133,7 @@ export function getLabBody(slug: string, meta: { h1: string; description: string
 
 This tool covers: ${meta.topics.join(', ')}. ${meta.apUnits.length > 0 ? `It maps to ${meta.apUnits.join(' and ')} in the College Board AP Chemistry framework.` : ''} Use it alongside your textbook to build hands-on intuition that goes beyond worked examples — seeing a simulation respond to your inputs reinforces conceptual understanding far more effectively than passive reading.
 
-All tools on TheChemSolver are free to use, with no time limits and no paywalls. We believe quality chemistry education should be accessible to every student regardless of school resources. Whether you are preparing for the AP Chemistry exam in May, working through USNCO practice problems, or studying IChO preparatory materials, these simulators are designed to complement — not replace — rigorous study with textbooks and past exam papers.
+Every interactive lab starts with a 15-day free trial so you can explore fully before deciding. After the trial, full student access is $15/year. Public study guides and hub pages stay free to browse. Whether you are preparing for the AP Chemistry exam in May, working through USNCO practice problems, or studying IChO preparatory materials, these simulators are designed to complement — not replace — rigorous study with textbooks and past exam papers.
 
 The interactive format is particularly valuable for topics that are hard to visualize from static diagrams alone. Experiment freely: change parameters, observe the system's response, and build the kind of physical intuition that separates top scorers from average performers on high-stakes chemistry exams.`
 }

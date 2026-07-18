@@ -78,7 +78,8 @@ const organizationLd = {
   name: 'TheChemSolver',
   url: 'https://www.thechemsolver.com',
   description:
-    'Free interactive chemistry simulators, ebooks, and practice tools for AP Chemistry, USNCO, and IChO students.',
+    'Interactive chemistry simulators, ebooks, and practice tools for AP Chemistry, USNCO, and IChO — 15-day free trial, then $15/year full access.',
+  email: 'support@thechemsolver.com',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
