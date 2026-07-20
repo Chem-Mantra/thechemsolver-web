@@ -3,23 +3,56 @@ import { useState, useEffect } from 'react'
 import NextImage from 'next/image'
 import RichText from './RichText'
 
+// Supabase Storage occasionally returns a transient 503 under load (see the
+// duplicate-prefetch fix below for why bursts happened); without a timeout,
+// a single failed load left this spinner stuck forever since neither onLoad
+// nor onError would ever fire again. 10s timeout -> retry link, one retry
+// attempt (cache-busting query param) before giving up for good.
+const IMAGE_LOAD_TIMEOUT_MS = 10_000
+
 function ProblemImage({ src, alt }: { src: string; alt: string }) {
   const [loaded, setLoaded] = useState(false)
+  const [timedOut, setTimedOut] = useState(false)
   const [error, setError] = useState(false)
+  const [attempt, setAttempt] = useState(0)
+
+  useEffect(() => {
+    setLoaded(false)
+    setTimedOut(false)
+    setError(false)
+    const timer = setTimeout(() => setTimedOut(true), IMAGE_LOAD_TIMEOUT_MS)
+    return () => clearTimeout(timer)
+  }, [src, attempt])
+
   if (error) return null
+
+  const effectiveSrc = attempt === 0 ? src : `${src}${src.includes('?') ? '&' : '?'}retry=${attempt}`
+
   return (
     <div className="mt-3 relative">
-      {!loaded && (
+      {!loaded && !timedOut && (
         <div className="h-40 rounded-xl border border-white/10 bg-white/[0.03] animate-pulse flex items-center justify-center">
           <span className="text-xs text-gray-600">Loading diagram…</span>
         </div>
       )}
+      {!loaded && timedOut && (
+        <div className="h-40 rounded-xl border border-white/10 bg-white/[0.03] flex items-center justify-center">
+          <button
+            onClick={() => { setTimedOut(false); setAttempt(a => a + 1) }}
+            className="text-xs text-gray-500 hover:text-yellow-400 transition-colors"
+          >
+            Diagram didn&apos;t load — tap to retry
+          </button>
+        </div>
+      )}
       <NextImage
-        src={src} alt={alt}
+        key={attempt}
+        src={effectiveSrc} alt={alt}
         width={900} height={675}
         style={{ width: 'auto', height: 'auto', maxWidth: '100%' }}
         className={`max-h-72 rounded-xl border border-white/10 ${loaded ? 'block' : 'hidden'}`}
         loading="lazy"
+        unoptimized
         onLoad={() => setLoaded(true)}
         onError={() => setError(true)}
       />
@@ -72,14 +105,20 @@ export default function IChOProblemViewer({ problems, examLabel }: Props) {
   const filtered = filter === 'all' ? problems : problems.filter(p => p.domain.startsWith(filter))
   const prob = filtered[selected] ?? problems[0]
 
-  // Prefetch all images for selected problem
+  // Prefetch all images for selected problem. Deduped -- multi-page problems
+  // intentionally reuse one page's crop across several parts (a problem with
+  // 12 parts across 4 pages has only 4 distinct images), and without a Set
+  // here every part fired its own redundant fetch of the same URL. That
+  // duplicate-request burst against Supabase Storage (which sends
+  // cache-control: no-cache, so nothing short-circuits it) was tripping
+  // transient 503s and stalling the diagram loading state.
   useEffect(() => {
     if (!prob) return
-    const urls: string[] = []
-    if (prob.image_url) urls.push(prob.image_url)
+    const urls = new Set<string>()
+    if (prob.image_url) urls.add(prob.image_url)
     prob.parts.forEach(p => {
-      if (p.image_url) urls.push(p.image_url)
-      p.sub_parts?.forEach(sp => { if (sp.image_url) urls.push(sp.image_url) })
+      if (p.image_url) urls.add(p.image_url)
+      p.sub_parts?.forEach(sp => { if (sp.image_url) urls.add(sp.image_url) })
     })
     urls.forEach(url => { const img = new Image(); img.src = url })
   }, [selected, prob])
