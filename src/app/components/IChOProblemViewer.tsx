@@ -14,6 +14,13 @@ import RichText from './RichText'
 // parts reference it.
 const imageLoadPromises = new Map<string, Promise<boolean>>()
 
+// Route through our own server-side proxy (src/app/api/icho/image) rather
+// than embedding Supabase Storage's public URL directly -- see route.ts for
+// why the direct-embed path 503s even for a single request.
+function toProxied(url: string): string {
+  return `/api/icho/image?src=${encodeURIComponent(url)}`
+}
+
 function loadImageOnce(url: string): Promise<boolean> {
   let p = imageLoadPromises.get(url)
   if (!p) {
@@ -39,7 +46,8 @@ function ProblemImage({ src, alt }: { src: string; alt: string }) {
   const [timedOut, setTimedOut] = useState(false)
   const [attempt, setAttempt] = useState(0)
 
-  const effectiveSrc = attempt === 0 ? src : `${src}${src.includes('?') ? '&' : '?'}retry=${attempt}`
+  const proxiedSrc = toProxied(src)
+  const effectiveSrc = attempt === 0 ? proxiedSrc : `${proxiedSrc}&retry=${attempt}`
 
   useEffect(() => {
     let cancelled = false
@@ -142,7 +150,7 @@ export default function IChOProblemViewer({ problems, examLabel }: Props) {
       if (p.image_url) urls.add(p.image_url)
       p.sub_parts?.forEach(sp => { if (sp.image_url) urls.add(sp.image_url) })
     })
-    urls.forEach(url => { loadImageOnce(url) })
+    urls.forEach(url => { loadImageOnce(toProxied(url)) })
   }, [selected, prob])
 
   if (!prob) return null
