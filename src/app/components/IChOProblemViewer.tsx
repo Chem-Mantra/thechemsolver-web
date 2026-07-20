@@ -3,30 +3,59 @@ import { useState, useEffect } from 'react'
 import NextImage from 'next/image'
 import RichText from './RichText'
 
-// Supabase Storage occasionally returns a transient 503 under load (see the
-// duplicate-prefetch fix below for why bursts happened); without a timeout,
-// a single failed load left this spinner stuck forever since neither onLoad
-// nor onError would ever fire again. 10s timeout -> retry link, one retry
-// attempt (cache-busting query param) before giving up for good.
+// Supabase Storage returns a transient 503 when the SAME object is hit by
+// several concurrent requests at once (confirmed 2026-07-20: a single fresh
+// request always succeeds, but this page rendered one independent <img> per
+// PART even when several parts intentionally share one page's crop, firing
+// a burst of simultaneous duplicate GETs for the same URL on every problem
+// load). This module-level cache makes every consumer -- each ProblemImage
+// instance and the prefetch effect below -- share ONE in-flight request per
+// unique URL, so a shared image is only ever fetched once no matter how many
+// parts reference it.
+const imageLoadPromises = new Map<string, Promise<boolean>>()
+
+function loadImageOnce(url: string): Promise<boolean> {
+  let p = imageLoadPromises.get(url)
+  if (!p) {
+    p = new Promise<boolean>(resolve => {
+      const img = new Image()
+      img.onload = () => resolve(true)
+      img.onerror = () => resolve(false)
+      img.src = url
+    })
+    imageLoadPromises.set(url, p)
+  }
+  return p
+}
+
+// Without a timeout, a failed/hanging load left this spinner stuck forever
+// since neither onLoad nor onError would ever fire again. 10s timeout ->
+// retry link, which forces a fresh single-flight attempt (cache-busting
+// query param gives it its own cache-map entry).
 const IMAGE_LOAD_TIMEOUT_MS = 10_000
 
 function ProblemImage({ src, alt }: { src: string; alt: string }) {
-  const [loaded, setLoaded] = useState(false)
+  const [state, setState] = useState<'loading' | 'loaded' | 'error'>('loading')
   const [timedOut, setTimedOut] = useState(false)
-  const [error, setError] = useState(false)
   const [attempt, setAttempt] = useState(0)
 
-  useEffect(() => {
-    setLoaded(false)
-    setTimedOut(false)
-    setError(false)
-    const timer = setTimeout(() => setTimedOut(true), IMAGE_LOAD_TIMEOUT_MS)
-    return () => clearTimeout(timer)
-  }, [src, attempt])
-
-  if (error) return null
-
   const effectiveSrc = attempt === 0 ? src : `${src}${src.includes('?') ? '&' : '?'}retry=${attempt}`
+
+  useEffect(() => {
+    let cancelled = false
+    setState('loading')
+    setTimedOut(false)
+    const timer = setTimeout(() => setTimedOut(true), IMAGE_LOAD_TIMEOUT_MS)
+    loadImageOnce(effectiveSrc).then(ok => {
+      if (cancelled) return
+      clearTimeout(timer)
+      setState(ok ? 'loaded' : 'error')
+    })
+    return () => { cancelled = true; clearTimeout(timer) }
+  }, [effectiveSrc])
+
+  if (state === 'error') return null
+  const loaded = state === 'loaded'
 
   return (
     <div className="mt-3 relative">
@@ -45,17 +74,15 @@ function ProblemImage({ src, alt }: { src: string; alt: string }) {
           </button>
         </div>
       )}
-      <NextImage
-        key={attempt}
-        src={effectiveSrc} alt={alt}
-        width={900} height={675}
-        style={{ width: 'auto', height: 'auto', maxWidth: '100%' }}
-        className={`max-h-72 rounded-xl border border-white/10 ${loaded ? 'block' : 'hidden'}`}
-        loading="lazy"
-        unoptimized
-        onLoad={() => setLoaded(true)}
-        onError={() => setError(true)}
-      />
+      {loaded && (
+        <NextImage
+          src={effectiveSrc} alt={alt}
+          width={900} height={675}
+          style={{ width: 'auto', height: 'auto', maxWidth: '100%' }}
+          className="max-h-72 rounded-xl border border-white/10"
+          unoptimized
+        />
+      )}
     </div>
   )
 }
@@ -105,13 +132,8 @@ export default function IChOProblemViewer({ problems, examLabel }: Props) {
   const filtered = filter === 'all' ? problems : problems.filter(p => p.domain.startsWith(filter))
   const prob = filtered[selected] ?? problems[0]
 
-  // Prefetch all images for selected problem. Deduped -- multi-page problems
-  // intentionally reuse one page's crop across several parts (a problem with
-  // 12 parts across 4 pages has only 4 distinct images), and without a Set
-  // here every part fired its own redundant fetch of the same URL. That
-  // duplicate-request burst against Supabase Storage (which sends
-  // cache-control: no-cache, so nothing short-circuits it) was tripping
-  // transient 503s and stalling the diagram loading state.
+  // Prefetch all images for selected problem, routed through the same
+  // single-flight cache ProblemImage uses -- see loadImageOnce above.
   useEffect(() => {
     if (!prob) return
     const urls = new Set<string>()
@@ -120,7 +142,7 @@ export default function IChOProblemViewer({ problems, examLabel }: Props) {
       if (p.image_url) urls.add(p.image_url)
       p.sub_parts?.forEach(sp => { if (sp.image_url) urls.add(sp.image_url) })
     })
-    urls.forEach(url => { const img = new Image(); img.src = url })
+    urls.forEach(url => { loadImageOnce(url) })
   }, [selected, prob])
 
   if (!prob) return null
