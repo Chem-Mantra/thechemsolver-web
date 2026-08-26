@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { getArticleBySlug } from '@/lib/patentNews'
 import PatentAnalyticsHeader from '../../PatentAnalyticsHeader'
+import OpenLeadFormButton from '../../OpenLeadFormButton'
 
 const SITE = 'https://patent-analytics.thechemsolver.com'
 
@@ -121,6 +122,28 @@ export default async function ArticlePage({ params }: Props) {
                 <p key={i} className="text-lg leading-relaxed" style={{ color: 'var(--on-surface-variant)' }}>{para}</p>
               )
             })}
+          </div>
+
+          {/* Services CTA — every article reader is a prospective client;
+              this is the actual conversion point, not just a news blurb. */}
+          <div
+            className="pa-glass pa-glass-elevated p-6 md:p-8 mt-4"
+            style={{ background: 'linear-gradient(135deg, rgba(2,132,199,0.06), rgba(75,65,225,0.05))' }}
+          >
+            <p className="pa-mono text-[11px] uppercase tracking-wide mb-2" style={{ color: 'var(--tertiary)' }}>
+              What we do
+            </p>
+            <h2 className="pa-display text-2xl md:text-3xl font-bold mb-3" style={{ color: 'var(--on-surface)' }}>
+              See if this applies to one of your matters
+            </h2>
+            <p className="text-base leading-relaxed mb-6 max-w-2xl" style={{ color: 'var(--on-surface-variant)' }}>
+              We run genus/species (Markush) claim coverage analysis, Section 3(d) compliance screening, and prior-art
+              structural triage on real chemical structures — not keyword search. If a case like this one is live for
+              you, we&apos;ll run a free sample on a compound of your choosing.
+            </p>
+            <OpenLeadFormButton className="pa-btn-primary text-base font-medium px-6 py-3">
+              Get a free sample report →
+            </OpenLeadFormButton>
           </div>
         </div>
       </main>
