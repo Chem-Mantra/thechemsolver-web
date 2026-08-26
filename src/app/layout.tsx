@@ -90,6 +90,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }}
         />
+        {/* Runs synchronously before hydration -- AdsGate reads this directly
+            (not via an effect) since unmounting next/script after the fact
+            doesn't undo the network request it already made; this must never
+            render in the first place on Patent Analytics. */}
+        <script
+          dangerouslySetInnerHTML={{ __html: `window.__PA_HOST__=location.hostname.startsWith('patent-analytics.')` }}
+        />
         <AuthProvider>
           <NativeAccessGate>
             <CapacitorNative />
