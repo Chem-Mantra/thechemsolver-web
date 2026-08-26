@@ -55,6 +55,10 @@ export default function GoogleOneTap() {
     if (loading || user) return
     if (Capacitor.isNativePlatform()) return // native app has its own Google sign-in (googleAuth.ts)
     if (SKIP_PREFIXES.some((p) => pathname?.startsWith(p))) return
+    // Subdomain access rewrites the path internally, invisible to
+    // usePathname() (it keeps returning the pre-rewrite path) -- checked
+    // here too since the prefix check above alone misses that case.
+    if (window.location.hostname.startsWith('patent-analytics.')) return
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
     if (!clientId) return
     if (initialized.current) return

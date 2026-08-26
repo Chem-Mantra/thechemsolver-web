@@ -27,16 +27,23 @@ export default function AdFreePopup() {
   const [dismissed, setDismissed] = useState(true) // start hidden until we've checked localStorage, avoids a flash
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  // Subdomain access rewrites the path internally, which usePathname() can't
+  // see (it keeps returning the pre-rewrite path) -- window.location.hostname
+  // is unaffected by that rewrite, so it catches the subdomain case that a
+  // pathname check alone would miss. Already defaults to hidden above, so
+  // there's no flash risk in adding this after mount.
+  const [isPatentAnalyticsHost, setIsPatentAnalyticsHost] = useState(false)
 
   useEffect(() => {
     const until = Number(localStorage.getItem(DISMISS_KEY) || 0)
     setDismissed(Date.now() < until)
+    setIsPatentAnalyticsHost(window.location.hostname.startsWith('patent-analytics.'))
   }, [])
 
   // Patent Analytics is a distinct product sharing this domain only to avoid
   // a second domain purchase — none of TheChemSolver's own student-tool
   // upsells (this popup included) should ever appear on it.
-  if (pathname?.startsWith('/patent-analytics')) return null
+  if (pathname?.startsWith('/patent-analytics') || isPatentAnalyticsHost) return null
   // The purchase flow is website-only: Apple's guidelines don't allow an app
   // to sell/unlock a feature used within the app via an external payment
   // link, so the app never shows or links to this popup at all. Premium

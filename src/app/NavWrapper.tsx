@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
@@ -23,17 +23,29 @@ export default function NavWrapper({ children }: { children: React.ReactNode }) 
   const pathname = usePathname()
   const isHome = pathname === '/'
   const isEbook = pathname?.startsWith('/ebook/')
-  // Patent Analytics is a distinct product/brand sharing this domain only to
-  // avoid a second domain purchase — it must never show TheChemSolver's own
-  // nav/footer or student-tool branding.
-  const isPatentAnalytics = pathname?.startsWith('/patent-analytics')
   const [menuOpen, setMenuOpen] = useState(false)
+  // Patent Analytics is reached via a subdomain that middleware rewrites
+  // internally to /patent-analytics/* -- that rewrite is invisible to
+  // usePathname() (it keeps returning the pre-rewrite path), so a pathname
+  // check alone silently fails to exclude it here. window.location.hostname
+  // is unaffected by any rewrite, so it's checked instead. useLayoutEffect
+  // (not useEffect) runs before the browser paints, so the correction
+  // happens before anyone sees the wrong chrome -- same no-flash technique
+  // as a dark-mode toggle script, and the same pattern AdFreePopup already
+  // uses (default to the safe/matching-SSR state, correct after mount).
+  const [isPatentAnalyticsHost, setIsPatentAnalyticsHost] = useState(false)
 
   // Close the mobile menu on route change so it never lingers over new content.
   useEffect(() => { setMenuOpen(false) }, [pathname])
 
-  // Full-screen app routes: no nav, no footer, no flex-col wrapper
-  if (isHome || isEbook || isPatentAnalytics) {
+  useLayoutEffect(() => {
+    setIsPatentAnalyticsHost(window.location.hostname.startsWith('patent-analytics.'))
+  }, [])
+
+  // Full-screen app routes: no nav, no footer, no flex-col wrapper.
+  // Checks both: pathname covers direct access (www.thechemsolver.com/patent-analytics),
+  // hostname covers the subdomain (see comment above on why pathname alone misses it).
+  if (isHome || isEbook || pathname?.startsWith('/patent-analytics') || isPatentAnalyticsHost) {
     return <>{children}</>
   }
 
