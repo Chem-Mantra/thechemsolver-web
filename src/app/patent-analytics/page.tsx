@@ -1,8 +1,7 @@
-import './patent-analytics.css'
 import StructureSlideshow from './StructureSlideshow'
 import OpenLeadFormButton from './OpenLeadFormButton'
-import LeadCaptureModal from './LeadCaptureModal'
-import { LatestNewsTeaser, PatentNewsFeedSection } from './PatentNewsFeed'
+import { PatentNewsFeedSection } from './PatentNewsFeed'
+import PatentAnalyticsHeader from './PatentAnalyticsHeader'
 import statsData from './stats-data.json'
 
 const services = [
@@ -45,70 +44,8 @@ const stats = [
 
 export default function PatentAnalyticsPage() {
   return (
-    <div
-      className="min-h-screen w-full"
-      style={{
-        // "Synthetix Light Spatial" design tokens, scoped to this page only.
-        // Primary corrected to #0284c7 per the spec's own WCAG AA note
-        // (overriding the slightly-off #006194 in its raw color table).
-        // CSS custom properties aren't in React's CSSProperties type, hence
-        // the cast rather than a per-line ts-expect-error (which wouldn't
-        // reliably cover every key in this multi-line object).
-        ...({
-          '--surface': '#f7f9fb',
-          '--surface-bright': '#ffffff',
-          '--surface-container-low': '#f2f4f6',
-          '--surface-container': '#eceef0',
-          '--on-surface': '#191c1e',
-          '--on-surface-variant': '#3f4850',
-          '--on-surface-muted': '#64748b',
-          '--outline-variant': '#bfc7d2',
-          '--primary': '#0284c7',
-          '--primary-container': '#007bb9',
-          '--secondary': '#4b41e1',
-          '--tertiary': '#00647c',
-          '--tertiary-bright': '#0ea5c4',
-          '--surface-glass': 'rgba(255, 255, 255, 0.7)',
-          '--border-light': 'rgba(15, 23, 42, 0.08)',
-          '--input-bg': '#f1f5f9',
-        } as React.CSSProperties),
-        background: 'var(--surface)',
-        color: 'var(--on-surface)',
-        fontFamily: 'var(--font-inter), Inter, sans-serif',
-      }}
-    >
-      <LeadCaptureModal />
-
-      {/* Header — brand wordmark deliberately larger than the hero H1 (per explicit direction) */}
-      <header className="sticky top-0 z-50 w-full pa-glass" style={{ borderRadius: 0, borderLeft: 'none', borderRight: 'none', borderTop: 'none' }}>
-        <div className="w-full px-6 md:px-12 py-5 flex items-center justify-between flex-wrap gap-4">
-          <div className="flex items-center gap-3">
-            <div
-              className="w-11 h-11 rounded-lg flex items-center justify-center pa-scaffold-node shrink-0"
-              style={{ background: `linear-gradient(135deg, var(--primary), var(--secondary))` }}
-            >
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                <circle cx="6" cy="6" r="2.5" fill="white" />
-                <circle cx="18" cy="6" r="2.5" fill="white" />
-                <circle cx="12" cy="16" r="2.5" fill="white" />
-                <path d="M8 7.5L10.5 14.5M16 7.5L13.5 14.5M8.5 6H15.5" stroke="white" strokeWidth="1.2" />
-              </svg>
-            </div>
-            <span className="pa-display text-[28px] md:text-[64px] font-bold leading-none">patent-analytics.thechemsolver.com</span>
-          </div>
-          <nav className="hidden md:flex items-center gap-1">
-            <a href="#services" className="text-base px-3 py-2 rounded-lg hover:bg-black/[0.03] transition-colors" style={{ color: 'var(--on-surface-variant)' }}>Services</a>
-            <a href="#proof" className="text-base px-3 py-2 rounded-lg hover:bg-black/[0.03] transition-colors" style={{ color: 'var(--on-surface-variant)' }}>Measured Accuracy</a>
-            <a href="#about" className="text-base px-3 py-2 rounded-lg hover:bg-black/[0.03] transition-colors" style={{ color: 'var(--on-surface-variant)' }}>About</a>
-          </nav>
-          <div className="flex items-center gap-3">
-            <LatestNewsTeaser />
-            <OpenLeadFormButton className="pa-btn-primary text-base font-medium px-5 py-2.5">
-              Free sample →
-            </OpenLeadFormButton>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen w-full">
+      <PatentAnalyticsHeader />
 
       {/* Hero — full-width bento split */}
       <section className="w-full px-6 md:px-12 py-16 md:py-24">

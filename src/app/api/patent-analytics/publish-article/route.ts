@@ -23,18 +23,20 @@ export async function POST(req: NextRequest) {
   const articleBody = typeof reqBody?.body === 'string' ? reqBody.body.trim() : ''
   const parties = typeof reqBody?.parties === 'string' ? reqBody.parties.trim() : ''
   const sourceUrl = typeof reqBody?.sourceUrl === 'string' ? reqBody.sourceUrl.trim() : ''
+  const imageUrl = typeof reqBody?.imageUrl === 'string' ? reqBody.imageUrl.trim() : null
 
   if (!title || !summary || !articleBody || !parties || !sourceUrl) {
     return NextResponse.json({ error: 'title, summary, body, parties, and sourceUrl are all required.' }, { status: 400 })
   }
 
   // `body` carries our own full write-up of the case, in our own words --
-  // visitors read the whole thing here rather than being sent to the
-  // source, which is cited only as a small attribution line, not the
-  // primary destination.
+  // visitors read the whole thing here rather than being sent elsewhere.
+  // `source_url` is stored for our own records but not rendered or linked
+  // anywhere on the site -- no traffic goes to sources we have no
+  // commercial relationship with.
   const { data, error: dbError } = await supabaseAdmin
     .from('patent_news')
-    .insert({ title, summary, body: articleBody, parties, source_url: sourceUrl })
+    .insert({ title, summary, body: articleBody, parties, source_url: sourceUrl, image_url: imageUrl })
     .select()
     .single()
 
