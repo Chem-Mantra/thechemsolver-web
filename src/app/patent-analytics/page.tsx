@@ -171,6 +171,41 @@ export default function PatentAnalyticsPage() {
 
       <PatentNewsFeedSection />
 
+      {/* Contact */}
+      <section id="contact" className="w-full px-6 md:px-12 py-16" style={{ background: 'var(--surface-container-low)' }}>
+        <div className="max-w-[1400px] mx-auto pa-glass pa-glass-elevated p-8 md:p-10 grid md:grid-cols-[auto_1fr] gap-8 items-center">
+          <div
+            className="w-16 h-16 rounded-full flex items-center justify-center shrink-0 pa-display text-2xl font-bold text-white"
+            style={{ background: 'linear-gradient(135deg, var(--primary), var(--secondary))' }}
+          >
+            PK
+          </div>
+          <div>
+            <h2 className="pa-display text-xl font-bold mb-1">Prashant Kotian</h2>
+            <p className="text-sm mb-4" style={{ color: 'var(--on-surface-muted)' }}>
+              PhD Researcher (Chemistry), Institute of Chemical Technology (ICT), Mumbai — Founder, Patent Analytics
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <a href="mailto:support@thechemsolver.com" className="pa-chip hover:shadow-md transition-shadow">
+                ✉ support@thechemsolver.com
+              </a>
+              <a href="tel:+919136255574" className="pa-chip hover:shadow-md transition-shadow">
+                ☎ +91 91362 55574
+              </a>
+              <a
+                href="https://wa.me/919136255574"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="pa-chip hover:shadow-md transition-shadow"
+                style={{ background: 'rgba(37, 211, 102, 0.08)', borderColor: 'rgba(37, 211, 102, 0.2)', color: '#1a9e4a' }}
+              >
+                WhatsApp
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="w-full px-6 md:px-12 py-20">
         <div className="max-w-[1400px] mx-auto pa-glass pa-glass-elevated text-center py-16 px-6" style={{ background: 'linear-gradient(180deg, rgba(2,132,199,0.04), var(--surface-glass))' }}>
@@ -188,7 +223,10 @@ export default function PatentAnalyticsPage() {
       {/* Footer — own, no TheChemSolver branding */}
       <footer className="w-full px-6 md:px-12 py-8 border-t text-center" style={{ borderColor: 'var(--border-light)' }}>
         <p className="pa-mono text-sm" style={{ color: 'var(--on-surface-muted)' }}>
-          patent-analytics.thechemsolver.com · support@thechemsolver.com
+          patent-analytics.thechemsolver.com ·{' '}
+          <a href="mailto:support@thechemsolver.com" className="hover:underline">support@thechemsolver.com</a>
+          {' '}·{' '}
+          <a href="tel:+919136255574" className="hover:underline">+91 91362 55574</a>
         </p>
       </footer>
     </div>

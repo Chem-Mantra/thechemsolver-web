@@ -96,7 +96,7 @@ export default async function ArticlePage({ params }: Props) {
             </div>
           )}
 
-          <div className="flex flex-wrap gap-2 mb-10">
+          <div className="flex flex-wrap gap-2 mb-8">
             {partyList.map((p) => (
               <span key={p} className="pa-chip" style={{ background: 'rgba(75, 65, 225, 0.06)', borderColor: 'rgba(75, 65, 225, 0.14)', color: 'var(--secondary)' }}>
                 {p}
@@ -104,17 +104,31 @@ export default async function ArticlePage({ params }: Props) {
             ))}
           </div>
 
-          <div className="flex flex-col gap-5 mb-4">
+          <MoleculeDivider />
+
+          <div className="flex flex-col gap-5 my-8">
             {paragraphs.map((para, i) => {
               const isCallout = /^why (it|this) matters:?/i.test(para.trim())
               if (isCallout) {
                 return (
                   <div
                     key={i}
-                    className="pa-glass pa-glass-elevated p-6"
+                    className="pa-glass pa-glass-elevated p-6 flex gap-4 items-start"
                     style={{ borderLeft: '4px solid var(--primary)', background: 'linear-gradient(135deg, rgba(2,132,199,0.05), var(--surface-glass))' }}
                   >
+                    <span className="shrink-0 text-2xl leading-none mt-0.5" aria-hidden>💡</span>
                     <p className="text-lg leading-relaxed font-medium" style={{ color: 'var(--on-surface)' }}>{para}</p>
+                  </div>
+                )
+              }
+              // Every third paragraph gets a large colored pull-quote mark for
+              // visual rhythm, breaking up the text wall without needing an
+              // image for every beat.
+              if (i > 0 && i % 3 === 0) {
+                return (
+                  <div key={i} className="flex gap-4 items-start">
+                    <span className="pa-display shrink-0 text-5xl leading-none select-none" style={{ color: 'var(--primary)', opacity: 0.25 }} aria-hidden>“</span>
+                    <p className="text-lg leading-relaxed" style={{ color: 'var(--on-surface-variant)' }}>{para}</p>
                   </div>
                 )
               }
@@ -123,6 +137,8 @@ export default async function ArticlePage({ params }: Props) {
               )
             })}
           </div>
+
+          <MoleculeDivider />
 
           {/* Services CTA — every article reader is a prospective client;
               this is the actual conversion point, not just a news blurb. */}
@@ -148,5 +164,23 @@ export default async function ArticlePage({ params }: Props) {
         </div>
       </main>
     </>
+  )
+}
+
+/** Purely decorative section break — same molecule motif as the header
+ * logo, in brand colors. Breaks up the text wall without depending on an
+ * externally-generated image for every beat of the article. */
+function MoleculeDivider() {
+  return (
+    <div className="flex items-center gap-3 my-2" aria-hidden>
+      <div className="h-px flex-1" style={{ background: 'var(--border-light)' }} />
+      <svg width="28" height="20" viewBox="0 0 24 24" fill="none">
+        <circle cx="6" cy="6" r="2.5" fill="var(--primary)" />
+        <circle cx="18" cy="6" r="2.5" fill="var(--secondary)" />
+        <circle cx="12" cy="16" r="2.5" fill="var(--tertiary-bright)" />
+        <path d="M8 7.5L10.5 14.5M16 7.5L13.5 14.5M8.5 6H15.5" stroke="var(--outline-variant)" strokeWidth="1.2" />
+      </svg>
+      <div className="h-px flex-1" style={{ background: 'var(--border-light)' }} />
+    </div>
   )
 }
