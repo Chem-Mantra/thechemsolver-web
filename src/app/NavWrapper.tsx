@@ -21,13 +21,17 @@ export default function NavWrapper({ children }: { children: React.ReactNode }) 
   const pathname = usePathname()
   const isHome = pathname === '/'
   const isEbook = pathname?.startsWith('/ebook/')
+  // Patent Analytics is a distinct product/brand sharing this domain only to
+  // avoid a second domain purchase — it must never show TheChemSolver's own
+  // nav/footer or student-tool branding.
+  const isPatentAnalytics = pathname?.startsWith('/patent-analytics')
   const [menuOpen, setMenuOpen] = useState(false)
 
   // Close the mobile menu on route change so it never lingers over new content.
   useEffect(() => { setMenuOpen(false) }, [pathname])
 
   // Full-screen app routes: no nav, no footer, no flex-col wrapper
-  if (isHome || isEbook) {
+  if (isHome || isEbook || isPatentAnalytics) {
     return <>{children}</>
   }
 

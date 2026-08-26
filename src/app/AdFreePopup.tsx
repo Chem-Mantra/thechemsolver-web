@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
 import { Capacitor } from '@capacitor/core'
 import { useAuth } from './AuthProvider'
 import { signInWithGoogle } from '@/lib/googleAuth'
@@ -11,6 +12,7 @@ const DISMISS_KEY = 'adfree-popup-dismissed-until'
 const DISMISS_DAYS = 7
 
 export default function AdFreePopup() {
+  const pathname = usePathname()
   const { user, session, premium } = useAuth()
   const [dismissed, setDismissed] = useState(true) // start hidden until we've checked localStorage, avoids a flash
   const [busy, setBusy] = useState(false)
@@ -21,6 +23,10 @@ export default function AdFreePopup() {
     setDismissed(Date.now() < until)
   }, [])
 
+  // Patent Analytics is a distinct product sharing this domain only to avoid
+  // a second domain purchase — none of TheChemSolver's own student-tool
+  // upsells (this popup included) should ever appear on it.
+  if (pathname?.startsWith('/patent-analytics')) return null
   // The purchase flow is website-only: Apple's guidelines don't allow an app
   // to sell/unlock a feature used within the app via an external payment
   // link, so the app never shows or links to this popup at all. Premium

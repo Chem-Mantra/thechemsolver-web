@@ -52,3 +52,4 @@ ios/.xcode.env.local
 /blob-report/
 /reports/
 /screenshots/
+.env*.local

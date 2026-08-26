@@ -35,6 +35,24 @@ export default function AboutPage() {
             simulation, and every practice set stays free and unlocked.
           </p>
 
+          <h2 className="text-lg font-bold text-white mt-8 mb-2">Who&rsquo;s behind TheChemSolver</h2>
+          <p>
+            TheChemSolver is built and maintained by Prashant Kotian, a chemistry researcher
+            pursuing a PhD in Chemistry at the Institute of Chemical Technology (ICT), Mumbai,
+            with 9+ years teaching organic and analytical chemistry for IIT-JEE and NEET. Every
+            simulator, structure engine, and practice set on this site is written and verified
+            in-house, not licensed from a third party.
+          </p>
+          <p>
+            That same structure-verification work also powers our{' '}
+            <Link href="/patent-analytics" className="text-purple-400 hover:text-purple-300">
+              chemical patent structure analysis services
+            </Link>{' '}
+            for IP teams and patent attorneys — extracting and independently verifying chemical
+            structures from patent documents, including genus/species (Markush) claim coverage
+            analysis.
+          </p>
+
           <h2 className="text-lg font-bold text-white mt-8 mb-2">Contact</h2>
           <p>
             Questions, corrections, or feedback? Reach out at{' '}

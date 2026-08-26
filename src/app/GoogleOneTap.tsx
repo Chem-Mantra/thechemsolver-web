@@ -27,8 +27,10 @@ declare global {
 }
 
 // Skip on the account/sign-in page — showing "sign in as X" over a page
-// whose whole purpose is signing in would be confusing.
-const SKIP_PREFIXES = ['/account']
+// whose whole purpose is signing in would be confusing. Also skip Patent
+// Analytics: a distinct product sharing this domain, must show none of
+// TheChemSolver's own student-account auth prompts.
+const SKIP_PREFIXES = ['/account', '/patent-analytics']
 
 // Supabase's signInWithIdToken requires a nonce, hashed with SHA-256 before
 // it's sent to Google (the raw nonce is sent to Supabase alongside the
