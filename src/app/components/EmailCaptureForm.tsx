@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { trackEvent, TCSEvents } from '@/lib/analytics'
 
 export default function EmailCaptureForm({
   sourcePage,
@@ -20,6 +21,7 @@ export default function EmailCaptureForm({
     const { error } = await supabase
       .from('Leads')
       .upsert({ email: email.trim().toLowerCase(), source_page: sourcePage }, { onConflict: 'email', ignoreDuplicates: true })
+    if (!error) trackEvent(TCSEvents.emailSubscribe, { source: sourcePage })
     setStatus(error ? 'error' : 'done')
   }
 

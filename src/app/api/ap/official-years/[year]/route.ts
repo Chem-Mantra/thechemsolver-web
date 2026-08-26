@@ -3,7 +3,8 @@ import { supabase } from '@/lib/supabase'
 
 // GET /api/ap/official-years/2019?type=mcq
 // GET /api/ap/official-years/2019?type=frq
-export async function GET(req: NextRequest, { params }: { params: { year: string } }) {
+export async function GET(req: NextRequest, props: { params: Promise<{ year: string }> }) {
+  const params = await props.params;
   const year = parseInt(params.year)
   const { searchParams } = req.nextUrl
   const type = searchParams.get('type')

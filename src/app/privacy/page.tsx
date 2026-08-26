@@ -32,19 +32,27 @@ export default function PrivacyPage() {
           </p>
           <p>
             <strong className="text-white">Usage data:</strong> We use privacy-focused analytics (Vercel Analytics)
-            to understand which pages and tools are used, in aggregate. This does not identify you
-            personally.
+            and Google Analytics (when configured) to understand which pages and tools are used, in
+            aggregate. This does not sell personal profiles.
           </p>
           <p>
-            We do not require an account to use any simulator, ebook, or practice tool on this site.
+            <strong className="text-white">Accounts (optional):</strong> You may browse public pages
+            without an account. Interactive labs and ebooks start with a 15-day free trial (local
+            trial clock and/or Google sign-in). After the trial, continued access to interactive
+            tools requires a paid year of access. Sign-in is used to restore access across devices
+            and to link PayPal purchases.
           </p>
 
           <h2 className="text-lg font-bold text-white mt-8 mb-2">Advertising (Google AdSense)</h2>
           <p>
-            This site is supported by advertising served through Google AdSense. Google and its
-            partners may use cookies and similar technologies to serve ads based on your prior
-            visits to this site or other websites. You can learn more about how Google uses data
-            and manage your ad personalization settings at{' '}
+            This site may be supported by advertising served through Google AdSense (publisher ID
+            ca-pub-4376919875096457). Third-party vendors, including Google, use cookies to serve
+            ads based on a user&apos;s prior visits to this website or other websites. Google&apos;s
+            use of advertising cookies enables it and its partners to serve ads based on visits to
+            this site and/or other sites on the Internet.
+          </p>
+          <p>
+            Users may opt out of personalized advertising by visiting{' '}
             <a
               href="https://adssettings.google.com/"
               target="_blank"
@@ -52,8 +60,18 @@ export default function PrivacyPage() {
               className="text-purple-400 hover:text-purple-300"
             >
               Google Ads Settings
-            </a>{' '}
-            and{' '}
+            </a>
+            . Alternatively, you can opt out of some third-party vendors&apos; uses of cookies for
+            personalized advertising at{' '}
+            <a
+              href="https://www.aboutads.info/choices/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-purple-400 hover:text-purple-300"
+            >
+              aboutads.info
+            </a>
+            . Learn more:{' '}
             <a
               href="https://policies.google.com/technologies/partner-sites"
               target="_blank"
@@ -61,13 +79,16 @@ export default function PrivacyPage() {
               className="text-purple-400 hover:text-purple-300"
             >
               How Google uses information from sites that use our services
-            </a>.
+            </a>
+            .
           </p>
 
           <h2 className="text-lg font-bold text-white mt-8 mb-2">Cookies</h2>
           <p>
-            Cookies on this site are used by our advertising partner (Google AdSense) and by our
-            analytics provider. We do not use cookies to store personal profiles ourselves.
+            Cookies on this site are used by Google AdSense (when ads are active), analytics, and
+            essential features such as trial/access state and sign-in sessions. We do not sell cookie
+            data. You can control cookies in your browser settings; blocking all cookies may break
+            sign-in or trial features.
           </p>
 
           <h2 className="text-lg font-bold text-white mt-8 mb-2">Children's privacy</h2>

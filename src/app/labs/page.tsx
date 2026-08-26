@@ -72,8 +72,8 @@ export default function USLabsPage() {
   return (
     <div className="max-w-5xl mx-auto px-5 py-16">
       <div className="mb-10">
-        <h1 className="text-3xl font-bold mb-2">All Free Chemistry Tools</h1>
-        <p className="text-gray-400">Every tool is free to use</p>
+        <h1 className="text-3xl font-bold mb-2">Chemistry Tools &amp; Virtual Labs</h1>
+        <p className="text-gray-400">15-day free trial on interactive labs · then $15/year full access</p>
       </div>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
         {ALL_TOOLS.map(tool => (

@@ -84,7 +84,7 @@ export default function APChemistryPage() {
           AP Chemistry
         </h1>
         <p className="text-gray-400 max-w-xl mb-8 leading-relaxed text-sm">
-          Everything you need in one place — an interactive ebook for all 9 units, 30+ simulators, and exam-style practice. All free to use.
+          Everything you need in one place — an interactive ebook for all 9 units, 30+ simulators, and exam-style practice. Explore free for 15 days, then $15/year for full access.
         </p>
 
         {/* Exam format chips */}

@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  gitleaks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+      - name: Install gitleaks
+        run: |
+          VERSION=$(curl -s https://api.github.com/repos/gitleaks/gitleaks/releases/latest | grep tag_name | cut -d '"' -f4 | tr -d v)
+          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks_${VERSION}_linux_x64.tar.gz" -o gitleaks.tar.gz
+          tar -xzf gitleaks.tar.gz gitleaks
+          sudo mv gitleaks /usr/local/bin/
+      - name: Scan for secrets
+        # --no-git scans the working tree only (not full history). Historical
+        # false positives from placeholder strings should not red-flag every push.
+        run: gitleaks detect --source . --verbose --redact --no-git
+
+  lint-build-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Build
+        env:
+          NEXT_PUBLIC_THECHEMSOLVER_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_THECHEMSOLVER_SUPABASE_URL }}
+          NEXT_PUBLIC_THECHEMSOLVER_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_THECHEMSOLVER_SUPABASE_ANON_KEY }}
+          THECHEMSOLVER_SUPABASE_SERVICE_KEY: ${{ secrets.THECHEMSOLVER_SUPABASE_SERVICE_KEY }}
+        run: |
+          export NEXT_PUBLIC_THECHEMSOLVER_SUPABASE_URL="${NEXT_PUBLIC_THECHEMSOLVER_SUPABASE_URL:-https://placeholder.supabase.co}"
+          export NEXT_PUBLIC_THECHEMSOLVER_SUPABASE_ANON_KEY="${NEXT_PUBLIC_THECHEMSOLVER_SUPABASE_ANON_KEY:-ci-placeholder-anon-key}"
+          export THECHEMSOLVER_SUPABASE_SERVICE_KEY="${THECHEMSOLVER_SUPABASE_SERVICE_KEY:-ci-placeholder-service-key}"
+          npm run build
+      # Advisory only — do not fail the pipeline on transitive vulns while
+      # we keep Next on the patched 14.2.x line used in production.
+      - name: Dependency audit (high/critical report)
+        continue-on-error: true
+        run: npm audit --audit-level=high

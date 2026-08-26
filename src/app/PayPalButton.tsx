@@ -7,7 +7,11 @@ const HOSTED_BUTTON_ID = process.env.NEXT_PUBLIC_PAYPAL_HOSTED_BUTTON_ID
  * the student is signed in (checked by the caller), so the PayPal-side
  * email can be matched back to their Supabase account by the webhook in
  * /api/paypal/webhook. */
-export default function PayPalButton() {
+export default function PayPalButton({
+  label = 'Unlock full access — Buy Now',
+}: {
+  label?: string
+}) {
   if (!HOSTED_BUTTON_ID) {
     return <p className="text-red-400 text-xs">PayPal checkout isn&apos;t configured yet.</p>
   }
@@ -21,7 +25,7 @@ export default function PayPalButton() {
     >
       <input
         type="submit"
-        value="Go ad-free — Buy Now"
+        value={label}
         className="text-center border-none rounded min-w-[9rem] h-[2.625rem] font-bold bg-[#FFD140] text-black text-sm cursor-pointer px-4"
       />
       {/* eslint-disable-next-line @next/next/no-img-element */}

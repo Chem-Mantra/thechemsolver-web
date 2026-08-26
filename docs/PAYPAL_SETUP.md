@@ -1,4 +1,10 @@
-# PayPal + Google Sign-In Setup — $15/Year Ad-Free
+# PayPal + Google Sign-In Setup — 15-day free trial, then $15/year
+
+Students explore free for **15 days**. After the trial, full access (labs,
+practice, ebooks) is **$15/year** via the PayPal hosted button. Server trial
+rows use `premium_access.paypal_capture_id = 'trial'`; a real capture id
+means paid.
+
 
 Replaces the earlier Razorpay-based design (see git history for
 `docs/RAZORPAY_SETUP.md` if you ever need it back) — the project moved to a

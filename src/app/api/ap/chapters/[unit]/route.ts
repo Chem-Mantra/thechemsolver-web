@@ -3,7 +3,8 @@ import { supabase } from '@/lib/supabase'
 
 // GET /api/ap/chapters/3?type=mcq
 // GET /api/ap/chapters/3?type=frq
-export async function GET(req: NextRequest, { params }: { params: { unit: string } }) {
+export async function GET(req: NextRequest, props: { params: Promise<{ unit: string }> }) {
+  const params = await props.params;
   const unit = parseInt(params.unit)
   const { searchParams } = req.nextUrl
   const type = searchParams.get('type')

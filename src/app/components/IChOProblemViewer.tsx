@@ -3,26 +3,94 @@ import { useState, useEffect } from 'react'
 import NextImage from 'next/image'
 import RichText from './RichText'
 
+// Supabase Storage returns a transient 503 when the SAME object is hit by
+// several concurrent requests at once (confirmed 2026-07-20: a single fresh
+// request always succeeds, but this page rendered one independent <img> per
+// PART even when several parts intentionally share one page's crop, firing
+// a burst of simultaneous duplicate GETs for the same URL on every problem
+// load). This module-level cache makes every consumer -- each ProblemImage
+// instance and the prefetch effect below -- share ONE in-flight request per
+// unique URL, so a shared image is only ever fetched once no matter how many
+// parts reference it.
+const imageLoadPromises = new Map<string, Promise<boolean>>()
+
+// Route through our own server-side proxy (src/app/api/icho/image) rather
+// than embedding Supabase Storage's public URL directly -- see route.ts for
+// why the direct-embed path 503s even for a single request.
+function toProxied(url: string): string {
+  return `/api/icho/image?src=${encodeURIComponent(url)}`
+}
+
+function loadImageOnce(url: string): Promise<boolean> {
+  let p = imageLoadPromises.get(url)
+  if (!p) {
+    p = new Promise<boolean>(resolve => {
+      const img = new Image()
+      img.onload = () => resolve(true)
+      img.onerror = () => resolve(false)
+      img.src = url
+    })
+    imageLoadPromises.set(url, p)
+  }
+  return p
+}
+
+// Without a timeout, a failed/hanging load left this spinner stuck forever
+// since neither onLoad nor onError would ever fire again. 10s timeout ->
+// retry link, which forces a fresh single-flight attempt (cache-busting
+// query param gives it its own cache-map entry).
+const IMAGE_LOAD_TIMEOUT_MS = 10_000
+
 function ProblemImage({ src, alt }: { src: string; alt: string }) {
-  const [loaded, setLoaded] = useState(false)
-  const [error, setError] = useState(false)
-  if (error) return null
+  const [state, setState] = useState<'loading' | 'loaded' | 'error'>('loading')
+  const [timedOut, setTimedOut] = useState(false)
+  const [attempt, setAttempt] = useState(0)
+
+  const proxiedSrc = toProxied(src)
+  const effectiveSrc = attempt === 0 ? proxiedSrc : `${proxiedSrc}&retry=${attempt}`
+
+  useEffect(() => {
+    let cancelled = false
+    setState('loading')
+    setTimedOut(false)
+    const timer = setTimeout(() => setTimedOut(true), IMAGE_LOAD_TIMEOUT_MS)
+    loadImageOnce(effectiveSrc).then(ok => {
+      if (cancelled) return
+      clearTimeout(timer)
+      setState(ok ? 'loaded' : 'error')
+    })
+    return () => { cancelled = true; clearTimeout(timer) }
+  }, [effectiveSrc])
+
+  if (state === 'error') return null
+  const loaded = state === 'loaded'
+
   return (
     <div className="mt-3 relative">
-      {!loaded && (
+      {!loaded && !timedOut && (
         <div className="h-40 rounded-xl border border-white/10 bg-white/[0.03] animate-pulse flex items-center justify-center">
           <span className="text-xs text-gray-600">Loading diagram…</span>
         </div>
       )}
-      <NextImage
-        src={src} alt={alt}
-        width={900} height={675}
-        style={{ width: 'auto', height: 'auto', maxWidth: '100%' }}
-        className={`max-h-72 rounded-xl border border-white/10 ${loaded ? 'block' : 'hidden'}`}
-        loading="lazy"
-        onLoad={() => setLoaded(true)}
-        onError={() => setError(true)}
-      />
+      {!loaded && timedOut && (
+        <div className="h-40 rounded-xl border border-white/10 bg-white/[0.03] flex items-center justify-center">
+          <button
+            onClick={() => { setTimedOut(false); setAttempt(a => a + 1) }}
+            className="text-xs text-gray-500 hover:text-yellow-400 transition-colors"
+          >
+            Diagram didn&apos;t load — tap to retry
+          </button>
+        </div>
+      )}
+      {loaded && (
+        <NextImage
+          src={effectiveSrc} alt={alt}
+          width={900} height={675}
+          style={{ width: 'auto', height: 'auto', maxWidth: '100%' }}
+          className="max-h-72 rounded-xl border border-white/10"
+          unoptimized
+        />
+      )}
     </div>
   )
 }
@@ -72,16 +140,17 @@ export default function IChOProblemViewer({ problems, examLabel }: Props) {
   const filtered = filter === 'all' ? problems : problems.filter(p => p.domain.startsWith(filter))
   const prob = filtered[selected] ?? problems[0]
 
-  // Prefetch all images for selected problem
+  // Prefetch all images for selected problem, routed through the same
+  // single-flight cache ProblemImage uses -- see loadImageOnce above.
   useEffect(() => {
     if (!prob) return
-    const urls: string[] = []
-    if (prob.image_url) urls.push(prob.image_url)
+    const urls = new Set<string>()
+    if (prob.image_url) urls.add(prob.image_url)
     prob.parts.forEach(p => {
-      if (p.image_url) urls.push(p.image_url)
-      p.sub_parts?.forEach(sp => { if (sp.image_url) urls.push(sp.image_url) })
+      if (p.image_url) urls.add(p.image_url)
+      p.sub_parts?.forEach(sp => { if (sp.image_url) urls.add(sp.image_url) })
     })
-    urls.forEach(url => { const img = new Image(); img.src = url })
+    urls.forEach(url => { loadImageOnce(toProxied(url)) })
   }, [selected, prob])
 
   if (!prob) return null

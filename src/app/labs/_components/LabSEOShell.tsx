@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { LAB_META, getLabBody } from '../_data/labMeta'
+import AccessGate from '@/app/AccessGate'
 
 const US_BASE = 'https://www.thechemsolver.com'
 
@@ -83,7 +84,7 @@ export default function LabSEOShell({ slug, children }: { slug: string; children
               {meta.icho && (
                 <span className="text-xs bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 px-2 py-1 rounded-full">IChO</span>
               )}
-              <span className="text-xs bg-green-500/10 text-green-400 border border-green-500/20 px-2 py-1 rounded-full">Free</span>
+              <span className="text-xs bg-green-500/10 text-green-400 border border-green-500/20 px-2 py-1 rounded-full">15-day free trial</span>
             </div>
           </div>
         </div>
@@ -99,7 +100,10 @@ export default function LabSEOShell({ slug, children }: { slug: string; children
 
         {/* ── Left: interactive tool (70%) ────────────────────── */}
         <div className="flex-1 min-w-0">
-          {children}
+          {/* SEO chrome stays public; only the interactive tool is trial-gated. */}
+          <AccessGate title="Keep using this lab">
+            {children}
+          </AccessGate>
 
           {/* Horizontal ad directly below the tool — high CTR position */}
           <div className="mt-4">

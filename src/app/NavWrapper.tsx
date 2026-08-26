@@ -15,6 +15,8 @@ const NAV_EXAMS = [
 const NAV_TOOLS = [
   { label: 'All Labs',   href: '/labs' },
   { label: 'Ebook',      href: '/ebook/ap-chemistry' },
+  { label: 'Blog',       href: '/blog' },
+  { label: 'Contact',    href: '/contact' },
 ]
 
 export default function NavWrapper({ children }: { children: React.ReactNode }) {
@@ -41,7 +43,7 @@ export default function NavWrapper({ children }: { children: React.ReactNode }) 
           <Link href="/" className="flex items-center gap-2 shrink-0">
             <Image src="/logo.png" alt="TheChemSolver" width={28} height={28} className="rounded-full" />
             <span className="font-bold text-base tracking-tight">TheChemSolver</span>
-            <span className="text-[10px] bg-green-500/20 text-green-400 border border-green-500/30 px-1.5 py-0.5 rounded-full">FREE</span>
+            <span className="text-[10px] bg-green-500/20 text-green-400 border border-green-500/30 px-1.5 py-0.5 rounded-full">15-DAY FREE</span>
           </Link>
           <div className="hidden md:flex items-center gap-1 overflow-x-auto">
             <span className="text-white/20 text-xs mr-1">|</span>
@@ -105,10 +107,11 @@ export default function NavWrapper({ children }: { children: React.ReactNode }) 
         <div className="flex items-center justify-center gap-2 mb-2">
           <Image src="/logo.png" alt="TheChemSolver" width={22} height={22} className="rounded-full" />
           <span className="font-bold text-white text-sm">TheChemSolver.com</span>
-          <span className="text-xs bg-green-500/20 text-green-400 border border-green-500/30 px-1.5 py-0.5 rounded-full">Free</span>
+          <span className="text-xs bg-green-500/20 text-green-400 border border-green-500/30 px-1.5 py-0.5 rounded-full">15-day free trial</span>
         </div>
         <p className="text-xs mb-3 max-w-md mx-auto">
-          Free interactive chemistry tools for AP Chemistry, Organic Chemistry, IChO, and College Gen Chem students.
+          Interactive chemistry tools for AP Chemistry, Organic Chemistry, IChO, and College Gen Chem —
+          free for 15 days, then $15/year.
         </p>
         <div className="flex justify-center flex-wrap gap-4 text-xs mb-3">
           <Link href="/ap-chemistry"      className="text-blue-400 hover:text-blue-300 transition-colors">AP Chemistry</Link>
@@ -118,7 +121,9 @@ export default function NavWrapper({ children }: { children: React.ReactNode }) 
           <span className="text-white/20">|</span>
           <Link href="/labs"    className="hover:text-white transition-colors">All Labs</Link>
           <Link href="/ebook"   className="hover:text-white transition-colors">Study Guide</Link>
+          <Link href="/blog"    className="hover:text-white transition-colors">Blog</Link>
           <Link href="/about"   className="hover:text-white transition-colors">About</Link>
+          <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
           <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
           <Link href="/terms"   className="hover:text-white transition-colors">Terms</Link>
           <a href="mailto:support@thechemsolver.com" className="hover:text-white transition-colors">Contact</a>

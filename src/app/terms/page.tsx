@@ -22,12 +22,13 @@ export default function TermsPage() {
             agree, please don't use the site.
           </p>
 
-          <h2 className="text-lg font-bold text-white mt-8 mb-2">Free service, optional account</h2>
+          <h2 className="text-lg font-bold text-white mt-8 mb-2">Free trial, then paid access</h2>
           <p>
-            All simulators, ebooks, and practice tools on this site are provided free of charge to
-            every visitor, whether signed in or not. Signing in with Google is optional, and lets you
-            purchase an optional ad-free upgrade (see Payments below). We reserve the right to modify,
-            suspend, or discontinue any tool or feature at any time.
+            New students may explore interactive labs, practice sets, and ebooks free for 15 days
+            (trial starts on first visit for guests, or on first Google sign-in for accounts). After
+            the trial, continued access to those interactive tools requires a paid plan (see Payments
+            below). Marketing pages and public SEO content remain free to browse. We reserve the right
+            to modify, suspend, or discontinue any tool or feature at any time.
           </p>
 
           <h2 className="text-lg font-bold text-white mt-8 mb-2">Educational use only</h2>
@@ -62,10 +63,12 @@ export default function TermsPage() {
 
           <h2 className="text-lg font-bold text-white mt-8 mb-2">Payments</h2>
           <p>
-            Signed-in users may optionally purchase Ad-Free access for one year. Payments are
-            processed securely via PayPal; we do not store your card or PayPal details. This is a one-time
-            payment for one year of ad-free access, not an auto-renewing subscription — ads return
-            automatically once that year expires, with no further charge, unless you purchase again.
+            After the free trial, signed-in students may purchase full access for one year at the
+            price shown on the site (currently $15/year for students). Payments are processed
+            securely via PayPal; we do not store your card or PayPal details. This is a one-time
+            payment for one year of access, not an auto-renewing subscription — access ends when the
+            year expires unless you purchase again. Use the same email for Google sign-in and PayPal
+            so access can be granted automatically.
           </p>
 
           <h2 className="text-lg font-bold text-white mt-8 mb-2">Changes to these terms</h2>

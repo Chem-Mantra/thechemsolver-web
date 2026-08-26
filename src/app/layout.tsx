@@ -8,12 +8,13 @@ import AdsGate from './AdsGate'
 import AdFreePopup from './AdFreePopup'
 import AuthCallbackListener from './AuthCallbackListener'
 import GoogleOneTap from './GoogleOneTap'
-import { Analytics } from '@vercel/analytics/next'
-// The $15/year ad-free purchase is live (website only — see AdFreePopup.tsx
-// for why the native app never shows it). NativeAccessGate (a full-app
-// paywall for the native build) stays unmounted — that's a materially
-// different, higher-risk pattern under App Store guidelines, unrelated to
-// this website ad-removal feature; see docs/PAYPAL_SETUP.md.
+import { Analytics as VercelAnalytics } from '@vercel/analytics/next'
+import NativeAccessGate from './NativeAccessGate'
+import Analytics from './Analytics'
+// Freemium: 15-day free trial, then $15/year full access (PayPal on web).
+// AccessGate wraps interactive tools; AdFreePopup nags near/after trial end.
+// NativeAccessGate is a no-op on the website; on Capacitor it requires
+// sign-in + trial/paid access and points users to the web for PayPal.
 
 const ADSENSE_CLIENT = 'ca-pub-4376919875096457'
 
@@ -24,7 +25,10 @@ export const viewport: Viewport = {
   themeColor: '#08020d',
 }
 
+const SITE_URL = 'https://www.thechemsolver.com'
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: 'TheChemSolver — Free Chemistry Tools for AP, USNCO & IChO',
     template: '%s | TheChemSolver',
@@ -49,10 +53,13 @@ export const metadata: Metadata = {
     'equilibrium lab',
     'electrochemistry simulator',
   ],
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
     title: 'TheChemSolver — Free Chemistry Tools',
     description: 'Interactive simulators for AP Chemistry, USNCO, and IChO.',
-    url: 'https://www.thechemsolver.com',
+    url: SITE_URL,
     siteName: 'TheChemSolver',
     locale: 'en_US',
     type: 'website',
@@ -71,7 +78,8 @@ const organizationLd = {
   name: 'TheChemSolver',
   url: 'https://www.thechemsolver.com',
   description:
-    'Free interactive chemistry simulators, ebooks, and practice tools for AP Chemistry, USNCO, and IChO students.',
+    'Interactive chemistry simulators, ebooks, and practice tools for AP Chemistry, USNCO, and IChO — 15-day free trial, then $15/year full access.',
+  email: 'support@thechemsolver.com',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -83,14 +91,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }}
         />
         <AuthProvider>
-          <CapacitorNative />
-          <AuthCallbackListener />
-          <GoogleOneTap />
-          <NavWrapper>{children}</NavWrapper>
-          <AdFreePopup />
-          <Analytics />
-          <RegisterServiceWorker />
-          <AdsGate client={ADSENSE_CLIENT} />
+          <NativeAccessGate>
+            <CapacitorNative />
+            <AuthCallbackListener />
+            <GoogleOneTap />
+            <NavWrapper>{children}</NavWrapper>
+            <AdFreePopup />
+            <Analytics />
+            <VercelAnalytics />
+            <RegisterServiceWorker />
+            <AdsGate client={ADSENSE_CLIENT} />
+          </NativeAccessGate>
         </AuthProvider>
       </body>
     </html>

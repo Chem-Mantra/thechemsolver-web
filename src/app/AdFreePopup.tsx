@@ -6,14 +6,24 @@ import { Capacitor } from '@capacitor/core'
 import { useAuth } from './AuthProvider'
 import { signInWithGoogle } from '@/lib/googleAuth'
 import PayPalButton from './PayPalButton'
-import { AD_FREE_PRICE_USD, formatAdFreeChargeAmount } from '@/lib/pricing'
+import {
+  ACCESS_PRICE_USD,
+  FREE_TRIAL_DAYS,
+  formatAccessChargeAmount,
+  trialHeadline,
+} from '@/lib/pricing'
 
-const DISMISS_KEY = 'adfree-popup-dismissed-until'
-const DISMISS_DAYS = 7
+const DISMISS_KEY = 'access-popup-dismissed-until'
+const DISMISS_DAYS = 3
 
+/**
+ * Corner upsell — shown to visitors whose free trial is ending soon or already
+ * over, and who have not paid. Hidden entirely inside the native app shell
+ * (App Store rules forbid external payment links for in-app unlock).
+ */
 export default function AdFreePopup() {
   const pathname = usePathname()
-  const { user, session, premium } = useAuth()
+  const { user, session, access } = useAuth()
   const [dismissed, setDismissed] = useState(true) // start hidden until we've checked localStorage, avoids a flash
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -33,7 +43,15 @@ export default function AdFreePopup() {
   // status (granted on the web) still applies inside the app automatically,
   // since it's read from the same signed-in Supabase account.
   if (Capacitor.isNativePlatform()) return null
-  if (premium.loading || premium.isPremium || dismissed) return null
+  if (access.loading || dismissed) return null
+  // Don't nag paid users or people early in a healthy trial.
+  if (access.isPaid) return null
+  if (access.hasAccess && access.isTrial && (access.daysLeft ?? 99) > 5) return null
+
+  const trialEnded = !access.hasAccess
+  const trialEnding = access.isTrial && (access.daysLeft ?? 0) <= 5
+
+  if (!trialEnded && !trialEnding) return null
 
   function dismiss() {
     localStorage.setItem(DISMISS_KEY, String(Date.now() + DISMISS_DAYS * 24 * 60 * 60 * 1000))
@@ -53,11 +71,8 @@ export default function AdFreePopup() {
   }
 
   return (
-    // top offset clears the sticky nav bar (which also has top-right controls,
-    // e.g. the mobile hamburger button) — sits just below it instead of on
-    // top of it, with a safe-area fallback for installed-PWA use.
     <div
-      className="fixed right-4 z-40 max-w-[280px] bg-[#150c1c] border border-white/10 rounded-2xl shadow-2xl p-4"
+      className="fixed right-4 z-40 max-w-[300px] bg-[#150c1c] border border-white/10 rounded-2xl shadow-2xl p-4"
       style={{ top: 'calc(5rem + var(--safe-top))' }}
     >
       <button
@@ -67,9 +82,12 @@ export default function AdFreePopup() {
       >
         ✕
       </button>
-      <p className="text-sm font-bold text-white pr-5 mb-1">Go ad-free</p>
+      <p className="text-sm font-bold text-white pr-5 mb-1">
+        {trialEnded ? 'Your free trial ended' : `${access.daysLeft} day${access.daysLeft === 1 ? '' : 's'} left free`}
+      </p>
       <p className="text-xs text-gray-400 mb-3 leading-relaxed">
-        Support the project — ${AD_FREE_PRICE_USD}, ad-free access for a full year.
+        Keep every lab, practice set, and ebook for ${ACCESS_PRICE_USD}/year after your{' '}
+        {FREE_TRIAL_DAYS}-day free trial.
       </p>
       {error && <p className="text-red-400 text-[11px] mb-2">{error}</p>}
       {!user || !session ? (
@@ -79,13 +97,13 @@ export default function AdFreePopup() {
           disabled={busy}
           className="inline-block bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white text-xs font-semibold px-3 py-2 rounded-lg transition-colors"
         >
-          {busy ? 'Please wait…' : 'Sign in with Google to continue →'}
+          {busy ? 'Please wait…' : 'Sign in with Google →'}
         </button>
       ) : (
-        <PayPalButton />
+        <PayPalButton label={`Unlock · $${ACCESS_PRICE_USD}/year`} />
       )}
       <p className="text-[10px] text-gray-500 mt-2">
-        Charged as {formatAdFreeChargeAmount()} at checkout (incl. payment processing fee)
+        Charged as {formatAccessChargeAmount()} · {trialHeadline()}
       </p>
     </div>
   )

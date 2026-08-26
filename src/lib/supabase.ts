@@ -1,7 +1,14 @@
 import { createClient } from '@supabase/supabase-js'
 
-const url  = process.env.NEXT_PUBLIC_THECHEMSOLVER_SUPABASE_URL!
-const anon = process.env.NEXT_PUBLIC_THECHEMSOLVER_SUPABASE_ANON_KEY!
+// Placeholders let `next build` / CI collect route page data when GitHub
+// Actions secrets are unset. Production always injects real Vercel env vars.
+const url =
+  process.env.NEXT_PUBLIC_THECHEMSOLVER_SUPABASE_URL ||
+  'https://placeholder.supabase.co'
+// Intentionally not a JWT-shaped string — gitleaks flags eyJ… placeholders.
+const anon =
+  process.env.NEXT_PUBLIC_THECHEMSOLVER_SUPABASE_ANON_KEY ||
+  'ci-placeholder-anon-key'
 
 // Browser-safe client (anon key, used in client components and API routes).
 // PKCE flow is required for the native app's Google sign-in: the OAuth

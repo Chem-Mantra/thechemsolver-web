@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import EmailCaptureForm from './components/EmailCaptureForm'
+import InterestForm from './components/InterestForm'
 import AdSlot from './components/AdSlot'
 import HomeNav from './HomeNav'
 
@@ -8,10 +9,12 @@ export const metadata: Metadata = {
   title: 'TheChemSolver — Free Chemistry Tools for AP Chem, Orgo & IChO',
   description: 'Free interactive chemistry solvers and virtual labs for AP Chemistry, Organic Chemistry, and IChO. IUPAC namer, titration simulator, VSEPR, equilibrium, kinetics, electrochemistry and more.',
   keywords: 'AP chemistry tools free, organic chemistry solver, IChO chemistry, IUPAC namer, titration simulator, VSEPR, equilibrium calculator, chemistry virtual lab',
+  // Explicit www homepage canonical — GSC was preferring non-www when userCanonical was missing.
+  alternates: { canonical: 'https://www.thechemsolver.com/' },
   openGraph: {
     title: 'TheChemSolver — Free Chemistry Solvers & Virtual Labs',
     description: 'Free interactive chemistry tools for AP Chemistry, Orgo, and IChO students.',
-    url: 'https://www.thechemsolver.com',
+    url: 'https://www.thechemsolver.com/',
     siteName: 'TheChemSolver',
     type: 'website',
   },
@@ -26,7 +29,7 @@ export default function USHomePage() {
       {/* Hero */}
       <section className="px-5 py-20 md:py-28 text-center max-w-5xl mx-auto">
         <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-4 py-1.5 text-sm text-purple-300 mb-6">
-          🆓 Every tool is free to use
+          🆓 15-day free trial · then $15/year
         </div>
         <h1 className="text-5xl md:text-6xl font-black mb-5 leading-tight tracking-tight">
           Chemistry Tools for
@@ -35,7 +38,7 @@ export default function USHomePage() {
           </span>
         </h1>
         <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-          Free interactive labs and simulators purpose-built for each exam — from AP Chemistry Units 1–9 to IChO-level coordination chemistry and multi-step synthesis.
+          Explore every interactive lab and simulator free for 15 days — purpose-built for AP Chemistry Units 1–9 through IChO-level coordination chemistry. After that, full access is $15/year for students.
         </p>
 
         {/* Exam hub cards */}
@@ -72,10 +75,10 @@ export default function USHomePage() {
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
           {[
-            { v: '30+', l: 'Free Simulators' },
-            { v: '$0', l: 'Forever Free' },
-            { v: '3', l: 'Exam Tracks' },
-            { v: '0', l: 'Login Required' },
+            { v: '30+', l: 'Simulators' },
+            { v: '15d', l: 'Free Trial' },
+            { v: '$15', l: 'Per Year' },
+            { v: '4', l: 'Exam Tracks' },
           ].map(s => (
             <div key={s.l} className="bg-white/5 border border-white/10 rounded-2xl p-4">
               <div className="text-2xl font-black text-white mb-0.5">{s.v}</div>
@@ -110,13 +113,41 @@ export default function USHomePage() {
         <AdSlot className="h-16 mt-4" />
       </section>
 
+      {/* Exam interest registration (WhatsApp notify to founder) */}
+      <section id="register" className="px-5 py-16 border-t border-white/10 bg-gradient-to-b from-purple-950/20 to-transparent">
+        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 items-start">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest text-purple-300 mb-3">
+              Guided prep
+            </p>
+            <h2 className="text-3xl font-black mb-4 leading-tight">
+              Register if you&apos;re preparing for AP, Orgo, USNCO, or IChO
+            </h2>
+            <p className="text-gray-400 leading-relaxed mb-4">
+              Tell us which exam you&apos;re targeting. We&apos;ll point you to the right labs, ebooks,
+              and practice sets — and reach out if you want a study plan.
+            </p>
+            <ul className="space-y-2 text-sm text-gray-300">
+              <li className="flex gap-2"><span className="text-blue-400">●</span> AP Chemistry — units, FRQs, simulations</li>
+              <li className="flex gap-2"><span className="text-emerald-400">●</span> Orgo 1 &amp; 2 — mechanisms &amp; structure tools</li>
+              <li className="flex gap-2"><span className="text-orange-400">●</span> USNCO — Local &amp; National practice</li>
+              <li className="flex gap-2"><span className="text-yellow-400">●</span> IChO — deep prep problems</li>
+            </ul>
+            <p className="text-xs text-gray-500 mt-6">
+              15-day free trial on every tool · then $15/year full access
+            </p>
+          </div>
+          <InterestForm />
+        </div>
+      </section>
+
       {/* Why Free */}
       <section className="px-5 py-16 bg-white/[0.02] border-t border-white/10">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-2xl font-bold mb-3">Why Is Everything Free?</h2>
           <p className="text-gray-400 leading-relaxed mb-6">
-            TheChemSolver is supported by non-intrusive display ads. You get full access to every tool, every simulation, every calculator, no paywalled features.
-            Prefer no ads? Sign in and go ad-free for $15/year.
+            Explore every lab free for 15 days. After that, full access is $15/year for students.
+            Display ads may appear during free browsing.
           </p>
           <div className="grid grid-cols-3 gap-4 text-sm">
             {[
@@ -162,7 +193,8 @@ export default function USHomePage() {
           <Link href="/about"   className="hover:text-white transition-colors">About</Link>
           <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
           <Link href="/terms"   className="hover:text-white transition-colors">Terms</Link>
-          <a href="mailto:support@thechemsolver.com" className="hover:text-white transition-colors">Contact</a>
+          <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
+          <a href="#register" className="hover:text-white transition-colors">Register interest</a>
         </div>
         <p className="text-[10px] text-gray-700">© {new Date().getFullYear()} TheChemSolver. All rights reserved.</p>
       </footer>

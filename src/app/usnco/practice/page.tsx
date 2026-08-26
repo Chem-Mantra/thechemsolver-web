@@ -1,4 +1,6 @@
 'use client'
+
+import AccessGate from '@/app/AccessGate'
 import { useState, useEffect } from 'react'
 import MCQExam, { MCQQuestion } from '@/app/components/MCQExam'
 import FRQViewer, { FRQProblem, FRQPart } from '@/app/components/FRQViewer'
@@ -71,7 +73,7 @@ function useYears(tab: Tab) {
   return years
 }
 
-export default function USNCOPracticePage() {
+function USNCOPracticePageInner() {
   const [tab, setTab]           = useState<Tab>('local')
   const [started, setStarted]   = useState(false)
   const [selectedYear, setYear] = useState<number | null>(null)
@@ -227,5 +229,13 @@ export default function USNCOPracticePage() {
         </button>
       </div>
     </div>
+  )
+}
+
+export default function USNCOPracticePage() {
+  return (
+    <AccessGate title='Keep practicing USNCO'>
+      <USNCOPracticePageInner />
+    </AccessGate>
   )
 }
