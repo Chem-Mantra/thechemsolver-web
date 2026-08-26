@@ -23,7 +23,11 @@ export const metadata: Metadata = {
   // Deliberately hidden from Google while this was being built quietly;
   // now that it's a real product page meant to surface in patent-law
   // searches, it needs to be indexed like any other page.
-  robots: { index: true, follow: true },
+  // max-image-preview:large is required for Google Discover/News to show
+  // a full-size image card instead of a tiny or no thumbnail -- our hero
+  // images are real, large (1672x941), non-generic illustrations, which
+  // is exactly what Discover eligibility wants.
+  robots: { index: true, follow: true, googleBot: { 'max-image-preview': 'large' } },
 }
 
 // "Synthetix Light Spatial" design tokens. Previously only defined inline

@@ -21,7 +21,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: { absolute: `${article.title} — Patent Analytics` },
     description: article.summary,
     alternates: { canonical: url },
-    robots: { index: true, follow: true },
+    // max-image-preview:large -- required for Google Discover/News to show
+    // the article's real hero image at full size rather than a small or
+    // absent thumbnail. See layout.tsx for the same setting.
+    robots: { index: true, follow: true, googleBot: { 'max-image-preview': 'large' } },
     openGraph: {
       title: article.title,
       description: article.summary,
@@ -53,6 +56,12 @@ export default async function ArticlePage({ params }: Props) {
     datePublished: article.published_date,
     url,
     image: article.image_url ? `${SITE}${article.image_url}` : undefined,
+    author: {
+      '@type': 'Person',
+      name: 'Prashant Kotian',
+      jobTitle: 'PhD Researcher, Chemistry (Institute of Chemical Technology, Mumbai)',
+      url: `${SITE}#contact`,
+    },
     publisher: {
       '@type': 'Organization',
       name: 'Patent Analytics by TheChemSolver',
@@ -80,9 +89,13 @@ export default async function ArticlePage({ params }: Props) {
             {new Date(article.published_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
           </div>
 
-          <h1 className="pa-display text-[32px] md:text-[48px] font-bold leading-[1.1] mb-6" style={{ color: 'var(--on-surface)' }}>
+          <h1 className="pa-display text-[32px] md:text-[48px] font-bold leading-[1.1] mb-4" style={{ color: 'var(--on-surface)' }}>
             {article.title}
           </h1>
+
+          <p className="text-sm mb-8" style={{ color: 'var(--on-surface-muted)' }}>
+            By <a href="/patent-analytics#contact" className="hover:underline" style={{ color: 'var(--on-surface-variant)' }}>Prashant Kotian</a>, PhD Researcher (Chemistry), ICT Mumbai
+          </p>
 
           {article.image_url && (
             <div className="pa-glass pa-glass-elevated overflow-hidden mb-8">
