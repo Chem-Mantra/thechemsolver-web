@@ -16,19 +16,24 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const body = await req.json().catch(() => null)
-  const title = typeof body?.title === 'string' ? body.title.trim() : ''
-  const summary = typeof body?.summary === 'string' ? body.summary.trim() : ''
-  const parties = typeof body?.parties === 'string' ? body.parties.trim() : ''
-  const sourceUrl = typeof body?.sourceUrl === 'string' ? body.sourceUrl.trim() : ''
+  const reqBody = await req.json().catch(() => null)
+  const title = typeof reqBody?.title === 'string' ? reqBody.title.trim() : ''
+  const summary = typeof reqBody?.summary === 'string' ? reqBody.summary.trim() : ''
+  const articleBody = typeof reqBody?.body === 'string' ? reqBody.body.trim() : ''
+  const parties = typeof reqBody?.parties === 'string' ? reqBody.parties.trim() : ''
+  const sourceUrl = typeof reqBody?.sourceUrl === 'string' ? reqBody.sourceUrl.trim() : ''
 
-  if (!title || !summary || !parties || !sourceUrl) {
-    return NextResponse.json({ error: 'title, summary, parties, and sourceUrl are all required.' }, { status: 400 })
+  if (!title || !summary || !articleBody || !parties || !sourceUrl) {
+    return NextResponse.json({ error: 'title, summary, body, parties, and sourceUrl are all required.' }, { status: 400 })
   }
 
+  // `body` carries our own full write-up of the case, in our own words --
+  // visitors read the whole thing here rather than being sent to the
+  // source, which is cited only as a small attribution line, not the
+  // primary destination.
   const { data, error: dbError } = await supabaseAdmin
     .from('patent_news')
-    .insert({ title, summary, parties, source_url: sourceUrl })
+    .insert({ title, summary, body: articleBody, parties, source_url: sourceUrl })
     .select()
     .single()
 

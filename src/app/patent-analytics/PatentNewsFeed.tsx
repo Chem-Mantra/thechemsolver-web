@@ -7,6 +7,7 @@ type Article = {
   id: string
   title: string
   summary: string
+  body: string
   parties: string
   source_url: string
   published_date: string
@@ -118,12 +119,22 @@ export function PatentNewsFeedSection() {
                 </button>
                 {open && (
                   <div className="px-6 pb-5">
-                    <p className="text-base leading-relaxed mb-3" style={{ color: 'var(--on-surface-variant)' }}>{a.summary}</p>
-                    <p className="text-sm mb-2" style={{ color: 'var(--on-surface-muted)' }}>
+                    <p className="text-sm mb-4" style={{ color: 'var(--on-surface-muted)' }}>
                       <b>Parties:</b> {a.parties}
                     </p>
-                    <a href={a.source_url} target="_blank" rel="noopener noreferrer" className="text-sm font-medium" style={{ color: 'var(--primary)' }}>
-                      Read source →
+                    <div className="flex flex-col gap-3 mb-4">
+                      {a.body.split('\n\n').map((para, i) => (
+                        <p key={i} className="text-base leading-relaxed" style={{ color: 'var(--on-surface-variant)' }}>{para}</p>
+                      ))}
+                    </div>
+                    <a
+                      href={a.source_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="pa-mono text-[11px] uppercase tracking-wide"
+                      style={{ color: 'var(--on-surface-muted)' }}
+                    >
+                      Source ↗
                     </a>
                   </div>
                 )}
