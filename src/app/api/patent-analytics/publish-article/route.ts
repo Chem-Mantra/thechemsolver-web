@@ -24,6 +24,7 @@ export async function POST(req: NextRequest) {
   const parties = typeof reqBody?.parties === 'string' ? reqBody.parties.trim() : ''
   const sourceUrl = typeof reqBody?.sourceUrl === 'string' ? reqBody.sourceUrl.trim() : ''
   const imageUrl = typeof reqBody?.imageUrl === 'string' ? reqBody.imageUrl.trim() : null
+  const inlineImageUrl = typeof reqBody?.inlineImageUrl === 'string' ? reqBody.inlineImageUrl.trim() : null
 
   if (!title || !summary || !articleBody || !parties || !sourceUrl) {
     return NextResponse.json({ error: 'title, summary, body, parties, and sourceUrl are all required.' }, { status: 400 })
@@ -36,7 +37,7 @@ export async function POST(req: NextRequest) {
   // commercial relationship with.
   const { data, error: dbError } = await supabaseAdmin
     .from('patent_news')
-    .insert({ title, summary, body: articleBody, parties, source_url: sourceUrl, image_url: imageUrl })
+    .insert({ title, summary, body: articleBody, parties, source_url: sourceUrl, image_url: imageUrl, inline_image_url: inlineImageUrl })
     .select()
     .single()
 

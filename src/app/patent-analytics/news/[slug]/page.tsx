@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Fragment } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
@@ -109,31 +110,40 @@ export default async function ArticlePage({ params }: Props) {
           <div className="flex flex-col gap-5 my-8">
             {paragraphs.map((para, i) => {
               const isCallout = /^why (it|this) matters:?/i.test(para.trim())
-              if (isCallout) {
-                return (
-                  <div
-                    key={i}
-                    className="pa-glass pa-glass-elevated p-6 flex gap-4 items-start"
-                    style={{ borderLeft: '4px solid var(--primary)', background: 'linear-gradient(135deg, rgba(2,132,199,0.05), var(--surface-glass))' }}
-                  >
-                    <span className="shrink-0 text-2xl leading-none mt-0.5" aria-hidden>💡</span>
-                    <p className="text-lg leading-relaxed font-medium" style={{ color: 'var(--on-surface)' }}>{para}</p>
-                  </div>
-                )
-              }
-              // Every third paragraph gets a large colored pull-quote mark for
-              // visual rhythm, breaking up the text wall without needing an
-              // image for every beat.
-              if (i > 0 && i % 3 === 0) {
-                return (
-                  <div key={i} className="flex gap-4 items-start">
-                    <span className="pa-display shrink-0 text-5xl leading-none select-none" style={{ color: 'var(--primary)', opacity: 0.25 }} aria-hidden>“</span>
-                    <p className="text-lg leading-relaxed" style={{ color: 'var(--on-surface-variant)' }}>{para}</p>
-                  </div>
-                )
-              }
+              const midpoint = article.inline_image_url ? Math.floor(paragraphs.length / 2) : -1
               return (
-                <p key={i} className="text-lg leading-relaxed" style={{ color: 'var(--on-surface-variant)' }}>{para}</p>
+                <Fragment key={i}>
+                  {i === midpoint && (
+                    <div className="pa-glass pa-glass-elevated overflow-hidden my-2">
+                      <Image
+                        src={article.inline_image_url as string}
+                        alt=""
+                        width={1600}
+                        height={900}
+                        className="w-full h-auto"
+                      />
+                    </div>
+                  )}
+                  {isCallout ? (
+                    <div
+                      className="pa-glass pa-glass-elevated p-6 flex gap-4 items-start"
+                      style={{ borderLeft: '4px solid var(--primary)', background: 'linear-gradient(135deg, rgba(2,132,199,0.05), var(--surface-glass))' }}
+                    >
+                      <span className="shrink-0 text-2xl leading-none mt-0.5" aria-hidden>💡</span>
+                      <p className="text-lg leading-relaxed font-medium" style={{ color: 'var(--on-surface)' }}>{para}</p>
+                    </div>
+                  ) : i > 0 && i % 3 === 0 ? (
+                    // Every third paragraph gets a large colored pull-quote mark
+                    // for visual rhythm, breaking up the text wall without
+                    // needing an image for every beat.
+                    <div className="flex gap-4 items-start">
+                      <span className="pa-display shrink-0 text-5xl leading-none select-none" style={{ color: 'var(--primary)', opacity: 0.25 }} aria-hidden>“</span>
+                      <p className="text-lg leading-relaxed" style={{ color: 'var(--on-surface-variant)' }}>{para}</p>
+                    </div>
+                  ) : (
+                    <p className="text-lg leading-relaxed" style={{ color: 'var(--on-surface-variant)' }}>{para}</p>
+                  )}
+                </Fragment>
               )
             })}
           </div>

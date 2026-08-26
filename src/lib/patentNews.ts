@@ -8,6 +8,7 @@ export type PatentNewsArticle = {
   parties: string
   source_url: string
   image_url: string | null
+  inline_image_url: string | null
   published_date: string
 }
 
