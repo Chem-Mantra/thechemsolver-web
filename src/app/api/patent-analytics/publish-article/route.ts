@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { supabaseAdmin } from '@/lib/supabase-admin'
+import { slugify } from '@/lib/patentNews'
 
 // Internal-only endpoint for publishing the daily curated patent-news
 // article: writes to Supabase (source of truth the website reads from),
@@ -41,7 +42,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Failed to save article', detail: dbError.message }, { status: 500 })
   }
 
-  const linkedInDraft = `${title}\n\n${summary}\n\nParties involved: ${parties}\n\nSource: ${sourceUrl}\n\n#PatentLaw #IP #Pharma #ChemistryPatents`
+  // Links to our own article page, not the source -- no reason to send
+  // LinkedIn traffic to someone else's site when we have the full
+  // analysis on ours.
+  const articleUrl = `https://patent-analytics.thechemsolver.com/news/${slugify(title)}`
+  const linkedInDraft = `${title}\n\n${summary}\n\nParties involved: ${parties}\n\nFull analysis: ${articleUrl}\n\n#PatentLaw #IP #Pharma #ChemistryPatents`
 
   // Best-effort: emails the draft so it's never stranded in a chat
   // session that might close before you see it. Never blocks or fails

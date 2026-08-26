@@ -23,15 +23,18 @@ export function middleware(request: NextRequest) {
   }
 
   // patent-analytics.thechemsolver.com is a subdomain, not a separate
-  // deployment — DNS points it at this same app, so its root path needs
-  // an internal rewrite to the /patent-analytics route. Everything the
-  // page itself references (assets, API routes) already uses full
-  // /patent-analytics/... or /api/patent-analytics/... paths, so only
-  // the bare root needs rewriting here.
-  if (host === 'patent-analytics.thechemsolver.com' && request.nextUrl.pathname === '/') {
-    const url = request.nextUrl.clone()
-    url.pathname = '/patent-analytics'
-    return NextResponse.rewrite(url)
+  // deployment — DNS points it at this same app, so every path under it
+  // (the landing page, /news/[slug] article pages, etc.) needs an
+  // internal rewrite into /patent-analytics/... . API routes and Next
+  // internals already live at their real paths regardless of host, so
+  // they're left alone.
+  if (host === 'patent-analytics.thechemsolver.com') {
+    const p = request.nextUrl.pathname
+    if (!p.startsWith('/patent-analytics') && !p.startsWith('/api') && !p.startsWith('/_next')) {
+      const url = request.nextUrl.clone()
+      url.pathname = `/patent-analytics${p === '/' ? '' : p}`
+      return NextResponse.rewrite(url)
+    }
   }
 
   const proto =

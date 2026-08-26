@@ -16,7 +16,12 @@ export const metadata: Metadata = {
   // template — this product's branding must never show the parent site's name.
   title: { absolute: 'Patent Analytics — Chemical Structure & Genus-Claim Analysis' },
   description: 'Chemical structure extraction, genus/species Markush coverage analysis, and Section 3(d) screening for patent attorneys and pharma IP teams.',
-  robots: { index: false, follow: false },
+  metadataBase: new URL('https://patent-analytics.thechemsolver.com'),
+  alternates: { canonical: 'https://patent-analytics.thechemsolver.com/' },
+  // Deliberately hidden from Google while this was being built quietly;
+  // now that it's a real product page meant to surface in patent-law
+  // searches, it needs to be indexed like any other page.
+  robots: { index: true, follow: true },
 }
 
 export default function PatentAnalyticsLayout({ children }: { children: React.ReactNode }) {

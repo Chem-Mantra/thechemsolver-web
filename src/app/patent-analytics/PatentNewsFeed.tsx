@@ -1,48 +1,24 @@
-'use client'
-
-import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase'
-
-type Article = {
-  id: string
-  title: string
-  summary: string
-  body: string
-  parties: string
-  source_url: string
-  published_date: string
-}
-
-async function fetchArticles(): Promise<Article[]> {
-  const { data, error } = await supabase
-    .from('patent_news')
-    .select('*')
-    .order('published_date', { ascending: false })
-    .limit(30)
-  if (error) {
-    console.warn('patent_news fetch failed:', error.message)
-    return []
-  }
-  return data as Article[]
-}
+import Link from 'next/link'
+import { getAllArticles, slugify } from '@/lib/patentNews'
 
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
-/** Compact top-right teaser: today's headline only, links down to the full feed. */
-export function LatestNewsTeaser() {
-  const [latest, setLatest] = useState<Article | null>(null)
+// Server-rendered (not client-fetched) so article content is present in
+// the initial HTML for crawlers -- a client useEffect fetch left the
+// page looking empty to anything that doesn't execute JS, which
+// defeated the point of a page meant to rank for patent-law searches.
 
-  useEffect(() => {
-    fetchArticles().then((a) => setLatest(a[0] ?? null))
-  }, [])
-
+/** Compact top-right teaser: today's headline only, links to its own page. */
+export async function LatestNewsTeaser() {
+  const articles = await getAllArticles()
+  const latest = articles[0]
   if (!latest) return null
 
   return (
-    <a
-      href="#patent-news"
+    <Link
+      href={`/patent-analytics/news/${slugify(latest.title)}`}
       className="pa-glass hidden lg:flex items-center gap-2 px-3 py-2 max-w-[280px] hover:shadow-md transition-shadow"
     >
       <span className="w-1.5 h-1.5 rounded-full shrink-0 animate-pulse" style={{ background: 'var(--tertiary-bright)' }} />
@@ -50,31 +26,13 @@ export function LatestNewsTeaser() {
         <div className="pa-mono text-[10px] uppercase" style={{ color: 'var(--on-surface-muted)' }}>Latest patent news</div>
         <div className="text-xs font-semibold truncate" style={{ color: 'var(--on-surface)' }}>{latest.title}</div>
       </div>
-    </a>
+    </Link>
   )
 }
 
-/** Full feed: latest article expanded, older ones as click-to-expand accordion rows. */
-export function PatentNewsFeedSection() {
-  const [articles, setArticles] = useState<Article[] | null>(null)
-  const [openId, setOpenId] = useState<string | null>(null)
-
-  useEffect(() => {
-    fetchArticles().then((a) => {
-      setArticles(a)
-      if (a[0]) setOpenId(a[0].id)
-    })
-  }, [])
-
-  if (articles === null) {
-    return (
-      <section id="patent-news" className="w-full px-6 md:px-12 py-16">
-        <div className="max-w-[1400px] mx-auto">
-          <p className="text-base" style={{ color: 'var(--on-surface-muted)' }}>Loading patent news…</p>
-        </div>
-      </section>
-    )
-  }
+/** Full feed: a list of cards, each linking to its own indexable article page. */
+export async function PatentNewsFeedSection() {
+  const articles = await getAllArticles()
 
   if (articles.length === 0) {
     return (
@@ -97,50 +55,17 @@ export function PatentNewsFeedSection() {
           Curated daily — real, sourced developments in patent law and chemistry IP.
         </p>
         <div className="flex flex-col gap-3 max-w-3xl">
-          {articles.map((a) => {
-            const open = openId === a.id
-            return (
-              <div key={a.id} className="pa-glass overflow-hidden">
-                <button
-                  type="button"
-                  onClick={() => setOpenId(open ? null : a.id)}
-                  className="w-full text-left px-6 py-4 flex items-center justify-between gap-4"
-                >
-                  <div className="min-w-0">
-                    <div className="pa-mono text-xs mb-1" style={{ color: 'var(--on-surface-muted)' }}>{formatDate(a.published_date)}</div>
-                    <div className="font-semibold text-base truncate">{a.title}</div>
-                  </div>
-                  <span
-                    className="shrink-0 text-lg transition-transform"
-                    style={{ transform: open ? 'rotate(45deg)' : 'none', color: 'var(--primary)' }}
-                  >
-                    +
-                  </span>
-                </button>
-                {open && (
-                  <div className="px-6 pb-5">
-                    <p className="text-sm mb-4" style={{ color: 'var(--on-surface-muted)' }}>
-                      <b>Parties:</b> {a.parties}
-                    </p>
-                    <div className="flex flex-col gap-3 mb-4">
-                      {a.body.split('\n\n').map((para, i) => (
-                        <p key={i} className="text-base leading-relaxed" style={{ color: 'var(--on-surface-variant)' }}>{para}</p>
-                      ))}
-                    </div>
-                    <a
-                      href={a.source_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="pa-mono text-[11px] uppercase tracking-wide"
-                      style={{ color: 'var(--on-surface-muted)' }}
-                    >
-                      Source ↗
-                    </a>
-                  </div>
-                )}
-              </div>
-            )
-          })}
+          {articles.map((a) => (
+            <Link
+              key={a.id}
+              href={`/patent-analytics/news/${slugify(a.title)}`}
+              className="pa-glass overflow-hidden px-6 py-4 hover:shadow-md transition-shadow"
+            >
+              <div className="pa-mono text-xs mb-1" style={{ color: 'var(--on-surface-muted)' }}>{formatDate(a.published_date)}</div>
+              <div className="font-semibold text-base mb-1">{a.title}</div>
+              <p className="text-sm line-clamp-2" style={{ color: 'var(--on-surface-variant)' }}>{a.summary}</p>
+            </Link>
+          ))}
         </div>
       </div>
     </section>

@@ -101,6 +101,29 @@ export default async function sitemap() {
   }))
 
   const questionPages = await getQuestionPages(base)
+  const patentAnalyticsPages = await getPatentAnalyticsPages()
 
-  return [...staticPages, ...blogPages, ...questionPages]
+  return [...staticPages, ...blogPages, ...questionPages, ...patentAnalyticsPages]
+}
+
+// patent-analytics.thechemsolver.com is a subdomain of this same site, not
+// a separate deployment -- listing its absolute URLs here (rather than a
+// second sitemap) is enough for discovery since sitemap entries don't need
+// to share a host with the sitemap file itself.
+async function getPatentAnalyticsPages() {
+  const paBase = 'https://patent-analytics.thechemsolver.com'
+  const staticEntry = { url: `${paBase}/`, lastModified: new Date(), changeFrequency: 'weekly' as const, priority: 0.9 }
+  try {
+    const { getAllArticles, slugify } = await import('@/lib/patentNews')
+    const articles = await getAllArticles()
+    const articlePages = articles.map((a) => ({
+      url: `${paBase}/news/${slugify(a.title)}`,
+      lastModified: new Date(a.published_date),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    }))
+    return [staticEntry, ...articlePages]
+  } catch {
+    return [staticEntry]
+  }
 }
