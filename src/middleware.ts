@@ -22,6 +22,18 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
+  // patent-analytics.thechemsolver.com is a subdomain, not a separate
+  // deployment — DNS points it at this same app, so its root path needs
+  // an internal rewrite to the /patent-analytics route. Everything the
+  // page itself references (assets, API routes) already uses full
+  // /patent-analytics/... or /api/patent-analytics/... paths, so only
+  // the bare root needs rewriting here.
+  if (host === 'patent-analytics.thechemsolver.com' && request.nextUrl.pathname === '/') {
+    const url = request.nextUrl.clone()
+    url.pathname = '/patent-analytics'
+    return NextResponse.rewrite(url)
+  }
+
   const proto =
     request.headers.get('x-forwarded-proto') ||
     request.nextUrl.protocol.replace(':', '') ||
