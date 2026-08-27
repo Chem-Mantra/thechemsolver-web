@@ -102,7 +102,9 @@ export default async function ProductResultPage({ params }: Props) {
           </p>
 
           <GatedDownloadButton
-            filename={`${slug}-${result.patent_number}.json`}
+            filenameBase={`${slug}-${result.patent_number}`}
+            title={result.headline}
+            subtitle={`${result.patent_number} — ${PRODUCTS[productType].name}`}
             data={result.details_json}
             className="pa-btn-primary text-base font-medium px-6 py-3 mb-12"
           >

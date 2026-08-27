@@ -14,26 +14,16 @@
    Pauses on hover so a link is actually clickable. */
 .pa-sidebar-scroll-viewport {
   max-height: 220px;
-  overflow: hidden;
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* old Edge/IE */
   -webkit-mask-image: linear-gradient(to bottom, transparent, black 12px, black calc(100% - 12px), transparent);
   mask-image: linear-gradient(to bottom, transparent, black 12px, black calc(100% - 12px), transparent);
 }
-.pa-sidebar-scroll-track {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  animation: pa-sidebar-scroll 22s linear infinite;
-}
-.pa-sidebar-scroll-viewport:hover .pa-sidebar-scroll-track {
-  animation-play-state: paused;
-}
-@keyframes pa-sidebar-scroll {
-  from { transform: translateY(0); }
-  to { transform: translateY(-50%); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .pa-sidebar-scroll-track { animation: none; }
-  .pa-sidebar-scroll-viewport { overflow-y: auto; }
+.pa-sidebar-scroll-viewport::-webkit-scrollbar {
+  display: none; /* Chrome/Safari -- auto-scroll is driven by AutoScrollList.tsx via
+  real scrollTop so this stays natively wheel/touch/drag-scrollable on hover
+  (when the JS auto-increment pauses), just without a visible scrollbar. */
 }
 .pa-mono {
   font-family: var(--font-mono), 'JetBrains Mono', monospace;

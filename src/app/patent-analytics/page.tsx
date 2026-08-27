@@ -1,34 +1,48 @@
+import Link from 'next/link'
 import StructureSlideshow from './StructureSlideshow'
 import OpenLeadFormButton from './OpenLeadFormButton'
 import { PatentNewsFeedSection } from './PatentNewsFeed'
 import PatentAnalyticsHeader from './PatentAnalyticsHeader'
 import statsData from './stats-data.json'
+import { getLiveVolumeStats } from '@/lib/productResults'
+
+// Re-renders in the background at most once an hour so the live volume stat
+// below actually grows as 04_upload_to_website.py uploads more rows -- this
+// page has no other dynamic data, so without this it would stay static at
+// whatever it looked like at the last deploy.
+export const revalidate = 3600
 
 const services = [
   {
     name: 'Genus/Species (Markush) Claim Coverage Analysis',
     desc: "Does a specific compound fall inside a patent's broad genus claim? Structural coverage testing built on real cheminformatics matching — not a keyword search.",
     flagship: true,
+    slug: 'markush-coverage',
   },
   {
     name: 'Section 3(d) Compliance Screening',
     desc: 'India-specific: classifies whether a claimed compound is a salt, ester, isomer, or other "known substance" derivative, and flags whether efficacy data is present — the exact test Indian courts apply.',
+    slug: 'section-3d',
   },
   {
     name: 'Prior-Art / FTO Structural Triage',
     desc: 'Fast first-pass structure search across multiple patents, before commissioning a full manual search.',
+    slug: 'fto-triage',
   },
   {
     name: 'Patent Family / Portfolio Landscape Reports',
     desc: 'An entire patent family around one drug or target, processed into a single consolidated structure database.',
+    slug: 'portfolio-landscape',
   },
   {
     name: 'Ongoing Patent Monitoring',
     desc: 'Retainer-based alerts when new patents matching your compound classes are published.',
+    slug: null, // retainer service, no bulk-processed report page -- see pricing page instead
   },
   {
     name: 'CDMO Process FTO Pre-Screens',
     desc: 'Check a proposed synthetic route or target compound against existing process patents before committing manufacturing resources.',
+    slug: 'fto-triage', // same engine as Prior-Art/FTO Structural Triage, see its own tagline
   },
 ]
 
@@ -42,7 +56,8 @@ const stats = [
   { v: `${statsData.autoVerifiedRatePercent}%`, l: 'auto-verified, zero errors measured' },
 ]
 
-export default function PatentAnalyticsPage() {
+export default async function PatentAnalyticsPage() {
+  const liveStats = await getLiveVolumeStats()
   return (
     <div className="min-h-screen w-full">
       <PatentAnalyticsHeader />
@@ -102,6 +117,21 @@ export default function PatentAnalyticsPage() {
               </div>
             ))}
           </div>
+          <p className="text-xs mt-3" style={{ color: 'var(--on-surface-muted)' }}>
+            Pilot accuracy validation ({statsData.realPatents}-patent benchmark, checked against ground truth) — as of {statsData.lastUpdated}.
+          </p>
+
+          <div className="pa-mono text-sm uppercase mt-10 mb-4" style={{ color: 'var(--on-surface-muted)' }}>Growing daily</div>
+          <div className="grid grid-cols-2 gap-4 max-w-xl">
+            <div className="pa-glass p-5">
+              <div className="pa-display text-4xl font-bold mb-1" style={{ color: 'var(--tertiary)' }}>{liveStats.uniquePatents}</div>
+              <div className="text-base leading-snug" style={{ color: 'var(--on-surface-variant)' }}>real 2025 patents analyzed</div>
+            </div>
+            <div className="pa-glass p-5">
+              <div className="pa-display text-4xl font-bold mb-1" style={{ color: 'var(--tertiary)' }}>{liveStats.totalResults}</div>
+              <div className="text-base leading-snug" style={{ color: 'var(--on-surface-variant)' }}>results published</div>
+            </div>
+          </div>
           <p className="text-base mt-5 max-w-2xl leading-relaxed" style={{ color: 'var(--on-surface-muted)' }}>
             Every structure in a report is labeled either{' '}
             <b style={{ color: 'var(--tertiary)' }}>Verified</b> (passed automated
@@ -121,21 +151,33 @@ export default function PatentAnalyticsPage() {
             what we can build out for your team.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {services.map((s) => (
-              <div
-                key={s.name}
-                className="pa-glass p-6"
-                style={s.flagship ? { borderTop: '2px solid var(--tertiary-bright)' } : undefined}
-              >
-                <div className="flex items-center gap-2 mb-2 flex-wrap">
-                  <h3 className="font-semibold text-base">{s.name}</h3>
-                  {s.flagship && (
-                    <span className="pa-chip" style={{ padding: '2px 10px', fontSize: '11px' }}>Flagship</span>
+            {services.map((s) => {
+              const cardClass = `pa-glass p-6 block${s.slug ? ' hover:pa-glass-elevated transition-shadow cursor-pointer' : ''}`
+              const cardStyle = s.flagship ? { borderTop: '2px solid var(--tertiary-bright)' } : undefined
+              const content = (
+                <>
+                  <div className="flex items-center gap-2 mb-2 flex-wrap">
+                    <h3 className="font-semibold text-base">{s.name}</h3>
+                    {s.flagship && (
+                      <span className="pa-chip" style={{ padding: '2px 10px', fontSize: '11px' }}>Flagship</span>
+                    )}
+                  </div>
+                  <p className="text-base leading-relaxed" style={{ color: 'var(--on-surface-variant)' }}>{s.desc}</p>
+                  {s.slug && (
+                    <p className="text-sm mt-3 font-medium" style={{ color: 'var(--primary)' }}>See real extracted data →</p>
                   )}
+                </>
+              )
+              return s.slug ? (
+                <Link key={s.name} href={`/data/${s.slug}`} className={cardClass} style={cardStyle}>
+                  {content}
+                </Link>
+              ) : (
+                <div key={s.name} className={cardClass} style={cardStyle}>
+                  {content}
                 </div>
-                <p className="text-base leading-relaxed" style={{ color: 'var(--on-surface-variant)' }}>{s.desc}</p>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </section>

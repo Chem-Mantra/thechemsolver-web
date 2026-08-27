@@ -100,3 +100,29 @@ export async function getLatestAcrossProducts(perProduct = 6): Promise<Record<Pr
   liveTypes.forEach((t, i) => { out[t] = results[i] })
   return out
 }
+
+export type LiveVolumeStats = {
+  totalResults: number
+  uniquePatents: number
+}
+
+// Grows automatically as 04_upload_to_website.py uploads more rows -- no
+// redeploy needed, since the page that calls this sets `revalidate` instead
+// of being fully static. Distinct from stats-data.json's numbers, which are
+// a one-time human-verified accuracy benchmark (41-patent pilot, ground-
+// truth checked) -- that claim doesn't grow with volume and shouldn't be
+// conflated with "how many patents has the daily pipeline processed".
+export async function getLiveVolumeStats(): Promise<LiveVolumeStats> {
+  const { count, error: countError } = await supabase
+    .from('product_results')
+    .select('*', { count: 'exact', head: true })
+  if (countError) {
+    console.warn('product_results count fetch failed:', countError.message)
+    return { totalResults: 0, uniquePatents: 0 }
+  }
+
+  const { data, error } = await supabase.from('product_results').select('patent_number')
+  const uniquePatents = error || !data ? 0 : new Set(data.map((r) => r.patent_number)).size
+
+  return { totalResults: count ?? 0, uniquePatents }
+}
