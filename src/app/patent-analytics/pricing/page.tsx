@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import PatentAnalyticsHeader from '../PatentAnalyticsHeader'
 import OpenLeadFormButton from '../OpenLeadFormButton'
+import OpenCheckPatentButton from '../OpenCheckPatentButton'
 
 const SITE = 'https://patent-analytics.thechemsolver.com'
 
@@ -23,7 +24,8 @@ const TIERS = [
       'Delivered instantly, no waiting',
       'Downloadable data (JSON)',
     ],
-    cta: 'Get a free sample first →',
+    cta: 'Check a patent →',
+    ctaType: 'check' as const,
     flagship: false,
   },
   {
@@ -38,6 +40,7 @@ const TIERS = [
       'Full HD structure images + data + sources, packaged',
     ],
     cta: 'Get a free sample report →',
+    ctaType: 'lead' as const,
     flagship: true,
   },
   {
@@ -52,6 +55,7 @@ const TIERS = [
       'Cancel anytime',
     ],
     cta: 'Talk to us →',
+    ctaType: 'lead' as const,
     flagship: false,
   },
 ]
@@ -102,9 +106,15 @@ export default function PricingPage() {
                     </li>
                   ))}
                 </ul>
-                <OpenLeadFormButton className={t.flagship ? 'pa-btn-primary text-sm font-medium px-5 py-3 w-full' : 'pa-chip text-sm font-medium px-5 py-3 w-full justify-center'}>
-                  {t.cta}
-                </OpenLeadFormButton>
+                {t.ctaType === 'check' ? (
+                  <OpenCheckPatentButton className={t.flagship ? 'pa-btn-primary text-sm font-medium px-5 py-3 w-full' : 'pa-chip text-sm font-medium px-5 py-3 w-full justify-center'}>
+                    {t.cta}
+                  </OpenCheckPatentButton>
+                ) : (
+                  <OpenLeadFormButton className={t.flagship ? 'pa-btn-primary text-sm font-medium px-5 py-3 w-full' : 'pa-chip text-sm font-medium px-5 py-3 w-full justify-center'}>
+                    {t.cta}
+                  </OpenLeadFormButton>
+                )}
               </div>
             ))}
           </div>

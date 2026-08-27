@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { PRODUCTS, productBySlug, getResultsByProduct } from '@/lib/productResults'
 import { MARKUSH_SAMPLE, SECTION_3D_SAMPLE } from '../sampleContent'
 import PatentAnalyticsHeader from '../../PatentAnalyticsHeader'
+import OpenCheckPatentButton from '../../OpenCheckPatentButton'
 
 const SITE = 'https://patent-analytics.thechemsolver.com'
 
@@ -48,6 +49,17 @@ export default async function ProductDataPage({ params }: Props) {
             <LiveResults slug={p.slug} results={results} />
           ) : (
             <SampleContent productType={productType} />
+          )}
+
+          {p.hasLiveData && (
+            <div className="pa-glass p-6 mt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <p className="text-sm" style={{ color: 'var(--on-surface-variant)' }}>
+                Don&rsquo;t see the patent you&rsquo;re looking for? We&rsquo;ll run it and email you within 1 hour.
+              </p>
+              <OpenCheckPatentButton className="pa-chip text-sm font-medium px-5 py-2.5 shrink-0">
+                Check a patent →
+              </OpenCheckPatentButton>
+            </div>
           )}
         </div>
       </main>

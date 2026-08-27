@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from 'next/font/google'
 import { GeistSans } from 'geist/font/sans'
 import './patent-analytics.css'
 import LeadCaptureModal from './LeadCaptureModal'
+import CheckPatentModal from './CheckPatentModal'
 
 // Self-hosted via next/font (no external CDN calls at runtime) — matches
 // the "Synthetix Light Spatial" design system: Geist for headlines, Inter
@@ -61,6 +62,7 @@ export default function PatentAnalyticsLayout({ children }: { children: React.Re
       style={{ ...tokens, background: 'var(--surface)', color: 'var(--on-surface)', fontFamily: 'var(--font-inter), Inter, sans-serif' }}
     >
       <LeadCaptureModal />
+      <CheckPatentModal />
       {children}
     </div>
   )
