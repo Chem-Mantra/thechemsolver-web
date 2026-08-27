@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 const TIERS = [
   {
     name: 'Instant Compound Check',
-    price: '$39',
+    price: '$10',
     per: 'per check',
     description: 'A single compound tested against a genus claim or across our screened patent set — fully automated, auto-verified only, delivered instantly. No human review in the loop, so it\'s priced like software.',
     features: [
