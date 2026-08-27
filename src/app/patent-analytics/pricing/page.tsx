@@ -1,0 +1,122 @@
+import type { Metadata } from 'next'
+import PatentAnalyticsHeader from '../PatentAnalyticsHeader'
+import OpenLeadFormButton from '../OpenLeadFormButton'
+
+const SITE = 'https://patent-analytics.thechemsolver.com'
+
+export const metadata: Metadata = {
+  title: { absolute: 'Pricing — Patent Analytics' },
+  description: 'Instant compound checks, standard reports, and portfolio retainers for patent attorneys and pharma IP teams. First report free.',
+  alternates: { canonical: `${SITE}/pricing` },
+  robots: { index: true, follow: true, googleBot: { 'max-image-preview': 'large' } },
+}
+
+const TIERS = [
+  {
+    name: 'Instant Compound Check',
+    price: '$39',
+    per: 'per check',
+    description: 'A single compound tested against a genus claim or across our screened patent set — fully automated, auto-verified only, delivered instantly. No human review in the loop, so it\'s priced like software.',
+    features: [
+      'Structural similarity / genus-membership result',
+      'Auto-verified confidence only (0% measured false positives)',
+      'Delivered instantly, no waiting',
+      'Downloadable data (JSON)',
+    ],
+    cta: 'Get a free sample first →',
+    flagship: false,
+  },
+  {
+    name: 'Standard Report',
+    price: '$199',
+    per: 'per report',
+    description: 'A full structure-extraction or coverage report on a specific patent. Anything flagged for review gets our own real chemist sign-off before you see it — this is where our actual time goes, priced accordingly.',
+    features: [
+      'Full genus/species, Section 3(d), or FTO triage report',
+      'Needs-review items get human sign-off, not just a flag',
+      '24-48h turnaround',
+      'Full HD structure images + data + sources, packaged',
+    ],
+    cta: 'Get a free sample report →',
+    flagship: true,
+  },
+  {
+    name: 'Portfolio Retainer',
+    price: '$999',
+    per: 'per month',
+    description: 'Ongoing monitoring across a portfolio or compound class — new matching patents flagged as they publish, plus priority turnaround on ad-hoc reports. For teams tracking a space continuously, not one-off.',
+    features: [
+      'Recurring alerts on new matching patents',
+      'Priority turnaround on Standard Reports',
+      'Direct line to review findings together',
+      'Cancel anytime',
+    ],
+    cta: 'Talk to us →',
+    flagship: false,
+  },
+]
+
+export default function PricingPage() {
+  return (
+    <>
+      <PatentAnalyticsHeader />
+      <main>
+        <div className="max-w-[1200px] mx-auto px-6 py-16 md:py-20">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <div className="pa-chip mb-6 inline-flex">
+              <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--tertiary-bright)' }} />
+              Priced like software, not a law firm
+            </div>
+            <h1 className="pa-display text-[36px] md:text-[48px] font-bold leading-[1.1] mb-4" style={{ color: 'var(--on-surface)' }}>
+              Pricing
+            </h1>
+            <p className="text-lg leading-relaxed" style={{ color: 'var(--on-surface-variant)' }}>
+              Manual chemist/associate triage on a single patent typically runs $300–800+ in billable time.
+              Our automation carries near-zero marginal cost, so we pass that through — your first report is free.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 mb-16">
+            {TIERS.map((t) => (
+              <div
+                key={t.name}
+                className="pa-glass pa-glass-elevated p-8 flex flex-col"
+                style={t.flagship ? { borderTop: '3px solid var(--primary)' } : undefined}
+              >
+                {t.flagship && (
+                  <div className="pa-mono text-[10px] uppercase tracking-wide mb-3" style={{ color: 'var(--primary)' }}>
+                    Most popular
+                  </div>
+                )}
+                <h2 className="text-xl font-bold mb-1" style={{ color: 'var(--on-surface)' }}>{t.name}</h2>
+                <div className="flex items-baseline gap-1.5 mb-4">
+                  <span className="pa-display text-4xl font-bold" style={{ color: 'var(--on-surface)' }}>{t.price}</span>
+                  <span className="text-sm" style={{ color: 'var(--on-surface-muted)' }}>{t.per}</span>
+                </div>
+                <p className="text-sm leading-relaxed mb-6" style={{ color: 'var(--on-surface-variant)' }}>{t.description}</p>
+                <ul className="flex flex-col gap-2.5 mb-8 flex-1">
+                  {t.features.map((f) => (
+                    <li key={f} className="text-sm flex items-start gap-2" style={{ color: 'var(--on-surface-variant)' }}>
+                      <span style={{ color: 'var(--tertiary-bright)' }}>✓</span>
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <OpenLeadFormButton className={t.flagship ? 'pa-btn-primary text-sm font-medium px-5 py-3 w-full' : 'pa-chip text-sm font-medium px-5 py-3 w-full justify-center'}>
+                  {t.cta}
+                </OpenLeadFormButton>
+              </div>
+            ))}
+          </div>
+
+          <div className="pa-glass p-8 max-w-2xl mx-auto text-center">
+            <p className="text-sm" style={{ color: 'var(--on-surface-variant)' }}>
+              Every report includes an explicit &ldquo;what we claim / what we don&apos;t claim&rdquo; section — we identify
+              chemical structures and their relationship to claimed scope, not legal conclusions like infringement or validity.
+            </p>
+          </div>
+        </div>
+      </main>
+    </>
+  )
+}
