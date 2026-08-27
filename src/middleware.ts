@@ -30,6 +30,14 @@ export function middleware(request: NextRequest) {
   // they're left alone.
   if (host === 'patent-analytics.thechemsolver.com') {
     const p = request.nextUrl.pathname
+    // robots.txt/sitemap.xml are Next.js metadata routes that live at the
+    // root (/robots.txt, /sitemap.xml), not under /patent-analytics/... --
+    // rewriting them the same way everything else is rewritten pointed at
+    // a path that doesn't exist and 404'd. Serve them as-is; sitemap.ts
+    // already lists the subdomain's own URLs as absolute paths.
+    if (p === '/robots.txt' || p === '/sitemap.xml') {
+      return NextResponse.next()
+    }
     if (!p.startsWith('/patent-analytics') && !p.startsWith('/api') && !p.startsWith('/_next')) {
       const url = request.nextUrl.clone()
       url.pathname = `/patent-analytics${p === '/' ? '' : p}`
