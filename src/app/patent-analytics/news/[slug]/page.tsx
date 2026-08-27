@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation'
 import { getArticleBySlug } from '@/lib/patentNews'
 import PatentAnalyticsHeader from '../../PatentAnalyticsHeader'
 import OpenLeadFormButton from '../../OpenLeadFormButton'
+import ProductSidebarCards from '../../ProductSidebarCards'
 
 const SITE = 'https://patent-analytics.thechemsolver.com'
 
@@ -79,7 +80,9 @@ export default async function ArticlePage({ params }: Props) {
       <main>
         {/* eslint-disable-next-line react/no-danger */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-        <div className="max-w-[820px] mx-auto px-6 py-12 md:py-16">
+        <div className="flex justify-center gap-6 max-w-[1400px] mx-auto px-6">
+          <ProductSidebarCards side="left" />
+          <div className="max-w-[820px] w-full py-12 md:py-16">
           <Link href="/patent-analytics#patent-news" className="pa-mono text-xs uppercase tracking-wide" style={{ color: 'var(--on-surface-muted)' }}>
             ← All patent news
           </Link>
@@ -184,6 +187,8 @@ export default async function ArticlePage({ params }: Props) {
               Get a free sample report →
             </OpenLeadFormButton>
           </div>
+          </div>
+          <ProductSidebarCards side="right" />
         </div>
       </main>
     </>

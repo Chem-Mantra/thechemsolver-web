@@ -8,6 +8,33 @@
   font-family: var(--font-geist-sans), Geist, sans-serif;
   letter-spacing: -0.02em;
 }
+
+/* Slow self-scrolling sidebar link lists (content is duplicated in the DOM
+   by ProductSidebarCards.tsx so the loop is seamless at the -50% mark).
+   Pauses on hover so a link is actually clickable. */
+.pa-sidebar-scroll-viewport {
+  max-height: 220px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 12px, black calc(100% - 12px), transparent);
+  mask-image: linear-gradient(to bottom, transparent, black 12px, black calc(100% - 12px), transparent);
+}
+.pa-sidebar-scroll-track {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  animation: pa-sidebar-scroll 22s linear infinite;
+}
+.pa-sidebar-scroll-viewport:hover .pa-sidebar-scroll-track {
+  animation-play-state: paused;
+}
+@keyframes pa-sidebar-scroll {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pa-sidebar-scroll-track { animation: none; }
+  .pa-sidebar-scroll-viewport { overflow-y: auto; }
+}
 .pa-mono {
   font-family: var(--font-mono), 'JetBrains Mono', monospace;
   letter-spacing: 0.05em;
