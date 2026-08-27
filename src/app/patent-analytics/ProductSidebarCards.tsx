@@ -48,11 +48,11 @@ export default async function ProductSidebarCards({ side }: { side: 'left' | 'ri
   const cardsData: { productType: ProductType; items: CardItem[] }[] = [
     {
       productType: 'fto_triage',
-      items: live.fto_triage.map((r) => ({ href: `/patent-analytics/data/fto-triage#${r.id}`, label: r.headline })),
+      items: live.fto_triage.map((r) => ({ href: `/patent-analytics/data/fto-triage/${r.patent_number}`, label: r.headline })),
     },
     {
       productType: 'portfolio_landscape',
-      items: live.portfolio_landscape.map((r) => ({ href: `/patent-analytics/data/portfolio-landscape#${r.id}`, label: r.headline })),
+      items: live.portfolio_landscape.map((r) => ({ href: `/patent-analytics/data/portfolio-landscape/${r.patent_number}`, label: r.headline })),
     },
     {
       productType: 'markush_coverage',

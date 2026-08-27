@@ -122,7 +122,22 @@ async function getPatentAnalyticsPages() {
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     }))
-    return [staticEntry, ...articlePages]
+
+    // Each product-result row is its own indexable page (real numbers,
+    // real patents) once the daily bulk pipeline starts uploading them --
+    // empty for now, populates automatically as product_results fills in.
+    const { PRODUCTS, getLatestAcrossProducts } = await import('@/lib/productResults')
+    const live = await getLatestAcrossProducts(500)
+    const productPages = Object.entries(live).flatMap(([productType, results]) =>
+      results.map((r) => ({
+        url: `${paBase}/data/${PRODUCTS[productType as keyof typeof PRODUCTS].slug}/${r.patent_number}`,
+        lastModified: new Date(r.published_date),
+        changeFrequency: 'monthly' as const,
+        priority: 0.6,
+      })),
+    )
+
+    return [staticEntry, ...articlePages, ...productPages]
   } catch {
     return [staticEntry]
   }

@@ -4,7 +4,6 @@ import { notFound } from 'next/navigation'
 import { PRODUCTS, productBySlug, getResultsByProduct } from '@/lib/productResults'
 import { MARKUSH_SAMPLE, SECTION_3D_SAMPLE } from '../sampleContent'
 import PatentAnalyticsHeader from '../../PatentAnalyticsHeader'
-import GatedDownloadButton from '../../GatedDownloadButton'
 
 const SITE = 'https://patent-analytics.thechemsolver.com'
 
@@ -46,7 +45,7 @@ export default async function ProductDataPage({ params }: Props) {
           <p className="text-lg mb-10" style={{ color: 'var(--on-surface-variant)' }}>{p.tagline}</p>
 
           {p.hasLiveData ? (
-            <LiveResults productType={productType} results={results} />
+            <LiveResults slug={p.slug} results={results} />
           ) : (
             <SampleContent productType={productType} />
           )}
@@ -56,7 +55,7 @@ export default async function ProductDataPage({ params }: Props) {
   )
 }
 
-function LiveResults({ productType, results }: { productType: string; results: Awaited<ReturnType<typeof getResultsByProduct>> }) {
+function LiveResults({ slug, results }: { slug: string; results: Awaited<ReturnType<typeof getResultsByProduct>> }) {
   if (results.length === 0) {
     return (
       <div className="pa-glass p-8 text-center">
@@ -69,18 +68,14 @@ function LiveResults({ productType, results }: { productType: string; results: A
   return (
     <div className="flex flex-col gap-4">
       {results.map((r) => (
-        <div key={r.id} id={r.id} className="pa-glass pa-glass-elevated p-6 scroll-mt-24">
+        // Each result is its own indexable page (not an anchor on this
+        // shared listing) -- a Google search on this specific patent
+        // should land here, not on a page shared with every other result.
+        <Link key={r.id} href={`/patent-analytics/data/${slug}/${r.patent_number}`} className="pa-glass pa-glass-elevated p-6 block hover:shadow-md transition-shadow">
           <div className="pa-mono text-xs mb-2" style={{ color: 'var(--on-surface-muted)' }}>{r.patent_number}</div>
           <h2 className="text-lg font-semibold mb-2" style={{ color: 'var(--on-surface)' }}>{r.headline}</h2>
-          <p className="text-base mb-4" style={{ color: 'var(--on-surface-variant)' }}>{r.summary}</p>
-          <GatedDownloadButton
-            filename={`${productType}-${r.patent_number}.json`}
-            data={r.details_json}
-            className="pa-btn-primary text-sm font-medium px-4 py-2"
-          >
-            Download data →
-          </GatedDownloadButton>
-        </div>
+          <p className="text-base" style={{ color: 'var(--on-surface-variant)' }}>{r.summary}</p>
+        </Link>
       ))}
     </div>
   )

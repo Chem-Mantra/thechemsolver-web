@@ -75,6 +75,24 @@ export async function getResultsByProduct(productType: ProductType, limit = 100)
   return data as ProductResult[]
 }
 
+// Readable URL segment (patent number) rather than the row's uuid -- SEO-
+// friendly and stable even if a patent is ever reprocessed. Not DB-enforced
+// unique per (product_type, patent_number), so this takes the most recent
+// if a batch ever reran a patent -- that's the correct choice regardless
+// (newer analysis supersedes older).
+export async function getResultByProductAndPatent(productType: ProductType, patentNumber: string): Promise<ProductResult | null> {
+  const { data, error } = await supabase
+    .from('product_results')
+    .select('*')
+    .eq('product_type', productType)
+    .eq('patent_number', patentNumber)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+  if (error || !data) return null
+  return data as ProductResult
+}
+
 export async function getLatestAcrossProducts(perProduct = 6): Promise<Record<ProductType, ProductResult[]>> {
   const liveTypes = (Object.keys(PRODUCTS) as ProductType[]).filter((t) => PRODUCTS[t].hasLiveData)
   const results = await Promise.all(liveTypes.map((t) => getResultsByProduct(t, perProduct)))
