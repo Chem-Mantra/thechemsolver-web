@@ -34,13 +34,23 @@ export default function NavWrapper({ children }: { children: React.ReactNode }) 
   // as a dark-mode toggle script, and the same pattern AdFreePopup already
   // uses (default to the safe/matching-SSR state, correct after mount).
   const [isPatentAnalyticsHost, setIsPatentAnalyticsHost] = useState(false)
+  // Education routes (AP Chem, USNCO, IChO, Orgo, Labs, Ebook, Blog) moved to
+  // international.chem-mantra.online in the 2026-08-28 domain split;
+  // thechemsolver.com now 301s those paths there. Relative links still work
+  // (they just eat the redirect hop), but this upgrades them to direct
+  // cross-domain links once we know we're on the old host -- same
+  // default-safe/correct-after-mount pattern as isPatentAnalyticsHost above.
+  const [isOldEduHost, setIsOldEduHost] = useState(false)
 
   // Close the mobile menu on route change so it never lingers over new content.
   useEffect(() => { setMenuOpen(false) }, [pathname])
 
   useLayoutEffect(() => {
     setIsPatentAnalyticsHost(window.location.hostname.startsWith('patent-analytics.'))
+    setIsOldEduHost(window.location.hostname === 'thechemsolver.com' || window.location.hostname === 'www.thechemsolver.com')
   }, [])
+
+  const eduHref = (path: string) => (isOldEduHost ? `https://international.chem-mantra.online${path}` : path)
 
   // Full-screen app routes: no nav, no footer, no flex-col wrapper.
   // Checks both: pathname covers direct access (www.thechemsolver.com/patent-analytics),
@@ -60,14 +70,14 @@ export default function NavWrapper({ children }: { children: React.ReactNode }) 
           <div className="hidden md:flex items-center gap-1 overflow-x-auto">
             <span className="text-white/20 text-xs mr-1">|</span>
             {NAV_EXAMS.map(e => (
-              <Link key={e.href} href={e.href}
+              <Link key={e.href} href={eduHref(e.href)}
                 className={`text-xs ${e.color} hover:opacity-80 px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors whitespace-nowrap font-semibold`}>
                 {e.label}
               </Link>
             ))}
             <span className="text-white/20 text-xs mx-1">|</span>
             {NAV_TOOLS.map(t => (
-              <Link key={t.href} href={t.href}
+              <Link key={t.href} href={t.href === '/contact' ? t.href : eduHref(t.href)}
                 className="text-xs text-gray-400 hover:text-white px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors whitespace-nowrap">
                 {t.label}
               </Link>
@@ -93,14 +103,14 @@ export default function NavWrapper({ children }: { children: React.ReactNode }) 
         {menuOpen && (
           <div data-testid="mobile-menu" className="md:hidden border-b border-white/10 bg-[#060610]/98 backdrop-blur sticky top-[57px] z-50 px-5 py-3 flex flex-col gap-1">
             {NAV_EXAMS.map(e => (
-              <Link key={e.href} href={e.href}
+              <Link key={e.href} href={eduHref(e.href)}
                 className={`text-sm ${e.color} font-semibold px-3 py-3 rounded-md hover:bg-white/5 transition-colors`}>
                 {e.label}
               </Link>
             ))}
             <div className="border-t border-white/10 my-1" />
             {NAV_TOOLS.map(t => (
-              <Link key={t.href} href={t.href}
+              <Link key={t.href} href={t.href === '/contact' ? t.href : eduHref(t.href)}
                 className="text-sm text-gray-300 px-3 py-3 rounded-md hover:bg-white/5 transition-colors">
                 {t.label}
               </Link>
@@ -126,14 +136,14 @@ export default function NavWrapper({ children }: { children: React.ReactNode }) 
           free for 15 days, then $15/year.
         </p>
         <div className="flex justify-center flex-wrap gap-4 text-xs mb-3">
-          <Link href="/ap-chemistry"      className="text-blue-400 hover:text-blue-300 transition-colors">AP Chemistry</Link>
-          <Link href="/organic-chemistry" className="text-emerald-400 hover:text-emerald-300 transition-colors">Orgo 1 & 2</Link>
-          <Link href="/usnco"             className="text-orange-400 hover:text-orange-300 transition-colors">USNCO</Link>
-          <Link href="/icho"              className="text-yellow-400 hover:text-yellow-300 transition-colors">IChO</Link>
+          <Link href={eduHref('/ap-chemistry')}      className="text-blue-400 hover:text-blue-300 transition-colors">AP Chemistry</Link>
+          <Link href={eduHref('/organic-chemistry')} className="text-emerald-400 hover:text-emerald-300 transition-colors">Orgo 1 & 2</Link>
+          <Link href={eduHref('/usnco')}             className="text-orange-400 hover:text-orange-300 transition-colors">USNCO</Link>
+          <Link href={eduHref('/icho')}              className="text-yellow-400 hover:text-yellow-300 transition-colors">IChO</Link>
           <span className="text-white/20">|</span>
-          <Link href="/labs"    className="hover:text-white transition-colors">All Labs</Link>
-          <Link href="/ebook"   className="hover:text-white transition-colors">Study Guide</Link>
-          <Link href="/blog"    className="hover:text-white transition-colors">Blog</Link>
+          <Link href={eduHref('/labs')}    className="hover:text-white transition-colors">All Labs</Link>
+          <Link href={eduHref('/ebook')}   className="hover:text-white transition-colors">Study Guide</Link>
+          <Link href={eduHref('/blog')}    className="hover:text-white transition-colors">Blog</Link>
           <Link href="/about"   className="hover:text-white transition-colors">About</Link>
           <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
           <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>

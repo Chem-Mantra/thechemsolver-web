@@ -5,13 +5,18 @@ import Image from 'next/image'
 import { Menu, X } from 'lucide-react'
 import AuthNavButton from './components/AuthNavButton'
 
+// Education routes moved to international.chem-mantra.online in the
+// 2026-08-28 domain split; thechemsolver.com's own homepage stays here (it's
+// the AdSense funnel), so these link out cross-domain directly rather than
+// through the 301 at thechemsolver.com/<path>.
+const EDU = 'https://international.chem-mantra.online'
 const HOME_NAV_LINKS = [
-  { label: 'AP Chemistry',   href: '/ap-chemistry',      color: 'text-blue-400' },
-  { label: 'USNCO',          href: '/usnco',              color: 'text-orange-400' },
-  { label: 'IChO',           href: '/icho',               color: 'text-yellow-400' },
-  { label: 'Orgo 1 & 2',     href: '/organic-chemistry',  color: 'text-emerald-400' },
-  { label: 'All Labs',       href: '/labs',                color: 'text-gray-300' },
-  { label: 'Ebook',          href: '/ebook/ap-chemistry',  color: 'text-gray-300' },
+  { label: 'AP Chemistry',   href: `${EDU}/ap-chemistry`,      color: 'text-blue-400' },
+  { label: 'USNCO',          href: `${EDU}/usnco`,              color: 'text-orange-400' },
+  { label: 'IChO',           href: `${EDU}/icho`,               color: 'text-yellow-400' },
+  { label: 'Orgo 1 & 2',     href: `${EDU}/organic-chemistry`,  color: 'text-emerald-400' },
+  { label: 'All Labs',       href: `${EDU}/labs`,                color: 'text-gray-300' },
+  { label: 'Ebook',          href: `${EDU}/ebook/ap-chemistry`,  color: 'text-gray-300' },
 ]
 
 export default function HomeNav() {
@@ -26,18 +31,18 @@ export default function HomeNav() {
           <span className="text-xs bg-green-500/20 text-green-400 border border-green-500/30 px-2 py-0.5 rounded-full">15-DAY FREE</span>
         </div>
         <div className="hidden md:flex items-center gap-1 text-sm">
-          <Link href="/ap-chemistry" className="text-blue-400 hover:text-blue-300 font-semibold px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors">AP Chemistry</Link>
-          <Link href="/usnco" className="text-orange-400 hover:text-orange-300 font-semibold px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors">USNCO</Link>
-          <Link href="/icho" className="text-yellow-400 hover:text-yellow-300 font-semibold px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors">IChO</Link>
+          <Link href={`${EDU}/ap-chemistry`} className="text-blue-400 hover:text-blue-300 font-semibold px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors">AP Chemistry</Link>
+          <Link href={`${EDU}/usnco`} className="text-orange-400 hover:text-orange-300 font-semibold px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors">USNCO</Link>
+          <Link href={`${EDU}/icho`} className="text-yellow-400 hover:text-yellow-300 font-semibold px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors">IChO</Link>
           <span className="text-white/20 mx-1">|</span>
-          <Link href="/organic-chemistry" className="text-emerald-400 hover:text-emerald-300 font-semibold px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors">Orgo 1 & 2</Link>
+          <Link href={`${EDU}/organic-chemistry`} className="text-emerald-400 hover:text-emerald-300 font-semibold px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors">Orgo 1 & 2</Link>
           <span className="text-white/20 mx-1">|</span>
-          <Link href="/labs" className="text-gray-400 hover:text-white px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors">All Labs</Link>
-          <Link href="/ebook/ap-chemistry" className="text-gray-400 hover:text-white px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors">Ebook</Link>
+          <Link href={`${EDU}/labs`} className="text-gray-400 hover:text-white px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors">All Labs</Link>
+          <Link href={`${EDU}/ebook/ap-chemistry`} className="text-gray-400 hover:text-white px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors">Ebook</Link>
         </div>
         <div className="flex items-center gap-2">
           <AuthNavButton />
-          <Link href="/labs/nomenclature" className="hidden sm:inline-block bg-purple-600 hover:bg-purple-500 text-white text-sm px-4 py-2 rounded-lg transition-colors font-medium">
+          <Link href={`${EDU}/labs/nomenclature`} className="hidden sm:inline-block bg-purple-600 hover:bg-purple-500 text-white text-sm px-4 py-2 rounded-lg transition-colors font-medium">
             Try IUPAC Namer →
           </Link>
           <button
@@ -62,7 +67,7 @@ export default function HomeNav() {
           ))}
           <div className="border-t border-white/10 my-1" />
           <AuthNavButton variant="mobile" />
-          <Link href="/labs/nomenclature" onClick={() => setMenuOpen(false)}
+          <Link href={`${EDU}/labs/nomenclature`} onClick={() => setMenuOpen(false)}
             className="text-sm text-center bg-purple-600 text-white px-3 py-3 rounded-lg font-medium mt-1">
             Try IUPAC Namer →
           </Link>

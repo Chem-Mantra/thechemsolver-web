@@ -69,6 +69,24 @@ export function middleware(request: NextRequest) {
     }
   }
 
+  // Step 2 of the domain-split migration (2026-08-28): the education
+  // sections below now live at international.chem-mantra.online (step 1,
+  // already deployed and confirmed working). Anyone hitting these paths on
+  // the old thechemsolver.com host gets a permanent redirect to the new
+  // host, same path preserved -- this is what actually moves the SEO
+  // equity/traffic over, not just serving the new host correctly. The site
+  // root ("/") is deliberately NOT included here: it's the AdSense-funnel
+  // homepage and moving it is a separate, bigger decision than this
+  // path-prefix migration.
+  const EDU_PATH_PREFIXES = ['/ap-chemistry', '/usnco', '/icho', '/organic-chemistry', '/labs', '/blog', '/ebook', '/q']
+  if (host === 'thechemsolver.com' || host === 'www.thechemsolver.com') {
+    const p = request.nextUrl.pathname
+    if (EDU_PATH_PREFIXES.some((prefix) => p === prefix || p.startsWith(`${prefix}/`))) {
+      const url = new URL(`https://international.chem-mantra.online${p}${request.nextUrl.search}`)
+      return NextResponse.redirect(url, 301)
+    }
+  }
+
   const proto =
     request.headers.get('x-forwarded-proto') ||
     request.nextUrl.protocol.replace(':', '') ||

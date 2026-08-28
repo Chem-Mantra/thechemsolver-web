@@ -65,27 +65,38 @@ async function getQuestionPages(base: string) {
 
 export default async function sitemap() {
   const base = 'https://www.thechemsolver.com'
+  // Education sections moved to international.chem-mantra.online as part of
+  // the 2026-08-28 domain split (thechemsolver.com -> B2B/patent-analytics
+  // only). This sitemap is served identically regardless of which host
+  // requests it -- same pattern already used for the patent-analytics
+  // subdomain pages below -- so it just needs to list each page's real,
+  // current canonical URL. Root "/" stays here; it's the AdSense-funnel
+  // homepage and hasn't moved.
+  const intlBase = 'https://international.chem-mantra.online'
 
   const staticPages = [
     { url: base,                      lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 1.0  },
-    { url: `${base}/labs`,            lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 0.9  },
     { url: `${base}/about`,           lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.3  },
     { url: `${base}/contact`,         lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.4  },
-    { url: `${base}/blog`,            lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 0.7  },
     { url: `${base}/privacy`,         lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.2  },
     { url: `${base}/terms`,           lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.2  },
-    { url: `${base}/ap-chemistry`,    lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 0.95 },
-    { url: `${base}/ap-chemistry/practice`, lastModified: new Date(), changeFrequency: 'weekly' as const, priority: 0.85 },
-    { url: `${base}/usnco`,           lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 0.95 },
-    { url: `${base}/usnco/practice`,  lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 0.85 },
-    { url: `${base}/icho`,            lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 0.95 },
-    { url: `${base}/icho/problems`,   lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 0.85 },
-    { url: `${base}/organic-chemistry`, lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 0.95 },
-    { url: `${base}/ebook/ap-chemistry`,      lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.9 },
-    { url: `${base}/ebook/organic-chemistry`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.9 },
-    { url: `${base}/ebook/advanced-chemistry`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.85 },
+  ]
+
+  const internationalPages = [
+    { url: `${intlBase}/labs`,            lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 0.9  },
+    { url: `${intlBase}/blog`,            lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 0.7  },
+    { url: `${intlBase}/ap-chemistry`,    lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 0.95 },
+    { url: `${intlBase}/ap-chemistry/practice`, lastModified: new Date(), changeFrequency: 'weekly' as const, priority: 0.85 },
+    { url: `${intlBase}/usnco`,           lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 0.95 },
+    { url: `${intlBase}/usnco/practice`,  lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 0.85 },
+    { url: `${intlBase}/icho`,            lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 0.95 },
+    { url: `${intlBase}/icho/problems`,   lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 0.85 },
+    { url: `${intlBase}/organic-chemistry`, lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 0.95 },
+    { url: `${intlBase}/ebook/ap-chemistry`,      lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.9 },
+    { url: `${intlBase}/ebook/organic-chemistry`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.9 },
+    { url: `${intlBase}/ebook/advanced-chemistry`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.85 },
     ...LAB_SLUGS.map(slug => ({
-      url: `${base}/labs/${slug}`,
+      url: `${intlBase}/labs/${slug}`,
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.9,
@@ -94,16 +105,16 @@ export default async function sitemap() {
 
   const { POSTS } = await import('@/lib/blog')
   const blogPages = POSTS.map((p) => ({
-    url: `${base}/blog/${p.slug}`,
+    url: `${intlBase}/blog/${p.slug}`,
     lastModified: new Date(p.date),
     changeFrequency: 'monthly' as const,
     priority: 0.75,
   }))
 
-  const questionPages = await getQuestionPages(base)
+  const questionPages = await getQuestionPages(intlBase)
   const patentAnalyticsPages = await getPatentAnalyticsPages()
 
-  return [...staticPages, ...blogPages, ...questionPages, ...patentAnalyticsPages]
+  return [...staticPages, ...internationalPages, ...blogPages, ...questionPages, ...patentAnalyticsPages]
 }
 
 // patent-analytics.thechemsolver.com is a subdomain of this same site, not
