@@ -35,9 +35,10 @@ const services = [
     slug: 'portfolio-landscape',
   },
   {
-    name: 'Ongoing Patent Monitoring',
-    desc: 'Retainer-based alerts when new patents matching your compound classes are published — catch evergreening attempts and competitor filings as they happen.',
-    slug: null, // retainer service, no bulk-processed report page -- see pricing page instead
+    name: 'Ongoing Patent Monitoring & Portfolio Intelligence',
+    desc: 'Retainer-based alerts when new patents matching your compound classes are published, plus continuously-updated portfolio landscapes for BD, licensing, and corporate strategy teams.',
+    slug: 'licensing', // placeholder to make the card clickable, see href override below
+    href: '/licensing',
   },
   {
     name: 'CDMO Process FTO Pre-Screens',
