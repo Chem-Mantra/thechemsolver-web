@@ -3,8 +3,12 @@ import { Resend } from 'resend'
 
 // The one sample report we currently have ready to hand out instantly.
 // When more real reports exist, this can become a lookup keyed by
-// patentNumber instead of a single fixed file.
-const SAMPLE_REPORT_PATH = '/patent-analytics/downloads/sample-report.zip'
+// patentNumber instead of a single fixed file. Absolute subdomain URL, not
+// the "/patent-analytics/downloads/..." relative form -- same double-prefix
+// class of bug fixed in middleware.ts 2026-08-29 (middleware's own rewrite
+// logic happens to route around it safely, but there's no reason to still
+// emit the wrong-for-this-host URL from a live lead-capture flow).
+const SAMPLE_REPORT_PATH = 'https://patent-analytics.thechemsolver.com/downloads/sample-report.zip'
 
 export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => null)

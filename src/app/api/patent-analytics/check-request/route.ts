@@ -32,7 +32,15 @@ export async function POST(req: NextRequest) {
     const slug = slugMap[existing.product_type] || existing.product_type
     return NextResponse.json({
       found: true,
-      url: `/patent-analytics/data/${slug}/${existing.patent_number}`,
+      // Absolute, not "/patent-analytics/data/...": that relative form only
+      // resolves correctly when this API is called from the main-domain
+      // direct-access path. Called from the subdomain (the only place this
+      // modal is actually wired up), a relative link with that prefix hits
+      // the exact double-prefix bug fixed in middleware.ts 2026-08-29 --
+      // middleware.ts now 301s it back to the right place, but that's a
+      // safety net, not a reason to still emit the wrong URL on a
+      // conversion-critical, paid-flow "view your result" link.
+      url: `https://patent-analytics.thechemsolver.com/data/${slug}/${existing.patent_number}`,
     })
   }
 
