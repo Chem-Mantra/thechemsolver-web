@@ -17,8 +17,8 @@ const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mon
 export const metadata: Metadata = {
   // `absolute` overrides the root layout's `%s | TheChemSolver` title
   // template — this product's branding must never show the parent site's name.
-  title: { absolute: 'Patent Analytics — Chemical Structure & Genus-Claim Analysis' },
-  description: 'Chemical structure extraction, genus/species Markush coverage analysis, and Section 3(d) screening for patent attorneys and pharma IP teams.',
+  title: { absolute: 'Patent Analytics — Patent Clearance for India’s Generic & CDMO Pharma Industry' },
+  description: 'Section 3(d) screening, genus/species Markush coverage, FTO structural triage, and patent-cliff mapping for Indian generic pharma companies, CDMOs, and the IP firms serving them.',
   metadataBase: new URL('https://patent-analytics.thechemsolver.com'),
   alternates: { canonical: 'https://patent-analytics.thechemsolver.com/' },
   // Deliberately hidden from Google while this was being built quietly;

@@ -7,7 +7,7 @@ const SITE = 'https://patent-analytics.thechemsolver.com'
 
 export const metadata: Metadata = {
   title: { absolute: 'Pricing — Patent Analytics' },
-  description: 'Instant compound checks, standard reports, and portfolio retainers for patent attorneys and pharma IP teams. First report free.',
+  description: 'Instant compound checks, standard reports, and portfolio retainers for India\'s generic pharma companies, CDMOs, and the patent attorneys serving them. First report free.',
   alternates: { canonical: `${SITE}/pricing` },
   robots: { index: true, follow: true, googleBot: { 'max-image-preview': 'large' } },
 }

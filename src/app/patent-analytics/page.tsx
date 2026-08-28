@@ -14,35 +14,35 @@ export const revalidate = 3600
 
 const services = [
   {
-    name: 'Genus/Species (Markush) Claim Coverage Analysis',
-    desc: "Does a specific compound fall inside a patent's broad genus claim? Structural coverage testing built on real cheminformatics matching — not a keyword search.",
-    flagship: true,
-    slug: 'markush-coverage',
-  },
-  {
     name: 'Section 3(d) Compliance Screening',
-    desc: 'India-specific: classifies whether a claimed compound is a salt, ester, isomer, or other "known substance" derivative, and flags whether efficacy data is present — the exact test Indian courts apply.',
+    desc: 'India’s sharpest tool against evergreening: classifies whether a claimed compound is a salt, ester, isomer, or other "known substance" derivative, and flags whether real efficacy data is present — the exact test that struck down Novartis’s Glivec patent. Built to find the secondary patents worth challenging.',
+    flagship: true,
     slug: 'section-3d',
   },
   {
-    name: 'Prior-Art / FTO Structural Triage',
-    desc: 'Fast first-pass structure search across multiple patents, before commissioning a full manual search.',
+    name: 'Genus/Species (Markush) Coverage & Design-Around Analysis',
+    desc: "Does your target compound actually fall inside a competitor's broad genus claim — or is there a real, legally distinct gap your chemists can design around? Structural coverage testing built on real cheminformatics matching, not a keyword search.",
+    slug: 'markush-coverage',
+  },
+  {
+    name: 'Pre-Launch FTO Structural Triage',
+    desc: 'Before committing R&D or manufacturing spend to a target compound or synthetic route, screen it against the real existing patent landscape — fast first-pass clearance, before a full manual search.',
     slug: 'fto-triage',
   },
   {
-    name: 'Patent Family / Portfolio Landscape Reports',
-    desc: 'An entire patent family around one drug or target, processed into a single consolidated structure database.',
+    name: 'Patent Cliff & Portfolio Landscape Mapping',
+    desc: 'An entire patent family around one drug or target, consolidated into a single structure database — see which patents in the family are weak or already expiring, and time your launch window with real data.',
     slug: 'portfolio-landscape',
   },
   {
     name: 'Ongoing Patent Monitoring',
-    desc: 'Retainer-based alerts when new patents matching your compound classes are published.',
+    desc: 'Retainer-based alerts when new patents matching your compound classes are published — catch evergreening attempts and competitor filings as they happen.',
     slug: null, // retainer service, no bulk-processed report page -- see pricing page instead
   },
   {
     name: 'CDMO Process FTO Pre-Screens',
-    desc: 'Check a proposed synthetic route or target compound against existing process patents before committing manufacturing resources.',
-    slug: 'fto-triage', // same engine as Prior-Art/FTO Structural Triage, see its own tagline
+    desc: 'Check a proposed synthetic route against existing process patents before committing manufacturing resources — one of the most commonly mishandled risks in CDMO/sponsor agreements.',
+    slug: 'fto-triage', // same engine as Pre-Launch FTO Structural Triage, see its own tagline
   },
 ]
 
@@ -68,18 +68,19 @@ export default async function PatentAnalyticsPage() {
           <div className="lg:col-span-7">
             <div className="pa-chip mb-6">
               <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--tertiary-bright)' }} />
-              Chemistry-grade patent analysis, tested and measured
+              Chemistry-grade patent clearance, built for India
             </div>
             <h1 className="pa-display text-[40px] md:text-[56px] font-bold leading-[1.05] mb-6" style={{ color: 'var(--on-surface)' }}>
-              Chemical structure &amp;<br />genus-claim analysis<br />
-              <span style={{ color: 'var(--primary)' }}>for patent teams</span>
+              Patent clearance for<br />India&rsquo;s generic &amp;<br />
+              <span style={{ color: 'var(--primary)' }}>CDMO pharma industry</span>
             </h1>
             <p className="text-lg leading-relaxed mb-8 max-w-xl" style={{ color: 'var(--on-surface-variant)' }}>
-              We extract, verify, and analyze chemical structures from patent documents —
-              including the genus/species (Markush) coverage question that decided
-              cases like <em>Natco v. Roche</em> and <em>AstraZeneca v. Intas</em>. Every
-              report is honest about what&rsquo;s independently confirmed and what still
-              needs your review.
+              Before committing R&amp;D or manufacturing spend, know whether a compound is
+              actually covered by a genus claim, whether a secondary patent has a real
+              Section 3(d) weakness, and where your freedom-to-operate actually stands —
+              the same structural analysis that decided cases like <em>Natco v. Roche</em>{' '}
+              and <em>Novartis v. Union of India</em>. Every report is honest about
+              what&rsquo;s independently confirmed and what still needs your counsel&rsquo;s review.
             </p>
             <div className="flex flex-wrap gap-3">
               <OpenLeadFormButton className="pa-btn-primary text-base font-semibold px-6 py-3.5">
