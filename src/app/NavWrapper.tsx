@@ -21,7 +21,14 @@ const NAV_TOOLS = [
 
 export default function NavWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-  const isHome = pathname === '/'
+  // international.chem-mantra.online's root ("/") is rewritten by
+  // middleware.ts to /international-home (its own full nav+footer page, see
+  // that file) -- unlike the patent-analytics rewrite below, usePathname()
+  // here reports the POST-rewrite destination path, not the original "/",
+  // so isHome alone misses it and both bars render stacked. Checked
+  // directly by path (no hostname round-trip needed since this route only
+  // ever exists on that host).
+  const isHome = pathname === '/' || pathname === '/international-home'
   const isEbook = pathname?.startsWith('/ebook/')
   const [menuOpen, setMenuOpen] = useState(false)
   // Patent Analytics is reached via a subdomain that middleware rewrites
