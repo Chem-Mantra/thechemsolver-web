@@ -126,16 +126,28 @@ async function getPatentAnalyticsPages() {
     // Each product-result row is its own indexable page (real numbers,
     // real patents) once the daily bulk pipeline starts uploading them --
     // empty for now, populates automatically as product_results fills in.
+    //
+    // Real bug found + fixed 2026-08-28: a patent can appear in MULTIPLE
+    // fto_triage rows (as patent_a in several different cross-patent
+    // pairs), but they all resolve to the SAME page
+    // (getResultByProductAndPatent takes the most recent row per
+    // product_type+patent_number). Mapping every row to a URL without
+    // deduping produced a sitemap with the same URL listed up to 17 times
+    // -- 294 entries for only 129 actual distinct pages. Dedupe by URL.
     const { PRODUCTS, getLatestAcrossProducts } = await import('@/lib/productResults')
     const live = await getLatestAcrossProducts(500)
-    const productPages = Object.entries(live).flatMap(([productType, results]) =>
-      results.map((r) => ({
-        url: `${paBase}/data/${PRODUCTS[productType as keyof typeof PRODUCTS].slug}/${r.patent_number}`,
-        lastModified: new Date(r.published_date),
-        changeFrequency: 'monthly' as const,
-        priority: 0.6,
-      })),
-    )
+    const productPageMap = new Map<string, { url: string; lastModified: Date; changeFrequency: 'monthly'; priority: number }>()
+    for (const [productType, results] of Object.entries(live)) {
+      for (const r of results) {
+        const url = `${paBase}/data/${PRODUCTS[productType as keyof typeof PRODUCTS].slug}/${r.patent_number}`
+        const existing = productPageMap.get(url)
+        const lastModified = new Date(r.published_date)
+        if (!existing || lastModified > existing.lastModified) {
+          productPageMap.set(url, { url, lastModified, changeFrequency: 'monthly', priority: 0.6 })
+        }
+      }
+    }
+    const productPages = Array.from(productPageMap.values())
 
     return [staticEntry, ...articlePages, ...productPages]
   } catch {
