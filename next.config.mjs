@@ -51,12 +51,18 @@ const nextConfig = {
   async headers() {
     const csp = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://securepubads.g.doubleclick.net https://tpc.googlesyndication.com https://*.google.com https://*.gstatic.com https://checkout.razorpay.com",
+      // https://www.paypal.com added to script-src/connect-src/frame-src
+      // 2026-08-29 for the Instant Compound Check inline PayPal JS SDK
+      // (Smart Buttons) -- the $15/yr flow's Hosted Button only ever needed
+      // form-action (a plain form POST to a new tab), so this CSP never
+      // had to allow loading/running PayPal's own script or its checkout
+      // iframe before now.
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://securepubads.g.doubleclick.net https://tpc.googlesyndication.com https://*.google.com https://*.gstatic.com https://checkout.razorpay.com https://www.paypal.com",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com data:",
       "img-src 'self' data: blob: https://storage.googleapis.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.gstatic.com https://*.razorpay.com https://*.googleusercontent.com https://www.paypalobjects.com",
-      "connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://*.supabase.co https://pagead2.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.razorpay.com",
-      "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://*.doubleclick.net https://*.google.com https://api.razorpay.com https://checkout.razorpay.com",
+      "connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://*.supabase.co https://pagead2.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.razorpay.com https://www.paypal.com https://api-m.paypal.com",
+      "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://*.doubleclick.net https://*.google.com https://api.razorpay.com https://checkout.razorpay.com https://www.paypal.com",
       "worker-src 'self'",
       "manifest-src 'self'",
       "object-src 'none'",
