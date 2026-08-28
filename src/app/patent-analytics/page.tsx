@@ -43,6 +43,8 @@ const services = [
     name: 'CDMO Process FTO Pre-Screens',
     desc: 'Check a proposed synthetic route against existing process patents before committing manufacturing resources — one of the most commonly mishandled risks in CDMO/sponsor agreements.',
     slug: 'fto-triage', // same engine as Pre-Launch FTO Structural Triage, see its own tagline
+    href: '/cdmo', // dedicated landing page for this buyer (CDMO business development,
+    // not patent attorneys) instead of the generic /data/fto-triage listing
   },
 ]
 
@@ -165,12 +167,14 @@ export default async function PatentAnalyticsPage() {
                   </div>
                   <p className="text-base leading-relaxed" style={{ color: 'var(--on-surface-variant)' }}>{s.desc}</p>
                   {s.slug && (
-                    <p className="text-sm mt-3 font-medium" style={{ color: 'var(--primary)' }}>See real extracted data →</p>
+                    <p className="text-sm mt-3 font-medium" style={{ color: 'var(--primary)' }}>
+                      {'href' in s && s.href ? 'Learn more →' : 'See real extracted data →'}
+                    </p>
                   )}
                 </>
               )
               return s.slug ? (
-                <Link key={s.name} href={`/data/${s.slug}`} className={cardClass} style={cardStyle}>
+                <Link key={s.name} href={'href' in s && s.href ? s.href : `/data/${s.slug}`} className={cardClass} style={cardStyle}>
                   {content}
                 </Link>
               ) : (

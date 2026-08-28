@@ -113,7 +113,27 @@ export default async function sitemap() {
 async function getPatentAnalyticsPages() {
   const paBase = 'https://patent-analytics.thechemsolver.com'
   const staticEntry = { url: `${paBase}/`, lastModified: new Date(), changeFrequency: 'weekly' as const, priority: 0.9 }
+  // Real gap found 2026-08-28: only the bare homepage was ever listed here --
+  // /pricing and every /data/[product] listing page (plus the new /cdmo
+  // landing page) were never in the sitemap at all, only discoverable via
+  // on-site links. Google already knows about the /data pages from manual
+  // URL Inspection requests, but they belong in the sitemap properly too.
+  const otherStaticPages = ['/pricing', '/cdmo'].map((path) => ({
+    url: `${paBase}${path}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.8,
+  }))
   try {
+    const { PRODUCTS: ALL_PRODUCTS } = await import('@/lib/productResults')
+    const productListingPages = Object.values(ALL_PRODUCTS).map((p) => ({
+      url: `${paBase}/data/${p.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    }))
+    otherStaticPages.push(...productListingPages)
+
     const { getAllArticles, slugify } = await import('@/lib/patentNews')
     const articles = await getAllArticles()
     const articlePages = articles.map((a) => ({
@@ -149,8 +169,8 @@ async function getPatentAnalyticsPages() {
     }
     const productPages = Array.from(productPageMap.values())
 
-    return [staticEntry, ...articlePages, ...productPages]
+    return [staticEntry, ...otherStaticPages, ...articlePages, ...productPages]
   } catch {
-    return [staticEntry]
+    return [staticEntry, ...otherStaticPages]
   }
 }
