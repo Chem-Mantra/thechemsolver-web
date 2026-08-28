@@ -22,6 +22,30 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
+  // international.chem-mantra.online serves this same app's existing
+  // education routes (ap-chemistry, usnco, icho, organic-chemistry, labs,
+  // blog, ebook, q) directly -- no path-prefix rewrite needed since those
+  // routes already live at these exact paths, unlike patent-analytics
+  // below. This is step 1 of the domain-split migration (2026-08-28):
+  // get this host serving correctly BEFORE adding 301 redirects away from
+  // the old thechemsolver.com URLs, so there's never a window where
+  // neither domain works.
+  if (host === 'international.chem-mantra.online' || host === 'www.international.chem-mantra.online') {
+    const p = request.nextUrl.pathname
+    if (p === '/robots.txt' || p === '/sitemap.xml' || p.startsWith('/api') || p.startsWith('/_next')) {
+      return NextResponse.next()
+    }
+    if (p === '/') {
+      const url = request.nextUrl.clone()
+      url.pathname = '/ap-chemistry'
+      return NextResponse.redirect(url, 302) // 302 (temporary) until a real
+      // dedicated homepage for this subdomain is built -- ap-chemistry is
+      // just the most complete section to land on for now, not a
+      // permanent canonical choice.
+    }
+    return NextResponse.next()
+  }
+
   // patent-analytics.thechemsolver.com is a subdomain, not a separate
   // deployment — DNS points it at this same app, so every path under it
   // (the landing page, /news/[slug] article pages, etc.) needs an
