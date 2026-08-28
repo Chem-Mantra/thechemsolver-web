@@ -60,7 +60,25 @@ export function middleware(request: NextRequest) {
     if (p === '/robots.txt' || p === '/sitemap.xml') {
       return NextResponse.next()
     }
-    if (!p.startsWith('/patent-analytics') && !p.startsWith('/api') && !p.startsWith('/_next')) {
+    // Real bug found 2026-08-29: every internal <Link> across this product
+    // (21 occurrences, 8 files) hardcodes an href starting with
+    // "/patent-analytics/..." -- correct for direct access via
+    // www.thechemsolver.com/patent-analytics/*, but on THIS subdomain the
+    // browser resolves that href against patent-analytics.thechemsolver.com
+    // itself, producing an ugly double-prefixed URL
+    // (patent-analytics.thechemsolver.com/patent-analytics/data/...) that
+    // the rewrite below then just serves as-is (its own startsWith check
+    // sees the prefix already present and skips rewriting) -- it works, but
+    // the address bar and canonical tag disagree, an SEO problem on every
+    // single click. Rather than editing all 8 files, self-heal it here:
+    // strip the redundant prefix and 301 to the clean equivalent, which
+    // matches this product's own <link rel=canonical> URLs.
+    if (p === '/patent-analytics' || p.startsWith('/patent-analytics/')) {
+      const url = request.nextUrl.clone()
+      url.pathname = p === '/patent-analytics' ? '/' : p.slice('/patent-analytics'.length)
+      return NextResponse.redirect(url, 301)
+    }
+    if (!p.startsWith('/api') && !p.startsWith('/_next')) {
       const url = request.nextUrl.clone()
       url.pathname = `/patent-analytics${p === '/' ? '' : p}`
       return NextResponse.rewrite(url)
