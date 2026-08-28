@@ -6,6 +6,12 @@ import { usePathname } from 'next/navigation'
 import { Menu, X } from 'lucide-react'
 import AuthNavButton from './components/AuthNavButton'
 
+declare global {
+  interface Window {
+    __PA_HOST__?: boolean
+  }
+}
+
 const NAV_EXAMS = [
   { label: 'AP Chemistry',   href: '/ap-chemistry',      color: 'text-blue-400' },
   { label: 'Orgo 1 & 2',    href: '/organic-chemistry', color: 'text-emerald-400' },
@@ -31,29 +37,39 @@ export default function NavWrapper({ children }: { children: React.ReactNode }) 
   const isHome = pathname === '/' || pathname === '/international-home'
   const isEbook = pathname?.startsWith('/ebook/')
   const [menuOpen, setMenuOpen] = useState(false)
-  // Patent Analytics is reached via a subdomain that middleware rewrites
-  // internally to /patent-analytics/* -- that rewrite is invisible to
-  // usePathname() (it keeps returning the pre-rewrite path), so a pathname
-  // check alone silently fails to exclude it here. window.location.hostname
-  // is unaffected by any rewrite, so it's checked instead. useLayoutEffect
-  // (not useEffect) runs before the browser paints, so the correction
-  // happens before anyone sees the wrong chrome -- same no-flash technique
-  // as a dark-mode toggle script, and the same pattern AdFreePopup already
-  // uses (default to the safe/matching-SSR state, correct after mount).
-  const [isPatentAnalyticsHost, setIsPatentAnalyticsHost] = useState(false)
+  // Real bug found 2026-08-29: Patent Analytics is reached via a subdomain
+  // that middleware rewrites internally to /patent-analytics/* -- that
+  // rewrite is invisible to usePathname() on the CLIENT (it keeps
+  // returning the pre-rewrite path), but on the SERVER usePathname()
+  // reflects the POST-rewrite path, which DOES start with
+  // "/patent-analytics". So server-side this component already bypasses
+  // correctly on its own, while client-side hydration needed a second,
+  // hostname-based signal -- getting that signal via useLayoutEffect+state
+  // is too late: hydration mismatch detection happens when React first
+  // reconciles the server HTML against the client's initial render, which
+  // is BEFORE any effect (including useLayoutEffect) runs. The two
+  // branches structurally disagreed (bare children vs full nav+footer
+  // shell) on that very first render, throwing React error #418 on every
+  // Patent Analytics page load. Fixed the same way AdsGate.tsx already
+  // solves this exact problem: read window.__PA_HOST__ directly in the
+  // render body -- it's set by a synchronous inline script in layout.tsx
+  // that runs before hydration even starts, so server (always false, no
+  // window) and client's first render agree from the start.
+  const isPatentAnalyticsHost = typeof window !== 'undefined' && window.__PA_HOST__
   // Education routes (AP Chem, USNCO, IChO, Orgo, Labs, Ebook, Blog) moved to
   // international.chem-mantra.online in the 2026-08-28 domain split;
   // thechemsolver.com now 301s those paths there. Relative links still work
   // (they just eat the redirect hop), but this upgrades them to direct
-  // cross-domain links once we know we're on the old host -- same
-  // default-safe/correct-after-mount pattern as isPatentAnalyticsHost above.
+  // cross-domain links once we know we're on the old host. Unlike
+  // isPatentAnalyticsHost above, this only ever changes an href STRING
+  // inside a subtree whose shape is already identical either way, so a
+  // post-hydration correction here doesn't risk a structural mismatch.
   const [isOldEduHost, setIsOldEduHost] = useState(false)
 
   // Close the mobile menu on route change so it never lingers over new content.
   useEffect(() => { setMenuOpen(false) }, [pathname])
 
   useLayoutEffect(() => {
-    setIsPatentAnalyticsHost(window.location.hostname.startsWith('patent-analytics.'))
     setIsOldEduHost(window.location.hostname === 'thechemsolver.com' || window.location.hostname === 'www.thechemsolver.com')
   }, [])
 
