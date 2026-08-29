@@ -31,8 +31,8 @@ export default function PatentAnalyticsHeader() {
         <nav className="hidden md:flex items-center gap-1">
           <a href="/patent-analytics#services" className="text-base px-3 py-2 rounded-lg hover:bg-black/[0.03] transition-colors" style={{ color: 'var(--on-surface-variant)' }}>Services</a>
           <Link href="/patent-analytics/pricing" className="text-base px-3 py-2 rounded-lg hover:bg-black/[0.03] transition-colors" style={{ color: 'var(--on-surface-variant)' }}>Pricing</Link>
-          <a href="/patent-analytics#proof" className="text-base px-3 py-2 rounded-lg hover:bg-black/[0.03] transition-colors" style={{ color: 'var(--on-surface-variant)' }}>Measured Accuracy</a>
           <a href="/patent-analytics#patent-news" className="text-base px-3 py-2 rounded-lg hover:bg-black/[0.03] transition-colors" style={{ color: 'var(--on-surface-variant)' }}>Patent News</a>
+          <Link href="/patent-analytics/expirations" className="text-base px-3 py-2 rounded-lg hover:bg-black/[0.03] transition-colors" style={{ color: 'var(--on-surface-variant)' }}>Patent Expiry Watch</Link>
           <a href="/patent-analytics#contact" className="text-base px-3 py-2 rounded-lg hover:bg-black/[0.03] transition-colors" style={{ color: 'var(--on-surface-variant)' }}>Contact</a>
         </nav>
         <div className="flex items-center gap-3">
