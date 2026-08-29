@@ -81,11 +81,16 @@ function extractPatentFamily(html: string): FamilyMember[] {
   return family
 }
 
-// Bounded so one pathologically large family (rare, but real families can
-// run into dozens of members) can't blow past a serverless function's
-// execution time budget on a single paid request -- same "bound the cost"
-// discipline as MAX_FTO_QUERY_STRUCTURES_PER_PATENT in 02_run_daily_batch.py.
-const MAX_FAMILY_MEMBERS_LIVE = 15
+// Real families can run into dozens of members (verified: US7314938B2 has
+// 44) -- a fixed low cap that silently truncates the fetch would ship an
+// incomplete result tagged auto_verified, undercounting structures with no
+// indication anything was cut. Real testing at 350ms/fetch showed ~20
+// members is the safe ceiling to finish well inside a 60s serverless
+// budget (seed fetch + extraction + DB write overhead included) -- families
+// larger than that return null here so the caller falls back to the
+// existing manual queue ("we'll email you within 1 hour") instead of
+// shipping a truncated live result. Never truncate and ship silently.
+const MAX_FAMILY_MEMBERS_LIVE = 20
 
 export async function buildFamilyLandscapeLive(seedPublicationNumber: string): Promise<FamilyLandscape | null> {
   const seedHtml = await fetchPatentHtml(seedPublicationNumber)
@@ -96,7 +101,10 @@ export async function buildFamilyLandscapeLive(seedPublicationNumber: string): P
     { publicationNumber: seedPublicationNumber, publicationDate: '', status: 'FETCHED', compounds: seedCompounds },
   ]
 
-  const family = extractPatentFamily(seedHtml).slice(0, MAX_FAMILY_MEMBERS_LIVE)
+  const family = extractPatentFamily(seedHtml)
+  if (family.length > MAX_FAMILY_MEMBERS_LIVE) {
+    return null // too large to safely complete live -- fall back to the manual queue, don't truncate
+  }
   for (const member of family) {
     await new Promise((resolve) => setTimeout(resolve, 350)) // politeness delay, same spirit as portfolio_landscape.py's FETCH_SLEEP_SECONDS
     const html = await fetchPatentHtml(member.publicationNumber)
