@@ -5,6 +5,7 @@ import './patent-analytics.css'
 import LeadCaptureModal from './LeadCaptureModal'
 import CheckPatentModal from './CheckPatentModal'
 import RetainerModal from './RetainerModal'
+import StandardReportModal from './StandardReportModal'
 
 // Self-hosted via next/font (no external CDN calls at runtime) — matches
 // the "Synthetix Light Spatial" design system: Geist for headlines, Inter
@@ -65,6 +66,7 @@ export default function PatentAnalyticsLayout({ children }: { children: React.Re
       <LeadCaptureModal />
       <CheckPatentModal />
       <RetainerModal />
+      <StandardReportModal />
       {children}
     </div>
   )

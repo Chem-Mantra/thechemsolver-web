@@ -3,6 +3,7 @@ import PatentAnalyticsHeader from '../PatentAnalyticsHeader'
 import OpenLeadFormButton from '../OpenLeadFormButton'
 import OpenCheckPatentButton from '../OpenCheckPatentButton'
 import OpenRetainerModalButton from '../OpenRetainerModalButton'
+import OpenStandardReportButton from '../OpenStandardReportButton'
 
 const SITE = 'https://patent-analytics.thechemsolver.com'
 
@@ -40,8 +41,8 @@ const TIERS = [
       '24-48h turnaround',
       'Full HD structure images + data + sources, packaged',
     ],
-    cta: 'Get a free sample report →',
-    ctaType: 'lead' as const,
+    cta: 'Order a report — $199 →',
+    ctaType: 'standard_report' as const,
     flagship: true,
   },
   {
@@ -116,9 +117,14 @@ export default function PricingPage() {
                     {t.cta}
                   </OpenRetainerModalButton>
                 ) : (
-                  <OpenLeadFormButton className={t.flagship ? 'pa-btn-primary text-sm font-medium px-5 py-3 w-full' : 'pa-chip text-sm font-medium px-5 py-3 w-full justify-center'}>
-                    {t.cta}
-                  </OpenLeadFormButton>
+                  <div className="flex flex-col gap-2 items-center">
+                    <OpenStandardReportButton className="pa-btn-primary text-sm font-medium px-5 py-3 w-full">
+                      {t.cta}
+                    </OpenStandardReportButton>
+                    <OpenLeadFormButton className="text-xs font-medium hover:underline text-[color:var(--primary)]">
+                      or see a free sample first →
+                    </OpenLeadFormButton>
+                  </div>
                 )}
               </div>
             ))}
