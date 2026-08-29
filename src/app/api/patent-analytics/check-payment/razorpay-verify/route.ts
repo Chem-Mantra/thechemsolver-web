@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
 import { Resend } from 'resend'
 import { supabaseAdmin } from '@/lib/supabase-admin'
+import { resolveOrFetchLiveResult } from '@/lib/liveCheckLookup'
+
+// See capture-order/route.ts's identical export -- live Portfolio Landscape
+// fetches on a large family can take up to ~25-30s.
+export const maxDuration = 60
 
 // Instant Compound Check ($10 via UPI/cards) -- step 2 of 2, Razorpay path.
 // Mirrors check-payment/capture-order/route.ts (the PayPal path) gate for
@@ -16,12 +21,6 @@ async function getAuthHeader(): Promise<string> {
   const keyId = process.env.RAZORPAY_KEY_ID!
   const keySecret = process.env.RAZORPAY_KEY_SECRET!
   return `Basic ${Buffer.from(`${keyId}:${keySecret}`).toString('base64')}`
-}
-
-function resultUrlFor(productType: string, patentNumber: string): string {
-  const slugMap: Record<string, string> = { fto_triage: 'fto-triage', portfolio_landscape: 'portfolio-landscape' }
-  const slug = slugMap[productType] || productType
-  return `https://patent-analytics.thechemsolver.com/data/${slug}/${patentNumber}`
 }
 
 async function notifyFounderOfQueuedCheck(patentNumber: string, email: string, name: string) {
@@ -126,17 +125,11 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  const { data: found } = await supabaseAdmin
-    .from('product_results')
-    .select('product_type, patent_number')
-    .eq('patent_number', patentNumber)
-    .eq('confidence_tier', 'auto_verified')
-    .limit(1)
-    .maybeSingle()
+  const liveResult = await resolveOrFetchLiveResult(patentNumber)
 
   let responseBody: Record<string, unknown>
-  if (found) {
-    const url = resultUrlFor(found.product_type, found.patent_number)
+  if (liveResult.found) {
+    const url = liveResult.url
     await supabaseAdmin.from('check_payments').insert({
       provider: 'razorpay',
       razorpay_order_id: razorpayOrderId,

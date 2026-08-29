@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { supabaseAdmin } from '@/lib/supabase-admin'
+import { resolveOrFetchLiveResult } from '@/lib/liveCheckLookup'
+
+// Live Portfolio Landscape fetches (Google Patents, up to 15 family
+// members + politeness delays) can genuinely take up to ~25-30s on a large
+// family -- default Vercel function timeouts are too short for that.
+export const maxDuration = 60
 
 // Instant Compound Check ($10) -- step 2 of 2. Captures the PayPal order
 // created by create-order/route.ts, then runs the SAME lookup logic the
@@ -34,12 +40,6 @@ async function getAccessToken(clientId: string, clientSecret: string): Promise<s
   })
   const data = await res.json()
   return data.access_token
-}
-
-function resultUrlFor(productType: string, patentNumber: string): string {
-  const slugMap: Record<string, string> = { fto_triage: 'fto-triage', portfolio_landscape: 'portfolio-landscape' }
-  const slug = slugMap[productType] || productType
-  return `https://patent-analytics.thechemsolver.com/data/${slug}/${patentNumber}`
 }
 
 async function notifyFounderOfQueuedCheck(patentNumber: string, email: string, name: string) {
@@ -154,17 +154,11 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  const { data: found } = await supabaseAdmin
-    .from('product_results')
-    .select('product_type, patent_number')
-    .eq('patent_number', patentNumber)
-    .eq('confidence_tier', 'auto_verified')
-    .limit(1)
-    .maybeSingle()
+  const liveResult = await resolveOrFetchLiveResult(patentNumber)
 
   let responseBody: Record<string, unknown>
-  if (found) {
-    const url = resultUrlFor(found.product_type, found.patent_number)
+  if (liveResult.found) {
+    const url = liveResult.url
     await supabaseAdmin.from('check_payments').insert({
       paypal_order_id: orderID,
       paypal_capture_id: captureId,
