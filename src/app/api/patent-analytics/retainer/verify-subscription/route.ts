@@ -76,9 +76,10 @@ export async function POST(req: NextRequest) {
 
   const apiKey = process.env.RESEND_API_KEY
   const from = process.env.RESEND_FROM_EMAIL
+  const notifyTo = process.env.LEAD_NOTIFY_EMAIL || 'support@thechemsolver.com'
   if (apiKey && from) {
+    const resend = new Resend(apiKey)
     try {
-      const resend = new Resend(apiKey)
       await resend.emails.send({
         from,
         to: customer.contact_email,
@@ -88,7 +89,26 @@ export async function POST(req: NextRequest) {
     } catch (err) {
       console.warn('retainer welcome email failed (non-blocking):', err)
     }
+    try {
+      await resend.emails.send({
+        from,
+        to: notifyTo,
+        subject: `New Portfolio Retainer subscriber: ${customer.company}`,
+        html: `
+          <p><b>Company:</b> ${escapeHtml(customer.company)}</p>
+          <p><b>Contact:</b> ${escapeHtml(customer.contact_name || '(not provided)')} — ${escapeHtml(customer.contact_email)}</p>
+          <p><b>Subscription ID:</b> ${escapeHtml(subscriptionId)}</p>
+          <p>$999/mo, active now. Watches were set up in create-subscription — check retainer_watches for the patent list.</p>
+        `,
+      })
+    } catch (err) {
+      console.warn('retainer admin notification email failed (non-blocking):', err)
+    }
   }
 
   return NextResponse.json({ success: true })
+}
+
+function escapeHtml(s: string): string {
+  return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] as string))
 }
