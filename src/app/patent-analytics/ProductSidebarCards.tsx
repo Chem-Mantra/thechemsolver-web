@@ -1,22 +1,29 @@
 import Link from 'next/link'
 import { PRODUCTS, getLatestAcrossProducts, type ProductType } from '@/lib/productResults'
+import { getAllExpirations, slugify as slugifyExpiration } from '@/lib/patentExpirations'
 import AutoScrollList from './AutoScrollList'
 
 type CardItem = { href: string; label: string }
+// Patent Expiry Watch isn't a product_results-backed product (it's daily
+// infographic content, see patentExpirations.ts), so it can't reuse
+// ProductType/PRODUCTS -- a small discriminated union instead of forcing
+// it into that type.
+type CardData =
+  | { kind: 'product'; productType: ProductType; items: CardItem[] }
+  | { kind: 'expirations'; items: CardItem[] }
 
 /** One block card per product, listing real linked items. Self-scrolls
  * only once there are enough real items to make that worthwhile -- a 1-2
  * item list just displays plainly. */
-function ProductCard({ productType, items }: { productType: ProductType; items: CardItem[] }) {
-  const p = PRODUCTS[productType]
+function BlockCard({ title, href, items }: { title: string; href: string; items: CardItem[] }) {
   const scrolls = items.length >= 4
 
   return (
     <div className="pa-glass pa-glass-elevated p-4 mb-4">
       <div className="flex items-center gap-2 mb-3">
         <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: 'var(--tertiary-bright)' }} />
-        <Link href={`/patent-analytics/data/${p.slug}`} className="text-xs font-semibold uppercase tracking-wide hover:underline" style={{ color: 'var(--on-surface)' }}>
-          {p.shortName}
+        <Link href={href} className="text-xs font-semibold uppercase tracking-wide hover:underline" style={{ color: 'var(--on-surface)' }}>
+          {title}
         </Link>
       </div>
       {items.length === 0 ? (
@@ -42,24 +49,28 @@ function ProductCard({ productType, items }: { productType: ProductType; items: 
 }
 
 export default async function ProductSidebarCards({ side }: { side: 'left' | 'right' }) {
-  const live = await getLatestAcrossProducts(8)
+  const [live, expirations] = await Promise.all([getLatestAcrossProducts(8), getAllExpirations()])
 
-  const cardsData: { productType: ProductType; items: CardItem[] }[] = [
+  const cardsData: CardData[] = [
     {
-      productType: 'fto_triage',
+      kind: 'product', productType: 'fto_triage',
       items: live.fto_triage.map((r) => ({ href: `/patent-analytics/data/fto-triage/${r.patent_number}`, label: r.headline })),
     },
     {
-      productType: 'portfolio_landscape',
+      kind: 'product', productType: 'portfolio_landscape',
       items: live.portfolio_landscape.map((r) => ({ href: `/patent-analytics/data/portfolio-landscape/${r.patent_number}`, label: r.headline })),
     },
     {
-      productType: 'markush_coverage',
+      kind: 'product', productType: 'markush_coverage',
       items: live.markush_coverage.map((r) => ({ href: `/patent-analytics/data/markush-coverage/${r.patent_number}`, label: r.headline })),
     },
     {
-      productType: 'section_3d',
+      kind: 'product', productType: 'section_3d',
       items: live.section_3d.map((r) => ({ href: `/patent-analytics/data/section-3d/${r.patent_number}`, label: r.headline })),
+    },
+    {
+      kind: 'expirations',
+      items: expirations.slice(0, 8).map((e) => ({ href: `/patent-analytics/expirations/${slugifyExpiration(e.title)}`, label: e.title })),
     },
   ]
 
@@ -73,9 +84,13 @@ export default async function ProductSidebarCards({ side }: { side: 'left' | 'ri
         <p className="pa-mono text-[10px] uppercase tracking-wide mb-3 px-1" style={{ color: 'var(--on-surface-muted)' }}>
           Free sample data
         </p>
-        {shown.map((c) => (
-          <ProductCard key={c.productType} productType={c.productType} items={c.items} />
-        ))}
+        {shown.map((c) =>
+          c.kind === 'product' ? (
+            <BlockCard key={c.productType} title={PRODUCTS[c.productType].shortName} href={`/patent-analytics/data/${PRODUCTS[c.productType].slug}`} items={c.items} />
+          ) : (
+            <BlockCard key="expirations" title="Patent Expiry Watch" href="/patent-analytics/expirations" items={c.items} />
+          )
+        )}
       </div>
     </aside>
   )

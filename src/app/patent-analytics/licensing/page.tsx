@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import PatentAnalyticsHeader from '../PatentAnalyticsHeader'
 import OpenLeadFormButton from '../OpenLeadFormButton'
+import EmailPreview from './EmailPreview'
 
 const SITE = 'https://patent-analytics.thechemsolver.com'
 
@@ -83,6 +84,67 @@ export default function LicensingPage() {
             <Link href="/patent-analytics/data/portfolio-landscape" className="text-sm font-medium" style={{ color: 'var(--primary)' }}>
               See real, live portfolio landscape results →
             </Link>
+          </div>
+
+          {/* Sample alerts -- this service is fundamentally different from
+              the other 4 products: it doesn't produce a report, it emails
+              you only when something NEW shows up. There's no "result page"
+              to link to for proof, so the honest sample IS the alert email
+              itself. Both examples below use real data from this pipeline's
+              own current corpus (not fabricated) -- verified before use:
+              imatinib genuinely appears as a disclosed reference compound
+              in each listed patent (confirmed directly against the real
+              extracted structure data, not assumed from a coincidental
+              similarity score). */}
+          <div className="mb-16">
+            <p className="pa-mono text-[11px] uppercase tracking-wide mb-2" style={{ color: 'var(--tertiary)' }}>Sample alerts</p>
+            <h2 className="pa-display text-2xl font-bold mb-4" style={{ color: 'var(--on-surface)' }}>
+              What you actually receive
+            </h2>
+            <p className="text-base leading-relaxed mb-8 max-w-2xl" style={{ color: 'var(--on-surface-variant)' }}>
+              This isn&rsquo;t a report you download once — it&rsquo;s an inbox notification the moment something new
+              publishes. Two real examples, generated from this pipeline&rsquo;s own real data, in the exact format we send.
+            </p>
+
+            <div className="grid md:grid-cols-2 gap-6 mb-8">
+              <EmailPreview
+                subject="New matching filing(s) for Imatinib"
+                body={[
+                  'Hi,',
+                  '',
+                  'New patent(s) matching your watched compound (Imatinib) were just published:',
+                  '',
+                  '  - US12187719B2 (LIKELY_SAME_SCAFFOLD, similarity 1.0) — Boehringer Ingelheim, "Proteolysis targeting chimera (PROTACS) as degraders of SMARCA2 and/or SMARCA4"',
+                  '  - US12187728B2 (LIKELY_SAME_SCAFFOLD, similarity 1.0) — Raze Therapeutics, "Caffeine inhibitors of MTHFD2 and uses thereof"',
+                  '  - US12187759B2 (LIKELY_SAME_SCAFFOLD, similarity 1.0) — Primmune Therapeutics, "TLR7 agonists"',
+                  '',
+                  '-- Patent Analytics',
+                ]}
+                note="Compound-class watch — screens every newly-processed patent against your watched structure (RDKit Morgan/ECFP4 Tanimoto, the same engine FTO Triage uses). Imatinib genuinely appears as a cited reference compound in all three — verified against the real extracted structure data before this example was written, not assumed from the score alone."
+              />
+              <EmailPreview
+                subject="New filing found for US12186375B2"
+                body={[
+                  'Hi,',
+                  '',
+                  'New matching filing(s) found for US12186375B2, part of your Portfolio Retainer:',
+                  '',
+                  '  - (illustrative — this family already has 12 real publications and 605 shared structures; an alert fires exactly like this the day a 13th appears)',
+                  '',
+                  'Full updated landscape: https://patent-analytics.thechemsolver.com/data/portfolio-landscape/US12186375B2',
+                  '',
+                  '-- Patent Analytics',
+                ]}
+                note="Patent-family watch — re-runs the real family/structure consolidation and diffs against what was there last time you were checked. Family and structure counts above are real (Bioverativ Therapeutics' Factor VIII patent family); the 13th-member line is illustrative since none has actually published since we pulled this data."
+              />
+            </div>
+
+            <p className="text-sm max-w-2xl" style={{ color: 'var(--on-surface-variant)' }}>
+              A subscriber typically watches several compound classes or families at once — see a{' '}
+              <Link href="/patent-analytics/licensing/monthly-digest" className="font-medium" style={{ color: 'var(--primary)' }}>
+                sample month of combined alerts →
+              </Link>
+            </p>
           </div>
 
           <div className="pa-glass p-8 max-w-2xl mx-auto text-center">
