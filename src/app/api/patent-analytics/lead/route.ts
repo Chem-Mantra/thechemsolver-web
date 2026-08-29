@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
+import { supabaseAdmin } from '@/lib/supabase-admin'
 
 // The one sample report we currently have ready to hand out instantly.
 // When more real reports exist, this can become a lookup keyed by
@@ -19,6 +20,17 @@ export async function POST(req: NextRequest) {
 
   if (!name || !email || !company) {
     return NextResponse.json({ error: 'Name, email, and company are required.' }, { status: 400 })
+  }
+
+  // Persist the lead first -- previously this route only sent a
+  // notification email, so a submission that arrived while no one was
+  // watching that inbox was gone for good. Now it's recoverable from the
+  // admin dashboard regardless of whether the email below succeeds.
+  const { error: dbError } = await supabaseAdmin
+    .from('leads')
+    .insert({ name, email, company, patent_number: patentNumber || null })
+  if (dbError) {
+    return NextResponse.json({ error: 'Could not save your request — please try again.', detail: dbError.message }, { status: 500 })
   }
 
   // Best-effort notification email -- never blocks or fails the actual
