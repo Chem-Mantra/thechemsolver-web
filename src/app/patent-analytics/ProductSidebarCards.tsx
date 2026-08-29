@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { PRODUCTS, getLatestAcrossProducts, type ProductType } from '@/lib/productResults'
-import { MARKUSH_SAMPLE, SECTION_3D_SAMPLE } from './data/sampleContent'
 import AutoScrollList from './AutoScrollList'
 
 type CardItem = { href: string; label: string }
@@ -56,11 +55,11 @@ export default async function ProductSidebarCards({ side }: { side: 'left' | 'ri
     },
     {
       productType: 'markush_coverage',
-      items: [{ href: '/patent-analytics/data/markush-coverage', label: MARKUSH_SAMPLE.caseTitle }],
+      items: live.markush_coverage.map((r) => ({ href: `/patent-analytics/data/markush-coverage/${r.patent_number}`, label: r.headline })),
     },
     {
       productType: 'section_3d',
-      items: [{ href: '/patent-analytics/data/section-3d', label: SECTION_3D_SAMPLE.caseTitle }],
+      items: live.section_3d.map((r) => ({ href: `/patent-analytics/data/section-3d/${r.patent_number}`, label: r.headline })),
     },
   ]
 

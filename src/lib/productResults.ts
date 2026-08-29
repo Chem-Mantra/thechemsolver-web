@@ -26,14 +26,14 @@ export const PRODUCTS: Record<ProductType, {
     name: 'Genus/Species (Markush) Claim Coverage Analysis',
     shortName: 'Markush Coverage',
     tagline: 'Does a specific compound fall inside a patent’s broad genus claim?',
-    hasLiveData: false,
+    hasLiveData: true,
   },
   section_3d: {
     slug: 'section-3d',
     name: 'Section 3(d) Compliance Screening',
     shortName: 'Section 3(d) Screening',
     tagline: 'India-specific "known substance" derivative classification.',
-    hasLiveData: false,
+    hasLiveData: true,
   },
   fto_triage: {
     slug: 'fto-triage',
