@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import PatentAnalyticsHeader from '../PatentAnalyticsHeader'
 import OpenLeadFormButton from '../OpenLeadFormButton'
 import OpenCheckPatentButton from '../OpenCheckPatentButton'
+import OpenRetainerModalButton from '../OpenRetainerModalButton'
 
 const SITE = 'https://patent-analytics.thechemsolver.com'
 
@@ -54,8 +55,8 @@ const TIERS = [
       'Direct line to review findings together',
       'Cancel anytime',
     ],
-    cta: 'Talk to us →',
-    ctaType: 'lead' as const,
+    cta: 'Subscribe — $999/mo →',
+    ctaType: 'retainer' as const,
     flagship: false,
   },
 ]
@@ -110,6 +111,10 @@ export default function PricingPage() {
                   <OpenCheckPatentButton className={t.flagship ? 'pa-btn-primary text-sm font-medium px-5 py-3 w-full' : 'pa-chip text-sm font-medium px-5 py-3 w-full justify-center'}>
                     {t.cta}
                   </OpenCheckPatentButton>
+                ) : t.ctaType === 'retainer' ? (
+                  <OpenRetainerModalButton className={t.flagship ? 'pa-btn-primary text-sm font-medium px-5 py-3 w-full' : 'pa-chip text-sm font-medium px-5 py-3 w-full justify-center'}>
+                    {t.cta}
+                  </OpenRetainerModalButton>
                 ) : (
                   <OpenLeadFormButton className={t.flagship ? 'pa-btn-primary text-sm font-medium px-5 py-3 w-full' : 'pa-chip text-sm font-medium px-5 py-3 w-full justify-center'}>
                     {t.cta}

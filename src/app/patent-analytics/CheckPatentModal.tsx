@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Script from 'next/script'
+import type { PayPalButtonsInstance } from './paypalTypes'
+import './paypalTypes' // side-effect import: brings the shared `declare global { Window.paypal }` into scope
 
 export const OPEN_CHECK_PATENT_EVENT = 'patent-analytics:open-check-patent'
 
@@ -15,17 +17,6 @@ type Status = 'closed' | 'open' | 'capturing' | 'found' | 'pending' | 'error'
 // do the actual PayPal Orders API calls and payment verification
 // server-side (see those routes for why: never trust "I paid" from the client).
 const PAYPAL_CLIENT_ID = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID
-
-type PayPalOrderActions = { order: { capture: () => Promise<unknown> } }
-type PayPalButtonsInstance = { render: (selector: string) => void; close: () => void }
-type PayPalGlobal = {
-  Buttons: (config: {
-    style?: Record<string, unknown>
-    createOrder: () => Promise<string>
-    onApprove: (data: { orderID: string }) => Promise<void>
-    onError?: (err: unknown) => void
-  }) => PayPalButtonsInstance
-}
 
 // Razorpay Checkout -- UPI/cards/netbanking for Indian customers, alongside
 // PayPal above. Same server-verified pattern: razorpay-create-order embeds
@@ -55,7 +46,6 @@ type RazorpayGlobal = new (options: {
 
 declare global {
   interface Window {
-    paypal?: PayPalGlobal
     Razorpay?: RazorpayGlobal
   }
 }

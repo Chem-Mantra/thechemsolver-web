@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
+import { supabaseAdmin } from '@/lib/supabase-admin'
 
 // PayPal webhook — the sole source of truth for upgrading a student from
 // free trial → paid full access (1 year), since checkout runs through a
@@ -37,6 +38,43 @@ export async function POST(req: NextRequest) {
     const granted = await grantAdFreeAccess(payerEmail, capture.id)
     if (!granted) {
       console.error(`[paypal webhook] no Supabase account found for payer email=${payerEmail} capture=${capture.id}`)
+    }
+  }
+
+  // Portfolio Retainer subscription lifecycle -- this is the gate that
+  // stops a cancelled/lapsed customer from continuing to be monitored (and
+  // stops us billing someone whose card started failing) after the fact.
+  // ACTIVATED is handled defensively here too even though
+  // verify-subscription/route.ts already activates on the client's own
+  // approval round-trip -- if that request never completes (tab closed,
+  // network drop) after PayPal already confirms ACTIVE, this webhook is
+  // the backstop that still flips status correctly.
+  if (
+    event.event_type === 'BILLING.SUBSCRIPTION.ACTIVATED' ||
+    event.event_type === 'BILLING.SUBSCRIPTION.CANCELLED' ||
+    event.event_type === 'BILLING.SUBSCRIPTION.SUSPENDED' ||
+    event.event_type === 'BILLING.SUBSCRIPTION.EXPIRED'
+  ) {
+    const subscriptionId: string | undefined = event.resource?.id
+    if (!subscriptionId) {
+      console.error('[paypal webhook] subscription event with no subscription id', event.event_type, event.id)
+      return NextResponse.json({ received: true })
+    }
+
+    const newStatus =
+      event.event_type === 'BILLING.SUBSCRIPTION.ACTIVATED'
+        ? 'active'
+        : event.event_type === 'BILLING.SUBSCRIPTION.SUSPENDED'
+          ? 'suspended'
+          : 'cancelled' // CANCELLED or EXPIRED
+
+    const { error } = await supabaseAdmin
+      .from('retainer_customers')
+      .update({ status: newStatus })
+      .eq('paypal_subscription_id', subscriptionId)
+
+    if (error) {
+      console.error('[paypal webhook] failed to update retainer_customers status', subscriptionId, newStatus, error)
     }
   }
 

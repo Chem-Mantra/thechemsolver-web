@@ -4,6 +4,7 @@ import { GeistSans } from 'geist/font/sans'
 import './patent-analytics.css'
 import LeadCaptureModal from './LeadCaptureModal'
 import CheckPatentModal from './CheckPatentModal'
+import RetainerModal from './RetainerModal'
 
 // Self-hosted via next/font (no external CDN calls at runtime) — matches
 // the "Synthetix Light Spatial" design system: Geist for headlines, Inter
@@ -63,6 +64,7 @@ export default function PatentAnalyticsLayout({ children }: { children: React.Re
     >
       <LeadCaptureModal />
       <CheckPatentModal />
+      <RetainerModal />
       {children}
     </div>
   )
