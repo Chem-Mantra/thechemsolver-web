@@ -23,7 +23,7 @@ export default function RetainerModal() {
   const [status, setStatus] = useState<Status>('closed')
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [sdkReady, setSdkReady] = useState(false)
-  const [form, setForm] = useState({ company: '', email: '', name: '', patents: '' })
+  const [form, setForm] = useState({ company: '', email: '', name: '', patents: '', compounds: '' })
 
   const formRef = useRef(form)
   formRef.current = form
@@ -43,17 +43,18 @@ export default function RetainerModal() {
     const instance = window.paypal.Buttons({
       style: { layout: 'vertical', color: 'blue', label: 'subscribe', height: 45 },
       createSubscription: async (_data, actions) => {
-        const { company, email, name, patents } = formRef.current
+        const { company, email, name, patents, compounds } = formRef.current
         const seedPatents = patents.split(/[,\n]/).map((p) => p.trim()).filter(Boolean)
-        if (!company.trim() || !email.trim() || seedPatents.length === 0) {
-          setErrorMsg('Company, email, and at least one patent number are required.')
+        const compoundList = compounds.split(/[,\n]/).map((c) => c.trim()).filter(Boolean)
+        if (!company.trim() || !email.trim() || (seedPatents.length === 0 && compoundList.length === 0)) {
+          setErrorMsg('Company, email, and at least one patent number or compound are required.')
           throw new Error('Missing required fields')
         }
         setErrorMsg(null)
         const res = await fetch('/api/patent-analytics/retainer/create-subscription', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ company, email, name, seedPatents }),
+          body: JSON.stringify({ company, email, name, seedPatents, compounds: compoundList }),
         })
         const data = await res.json()
         if (!res.ok || !data.pendingCustomerId) throw new Error(data?.error || 'Could not start signup.')
@@ -97,7 +98,7 @@ export default function RetainerModal() {
   function close() {
     setStatus('closed')
     setErrorMsg(null)
-    setForm({ company: '', email: '', name: '', patents: '' })
+    setForm({ company: '', email: '', name: '', patents: '', compounds: '' })
   }
 
   return (
@@ -141,8 +142,9 @@ export default function RetainerModal() {
             <div>
               <h2 className="pa-display text-2xl font-bold mb-2">Portfolio Retainer — $999/mo</h2>
               <p className="text-base leading-relaxed mb-6" style={{ color: 'var(--on-surface-variant)' }}>
-                Tell us which patent(s) to monitor. We&rsquo;ll re-check their families on an ongoing basis and
-                email you the moment a new matching filing publishes.
+                Tell us which patent(s) and/or compound(s) to monitor. We&rsquo;ll re-check patent families and screen
+                newly-published patents against your compounds on an ongoing basis, and email you the moment
+                something new matches.
               </p>
               <div className="flex flex-col gap-3 mb-5">
                 <input
@@ -173,12 +175,20 @@ export default function RetainerModal() {
                   style={{ background: 'var(--input-bg)', border: '1px solid var(--border-light)' }}
                 />
                 <textarea
-                  required
                   placeholder="Patent number(s) to monitor — one per line (e.g. US7314938B2)"
                   value={form.patents}
                   onChange={(e) => setForm({ ...form, patents: e.target.value })}
                   disabled={status === 'activating'}
-                  rows={3}
+                  rows={2}
+                  className="text-base px-4 py-3 rounded-lg outline-none disabled:opacity-60 resize-none"
+                  style={{ background: 'var(--input-bg)', border: '1px solid var(--border-light)' }}
+                />
+                <textarea
+                  placeholder="Compound(s) to monitor for new matching patents — one per line, name or SMILES (optional)"
+                  value={form.compounds}
+                  onChange={(e) => setForm({ ...form, compounds: e.target.value })}
+                  disabled={status === 'activating'}
+                  rows={2}
                   className="text-base px-4 py-3 rounded-lg outline-none disabled:opacity-60 resize-none"
                   style={{ background: 'var(--input-bg)', border: '1px solid var(--border-light)' }}
                 />

@@ -164,6 +164,25 @@ export function buildPortfolioLandscapeResult(landscape: FamilyLandscape): Portf
     `patent family, ${nStructures} unique structures consolidated across all successfully-fetched ` +
     `family members, ${multiMemberInchikeys.size} of which appear in 2 or more family members.`
 
+  // One entry per unique compound (deduped by Google's own InChIKey),
+  // carrying a representative SMILES + which member patents it appeared
+  // in. Same shape 02_run_daily_batch.py's build_portfolio_landscape_row
+  // already produces (structures[].smiles/inchikeys/member_patents) --
+  // needed so 06_check_retainer_watches.py's compound-class matching can
+  // read structures uniformly whether a result came from the daily batch
+  // or a live on-demand fetch, not just the family-summary counts above.
+  const structureByInchikey = new Map<string, { smiles: string; inchikeys: Set<string>; memberPatents: Set<string> }>()
+  for (const m of members) {
+    for (const c of m.compounds) {
+      const existing = structureByInchikey.get(c.inchikey)
+      if (existing) {
+        existing.memberPatents.add(m.publicationNumber)
+      } else {
+        structureByInchikey.set(c.inchikey, { smiles: c.smiles, inchikeys: new Set([c.inchikey]), memberPatents: new Set([m.publicationNumber]) })
+      }
+    }
+  }
+
   return {
     patent_number: seed,
     headline,
@@ -176,6 +195,11 @@ export function buildPortfolioLandscapeResult(landscape: FamilyLandscape): Portf
       n_multi_member_structures: multiMemberInchikeys.size,
       fetch_failures: members.filter((m) => m.status === 'FETCH_FAILED').map((m) => m.publicationNumber),
       generated_live: true,
+      structures: [...structureByInchikey.values()].map((s) => ({
+        smiles: s.smiles,
+        inchikeys: [...s.inchikeys],
+        member_patents: [...s.memberPatents],
+      })),
     },
     confidence_tier: 'auto_verified',
   }
