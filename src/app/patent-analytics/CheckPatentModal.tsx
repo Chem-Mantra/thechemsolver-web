@@ -26,9 +26,37 @@ type PayPalGlobal = {
     onError?: (err: unknown) => void
   }) => PayPalButtonsInstance
 }
+
+// Razorpay Checkout -- UPI/cards/netbanking for Indian customers, alongside
+// PayPal above. Same server-verified pattern: razorpay-create-order embeds
+// patentNumber/email in the order's own `notes` (read back server-side at
+// verify time, not re-trusted from the client), razorpay-verify checks the
+// HMAC signature Razorpay's own handler returns before revealing anything.
+const RAZORPAY_KEY_ID = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID
+
+type RazorpaySuccessResponse = {
+  razorpay_order_id: string
+  razorpay_payment_id: string
+  razorpay_signature: string
+}
+type RazorpayInstance = { open: () => void }
+type RazorpayGlobal = new (options: {
+  key: string
+  amount: number
+  currency: string
+  order_id: string
+  name: string
+  description: string
+  prefill?: { email?: string; name?: string }
+  theme?: { color?: string }
+  handler: (response: RazorpaySuccessResponse) => void
+  modal?: { ondismiss?: () => void }
+}) => RazorpayInstance
+
 declare global {
   interface Window {
     paypal?: PayPalGlobal
+    Razorpay?: RazorpayGlobal
   }
 }
 
@@ -38,6 +66,8 @@ export default function CheckPatentModal() {
   const [message, setMessage] = useState<string | null>(null)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [sdkReady, setSdkReady] = useState(false)
+  const [razorpaySdkReady, setRazorpaySdkReady] = useState(false)
+  const [razorpayBusy, setRazorpayBusy] = useState(false)
   const [form, setForm] = useState({ patentNumber: '', email: '', name: '' })
 
   // PayPal's Buttons callbacks are set up once (on render) and must always
@@ -119,6 +149,67 @@ export default function CheckPatentModal() {
     }
   }, [sdkReady, status])
 
+  async function handleRazorpayClick() {
+    const { patentNumber, email, name } = formRef.current
+    if (!patentNumber.trim() || !email.trim()) {
+      setErrorMsg('Enter a patent number and email before paying.')
+      return
+    }
+    if (!window.Razorpay) {
+      setErrorMsg('Payment is still loading — try again in a moment.')
+      return
+    }
+    setErrorMsg(null)
+    setRazorpayBusy(true)
+    try {
+      const orderRes = await fetch('/api/patent-analytics/check-payment/razorpay-create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ patentNumber, email }),
+      })
+      const order = await orderRes.json()
+      if (!orderRes.ok || !order.orderId) throw new Error(order?.error || 'Could not start payment.')
+
+      const rzp = new window.Razorpay({
+        key: order.keyId,
+        amount: order.amount,
+        currency: order.currency,
+        order_id: order.orderId,
+        name: 'Patent Analytics',
+        description: `Instant Compound Check: ${patentNumber}`,
+        prefill: { email, name: name || undefined },
+        theme: { color: '#0284c7' },
+        handler: async (response) => {
+          setStatus('capturing')
+          try {
+            const res = await fetch('/api/patent-analytics/check-payment/razorpay-verify', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ ...response, name }),
+            })
+            const result = await res.json()
+            if (!res.ok) throw new Error(result?.error || 'Payment succeeded but something went wrong.')
+            if (result.found) {
+              setResultUrl(result.url)
+              setStatus('found')
+            } else {
+              setMessage(result.message)
+              setStatus('pending')
+            }
+          } catch (err) {
+            setErrorMsg(err instanceof Error ? err.message : 'Something went wrong — please contact support, your payment may have gone through.')
+            setStatus('error')
+          }
+        },
+        modal: { ondismiss: () => setRazorpayBusy(false) },
+      })
+      rzp.open()
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : 'Could not start payment.')
+      setRazorpayBusy(false)
+    }
+  }
+
   if (status === 'closed') return null
 
   function close() {
@@ -136,6 +227,13 @@ export default function CheckPatentModal() {
           src={`https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&currency=USD&intent=capture`}
           strategy="lazyOnload"
           onLoad={() => setSdkReady(true)}
+        />
+      )}
+      {RAZORPAY_KEY_ID && (
+        <Script
+          src="https://checkout.razorpay.com/v1/checkout.js"
+          strategy="lazyOnload"
+          onLoad={() => setRazorpaySdkReady(true)}
         />
       )}
       <div
@@ -219,10 +317,31 @@ export default function CheckPatentModal() {
               )}
               {status === 'capturing' ? (
                 <p className="text-sm text-center py-3" style={{ color: 'var(--on-surface-muted)' }}>Confirming payment…</p>
-              ) : !PAYPAL_CLIENT_ID ? (
-                <p className="text-sm" style={{ color: '#ba1a1a' }}>Payments aren&rsquo;t configured yet.</p>
               ) : (
-                <div id="pa-check-paypal-buttons" ref={buttonsContainerRef} />
+                <div className="flex flex-col gap-3">
+                  {PAYPAL_CLIENT_ID && <div id="pa-check-paypal-buttons" ref={buttonsContainerRef} />}
+                  {PAYPAL_CLIENT_ID && RAZORPAY_KEY_ID && (
+                    <div className="flex items-center gap-3 text-xs" style={{ color: 'var(--on-surface-muted)' }}>
+                      <div className="flex-1 h-px" style={{ background: 'var(--border-light)' }} />
+                      or
+                      <div className="flex-1 h-px" style={{ background: 'var(--border-light)' }} />
+                    </div>
+                  )}
+                  {RAZORPAY_KEY_ID && (
+                    <button
+                      type="button"
+                      onClick={handleRazorpayClick}
+                      disabled={razorpayBusy || !razorpaySdkReady}
+                      className="text-base font-semibold px-6 py-3.5 rounded-lg disabled:opacity-60"
+                      style={{ background: '#0284c7', color: 'white' }}
+                    >
+                      {razorpayBusy ? 'Opening payment…' : 'Pay with UPI / Cards (India) →'}
+                    </button>
+                  )}
+                  {!PAYPAL_CLIENT_ID && !RAZORPAY_KEY_ID && (
+                    <p className="text-sm" style={{ color: '#ba1a1a' }}>Payments aren&rsquo;t configured yet.</p>
+                  )}
+                </div>
               )}
             </div>
           )}
