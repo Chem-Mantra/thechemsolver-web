@@ -21,7 +21,12 @@ export default function PatentAnalyticsHeader() {
               <path d="M8 7.5L10.5 14.5M16 7.5L13.5 14.5M8.5 6H15.5" stroke="white" strokeWidth="1.2" />
             </svg>
           </div>
-          <span className="pa-display text-[28px] md:text-[64px] font-bold leading-none">patent-analytics.thechemsolver.com</span>
+          <div className="flex flex-col">
+            <span className="pa-display text-[28px] md:text-[64px] font-bold leading-none">patent-analytics.thechemsolver.com</span>
+            <span className="pa-mono text-[10px] md:text-xs uppercase tracking-wide mt-1" style={{ color: 'var(--on-surface-muted)' }}>
+              The atoms are public, the answer isn&rsquo;t.
+            </span>
+          </div>
         </Link>
         <nav className="hidden md:flex items-center gap-1">
           <a href="/patent-analytics#services" className="text-base px-3 py-2 rounded-lg hover:bg-black/[0.03] transition-colors" style={{ color: 'var(--on-surface-variant)' }}>Services</a>
