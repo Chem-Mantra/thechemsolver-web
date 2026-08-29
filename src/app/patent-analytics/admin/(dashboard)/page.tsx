@@ -1,4 +1,4 @@
-import { getLiveVolumeStats, getPilotAccuracyStats } from '@/lib/productResults'
+import { getLiveVolumeStats } from '@/lib/productResults'
 import {
   getAdminSummaryCounts,
   getRecentCheckPayments,
@@ -37,9 +37,8 @@ const th = 'text-left text-xs uppercase tracking-wide px-4 py-2 whitespace-nowra
 const td = 'text-sm px-4 py-2 whitespace-nowrap'
 
 export default async function AdminDashboardPage() {
-  const [liveStats, pilotStats, counts, leads, checkRequests, checkPayments, retainers] = await Promise.all([
+  const [liveStats, counts, leads, checkRequests, checkPayments, retainers] = await Promise.all([
     getLiveVolumeStats(),
-    getPilotAccuracyStats(),
     getAdminSummaryCounts(),
     getRecentLeads(),
     getRecentCheckRequests(),
@@ -55,11 +54,9 @@ export default async function AdminDashboardPage() {
           <LogoutButton />
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        <div className="grid grid-cols-2 gap-4 mb-4 max-w-md">
           <Card value={liveStats.uniquePatents} label="real 2025 patents analyzed" />
           <Card value={liveStats.totalResults} label="results published" />
-          <Card value={`${pilotStats.autoVerifiedRatePercent}%`} label="pilot auto-verified rate" />
-          <Card value={`${pilotStats.falsePositiveRatePercent}%`} label="pilot false positive rate" />
         </div>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-10">
           <Card value={counts.totalLeads} label="total leads" />

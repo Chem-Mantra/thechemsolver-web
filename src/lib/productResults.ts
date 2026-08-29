@@ -108,10 +108,7 @@ export type LiveVolumeStats = {
 
 // Grows automatically as 04_upload_to_website.py uploads more rows -- no
 // redeploy needed, since the page that calls this sets `revalidate` instead
-// of being fully static. Distinct from getPilotAccuracyStats below, which is
-// a human-verified accuracy benchmark (ground-truth checked) -- that claim
-// doesn't grow with volume and shouldn't be conflated with "how many
-// patents has the daily pipeline processed".
+// of being fully static.
 export async function getLiveVolumeStats(): Promise<LiveVolumeStats> {
   const { count, error: countError } = await supabase
     .from('product_results')
@@ -125,47 +122,4 @@ export async function getLiveVolumeStats(): Promise<LiveVolumeStats> {
   const uniquePatents = error || !data ? 0 : new Set(data.map((r) => r.patent_number)).size
 
   return { totalResults: count ?? 0, uniquePatents }
-}
-
-export type PilotAccuracyStats = {
-  structuresTested: number
-  realPatents: number
-  falsePositiveRatePercent: number
-  autoVerifiedRatePercent: number
-  lastUpdated: string
-}
-
-// Last-published values as a fallback if the fetch fails -- unlike
-// getLiveVolumeStats (where 0 just reads as "just started"), this block is
-// the site's core credibility claim, so a fetch error should hold the last
-// real number instead of flashing 0%. Update this constant whenever
-// update_website_stats.py reports a change, same as the row it writes.
-const PILOT_ACCURACY_FALLBACK: PilotAccuracyStats = {
-  structuresTested: 100,
-  realPatents: 41,
-  falsePositiveRatePercent: 0,
-  autoVerifiedRatePercent: 54,
-  lastUpdated: '2026-08-26',
-}
-
-// Single-row table, updated by hand whenever update_website_stats.py's
-// ground-truth accuracy validation batch grows -- NOT mechanically derived
-// from product_results volume the way getLiveVolumeStats is. See that
-// script's docstring: false positive / auto-verified rates require a human
-// ground-truth check per structure, so this can't auto-grow with the daily
-// pipeline the way raw counts can. "Live" here means "no redeploy needed
-// after Prashant reruns the validation batch," not "grows on its own."
-export async function getPilotAccuracyStats(): Promise<PilotAccuracyStats> {
-  const { data, error } = await supabase.from('pilot_accuracy_stats').select('*').eq('id', 1).maybeSingle()
-  if (error || !data) {
-    console.warn('pilot_accuracy_stats fetch failed, using last-published fallback:', error?.message)
-    return PILOT_ACCURACY_FALLBACK
-  }
-  return {
-    structuresTested: data.structures_tested,
-    realPatents: data.real_patents,
-    falsePositiveRatePercent: data.false_positive_rate_percent,
-    autoVerifiedRatePercent: data.auto_verified_rate_percent,
-    lastUpdated: data.last_updated,
-  }
 }

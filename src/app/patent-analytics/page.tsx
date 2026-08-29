@@ -3,7 +3,7 @@ import StructureSlideshow from './StructureSlideshow'
 import OpenLeadFormButton from './OpenLeadFormButton'
 import { PatentNewsFeedSection } from './PatentNewsFeed'
 import PatentAnalyticsHeader from './PatentAnalyticsHeader'
-import { getLiveVolumeStats, getPilotAccuracyStats } from '@/lib/productResults'
+import { getLiveVolumeStats } from '@/lib/productResults'
 
 // Re-renders in the background at most once an hour so the live volume stat
 // below actually grows as 04_upload_to_website.py uploads more rows -- this
@@ -49,13 +49,7 @@ const services = [
 ]
 
 export default async function PatentAnalyticsPage() {
-  const [liveStats, pilotStats] = await Promise.all([getLiveVolumeStats(), getPilotAccuracyStats()])
-  const stats = [
-    { v: String(pilotStats.structuresTested), l: 'structures tested' },
-    { v: String(pilotStats.realPatents), l: 'real patents' },
-    { v: `${pilotStats.falsePositiveRatePercent}%`, l: 'false positives on auto-verified' },
-    { v: `${pilotStats.autoVerifiedRatePercent}%`, l: 'auto-verified, zero errors measured' },
-  ]
+  const liveStats = await getLiveVolumeStats()
   return (
     <div className="min-h-screen w-full">
       <PatentAnalyticsHeader />
@@ -107,20 +101,7 @@ export default async function PatentAnalyticsPage() {
       {/* Stats bento row */}
       <section id="proof" className="w-full px-6 md:px-12 pb-16">
         <div className="max-w-[1400px] mx-auto">
-          <div className="pa-mono text-sm uppercase mb-4" style={{ color: 'var(--on-surface-muted)' }}>Measured, not marketed</div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {stats.map((s) => (
-              <div key={s.l} className="pa-glass p-5">
-                <div className="pa-display text-4xl font-bold mb-1" style={{ color: 'var(--primary)' }}>{s.v}</div>
-                <div className="text-base leading-snug" style={{ color: 'var(--on-surface-variant)' }}>{s.l}</div>
-              </div>
-            ))}
-          </div>
-          <p className="text-xs mt-3" style={{ color: 'var(--on-surface-muted)' }}>
-            Pilot accuracy validation ({pilotStats.realPatents}-patent benchmark, checked against ground truth) — as of {pilotStats.lastUpdated}.
-          </p>
-
-          <div className="pa-mono text-sm uppercase mt-10 mb-4" style={{ color: 'var(--on-surface-muted)' }}>Growing daily</div>
+          <div className="pa-mono text-sm uppercase mb-4" style={{ color: 'var(--on-surface-muted)' }}>Growing daily</div>
           <div className="grid grid-cols-2 gap-4 max-w-xl">
             <div className="pa-glass p-5">
               <div className="pa-display text-4xl font-bold mb-1" style={{ color: 'var(--tertiary)' }}>{liveStats.uniquePatents}</div>
