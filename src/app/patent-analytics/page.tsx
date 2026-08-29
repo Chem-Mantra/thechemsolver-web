@@ -14,7 +14,7 @@ export const revalidate = 3600
 const services = [
   {
     name: 'Section 3(d) Compliance Screening',
-    desc: 'India’s sharpest tool against evergreening: classifies whether a claimed compound is a salt, ester, isomer, or other "known substance" derivative, and flags whether real efficacy data is present — the exact test that struck down Novartis’s Glivec patent. Built to find the secondary patents worth challenging.',
+    desc: 'India’s sharpest tool against evergreening: classifies whether a claimed compound is a salt, ester, isomer, or other "known substance" derivative of something already known — the structural half of the exact test that struck down Novartis’s Glivec patent. Whether therapeutic efficacy was actually enhanced is a separate clinical/legal question we flag for your review, not guess at.',
     flagship: true,
     slug: 'section-3d',
   },
