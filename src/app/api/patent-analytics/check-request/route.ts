@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { supabaseAdmin } from '@/lib/supabase-admin'
+import { checkPatentRelevance, NOT_CHEMISTRY_MESSAGE } from '@/lib/patentRelevanceGate'
 
 // Instant Compound Check ($10 tier): looks up whether we've already
 // screened a given patent. If yes, points straight at the result. If not,
@@ -16,6 +17,14 @@ export async function POST(req: NextRequest) {
 
   if (!patentNumber || !email) {
     return NextResponse.json({ error: 'Patent number and email are required.' }, { status: 400 })
+  }
+
+  // Reject before queuing a manual-review request (this is free, but the
+  // founder's manual-review time behind it isn't) if this is confirmed to
+  // not be a chemistry/pharma patent. Fails open if we can't verify.
+  const relevance = await checkPatentRelevance(patentNumber)
+  if (relevance.reason === 'not_chemistry') {
+    return NextResponse.json({ error: NOT_CHEMISTRY_MESSAGE }, { status: 400 })
   }
 
   // Check both live-data products for an existing auto-verified result.

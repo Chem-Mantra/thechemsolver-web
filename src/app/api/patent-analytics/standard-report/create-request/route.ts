@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase-admin'
+import { checkPatentRelevance, NOT_CHEMISTRY_MESSAGE } from '@/lib/patentRelevanceGate'
 
 // Standard Report ($199) -- step 1 of 3. Section 3(d) and Markush Coverage
 // have no automated pairing/genus-parsing (see SECTION3D_AUTOPAIR_RESULTS.md
@@ -27,6 +28,18 @@ export async function POST(req: NextRequest) {
   }
   if (!details || !email || !company) {
     return NextResponse.json({ error: 'Company, email, and details of what you need are required.' }, { status: 400 })
+  }
+
+  // Only checkable when a specific patent number was given -- this tier's
+  // intake is free-text-first (patentNumber is optional), and a human
+  // reviews every request anyway, but reject up front on the same confirmed
+  // basis as the automated tiers rather than let a $199 order get created
+  // for a patent this business's tools don't apply to at all.
+  if (patentNumber) {
+    const relevance = await checkPatentRelevance(patentNumber)
+    if (relevance.reason === 'not_chemistry') {
+      return NextResponse.json({ error: NOT_CHEMISTRY_MESSAGE }, { status: 400 })
+    }
   }
 
   const { data: row, error } = await supabaseAdmin

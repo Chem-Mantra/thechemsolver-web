@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { checkPatentRelevance, NOT_CHEMISTRY_MESSAGE } from '@/lib/patentRelevanceGate'
 
 // Instant Compound Check ($10, charged as its INR equivalent) via Razorpay --
 // the UPI/cards/netbanking path for Indian customers, alongside the
@@ -32,6 +33,11 @@ export async function POST(req: NextRequest) {
   const email = typeof body?.email === 'string' ? body.email.trim() : ''
   if (!patentNumber || !email) {
     return NextResponse.json({ error: 'Patent number and email are required.' }, { status: 400 })
+  }
+
+  const relevance = await checkPatentRelevance(patentNumber)
+  if (relevance.reason === 'not_chemistry') {
+    return NextResponse.json({ error: NOT_CHEMISTRY_MESSAGE }, { status: 400 })
   }
 
   const res = await fetch(`${RAZORPAY_API_BASE}/orders`, {

@@ -40,7 +40,7 @@ export type FamilyLandscape = {
   multiMemberInchikeys: Set<string>
 }
 
-async function fetchPatentHtml(publicationNumber: string): Promise<string | null> {
+export async function fetchPatentHtml(publicationNumber: string): Promise<string | null> {
   const url = `https://patents.google.com/patent/${publicationNumber}/en`
   let resp: Response
   try {

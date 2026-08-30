@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { checkPatentRelevance, NOT_CHEMISTRY_MESSAGE } from '@/lib/patentRelevanceGate'
 
 // Instant Compound Check ($10) -- step 1 of 2. Creates a PayPal order via
 // the Orders API v2 (NOT the dashboard-configured Hosted Button used
@@ -41,6 +42,14 @@ export async function POST(req: NextRequest) {
   const email = typeof body?.email === 'string' ? body.email.trim() : ''
   if (!patentNumber || !email) {
     return NextResponse.json({ error: 'Patent number and email are required.' }, { status: 400 })
+  }
+
+  // Reject before any money changes hands if this is confirmed to not be a
+  // chemistry/pharma patent at all. Fails open (lets it through) if we
+  // simply can't verify -- see patentRelevanceGate.ts for why.
+  const relevance = await checkPatentRelevance(patentNumber)
+  if (relevance.reason === 'not_chemistry') {
+    return NextResponse.json({ error: NOT_CHEMISTRY_MESSAGE }, { status: 400 })
   }
 
   // custom_id has a hard 127-char limit on PayPal's side -- reject upfront
