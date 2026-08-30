@@ -19,6 +19,13 @@ export type LiveExtractionResultJson = {
   timing: Record<string, unknown>
 }
 
+export type CompoundMatchResult = {
+  matched: boolean
+  query_canonical_smiles: string | null
+  matched_pages: number[]
+  error?: string
+}
+
 export type LiveExtractionRequest = {
   id: string
   patent_number: string
@@ -29,6 +36,12 @@ export type LiveExtractionRequest = {
   error_message: string | null
   created_at: string
   completed_at: string | null
+  // Compound-vs-one-patent variant only -- null for the regular "list every
+  // structure in this patent" flow. See live_extraction_schema_compound_match_addendum.sql
+  // -- these columns must exist in the DB before this file's .select() below
+  // is updated to request them (same rule that bit the `unlocked` rollout).
+  query_compound_input: string | null
+  match_result: CompoundMatchResult | null
 }
 
 // Server-side only (admin/service-role client, never exposed to the
@@ -41,7 +54,7 @@ export type LiveExtractionRequest = {
 export async function getLiveExtractionRequest(id: string): Promise<LiveExtractionRequest | null> {
   const { data, error } = await supabaseAdmin
     .from('live_extraction_requests')
-    .select('id, patent_number, status, outcome, unlocked, result_json, error_message, created_at, completed_at')
+    .select('id, patent_number, status, outcome, unlocked, result_json, error_message, created_at, completed_at, query_compound_input, match_result')
     .eq('id', id)
     .maybeSingle()
   if (error || !data) return null

@@ -70,15 +70,26 @@ type RequestWithResult = NonNullable<Awaited<ReturnType<typeof getLiveExtraction
 
 function Confirmed({ request }: { request: RequestWithResult }) {
   const r = request.result_json!
-  const confirmedStructures = r.structures.filter((s) => s.tier === 'confirmed')
+  const isCompoundMatch = Boolean(request.query_compound_input)
+  const confirmedStructures = isCompoundMatch
+    ? r.structures.filter((s) => request.match_result?.matched_pages.includes(s.page))
+    : r.structures.filter((s) => s.tier === 'confirmed')
+
   return (
     <div className="pa-glass p-8 mt-4">
       <h1 className="pa-display text-2xl font-bold mb-3" style={{ color: 'var(--on-surface)' }}>
-        Success — {r.n_confirmed} of {r.n_structures_found} structures confirmed
+        {isCompoundMatch
+          ? <>Match found — &ldquo;{request.query_compound_input}&rdquo; appears in this patent</>
+          : <>Success — {r.n_confirmed} of {r.n_structures_found} structures confirmed</>}
       </h1>
       <p className="text-base leading-relaxed mb-6" style={{ color: 'var(--on-surface-variant)' }}>
-        We scanned {r.n_pages_scanned} of {r.n_pages_total} pages and found {confirmedStructures.length} structure(s)
-        both of our independent extraction models agreed on.
+        {isCompoundMatch ? (
+          <>We scanned {r.n_pages_scanned} of {r.n_pages_total} pages and confirmed your compound&rsquo;s structure
+          matches one both of our independent extraction models agreed on.</>
+        ) : (
+          <>We scanned {r.n_pages_scanned} of {r.n_pages_total} pages and found {confirmedStructures.length} structure(s)
+          both of our independent extraction models agreed on.</>
+        )}
       </p>
 
       {request.unlocked ? (
@@ -93,7 +104,7 @@ function Confirmed({ request }: { request: RequestWithResult }) {
       ) : (
         <>
           <div className="pa-glass p-5 mb-6" style={{ background: 'var(--surface-bright)' }}>
-            <p className="text-sm mb-2" style={{ color: 'var(--on-surface-muted)' }}>Preview (unlock to see full SMILES):</p>
+            <p className="text-sm mb-2" style={{ color: 'var(--on-surface-muted)' }}>Preview (unlock to see the page and full SMILES):</p>
             {confirmedStructures.map((_, i) => (
               <div key={i} className="pa-mono text-sm mb-1" style={{ color: 'var(--on-surface-muted)', filter: 'blur(4px)' }}>
                 C{'█'.repeat(20 + i * 4)}
@@ -109,15 +120,25 @@ function Confirmed({ request }: { request: RequestWithResult }) {
 
 function NeedsReview({ request }: { request: RequestWithResult }) {
   const r = request.result_json!
+  const isCompoundMatch = Boolean(request.query_compound_input)
   return (
     <div className="pa-glass p-8 mt-4">
       <h1 className="pa-display text-2xl font-bold mb-3" style={{ color: 'var(--on-surface)' }}>
-        No confirmed structure — here&rsquo;s exactly why
+        {isCompoundMatch
+          ? <>Not confirmed — &ldquo;{request.query_compound_input}&rdquo; wasn&rsquo;t found with confidence</>
+          : <>No confirmed structure — here&rsquo;s exactly why</>}
       </h1>
       <p className="text-base leading-relaxed mb-6" style={{ color: 'var(--on-surface-variant)' }}>
-        We scanned {r.n_pages_scanned} of {r.n_pages_total} pages and found {r.n_structures_found} candidate
-        structure(s), but none passed our confirmation bar (both independent models must agree). This is free —
-        no charge for an unconfirmed result. Here&rsquo;s what we actually found:
+        {isCompoundMatch ? (
+          <>We scanned {r.n_pages_scanned} of {r.n_pages_total} pages and found {r.n_structures_found} candidate
+          structure(s) in this patent, but none that both independent models confirmed matched your compound.
+          This doesn&rsquo;t mean it definitely isn&rsquo;t there — only that we can&rsquo;t confirm it automatically.
+          This is free. Here&rsquo;s what we actually found in the patent:</>
+        ) : (
+          <>We scanned {r.n_pages_scanned} of {r.n_pages_total} pages and found {r.n_structures_found} candidate
+          structure(s), but none passed our confirmation bar (both independent models must agree). This is free —
+          no charge for an unconfirmed result. Here&rsquo;s what we actually found:</>
+        )}
       </p>
       <div className="flex flex-col gap-3 mb-6">
         {r.structures.length === 0 && (

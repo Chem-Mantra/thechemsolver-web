@@ -2,6 +2,34 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase-admin'
 import { checkPatentRelevance, NOT_CHEMISTRY_MESSAGE } from '@/lib/patentRelevanceGate'
 
+const PUBCHEM_BASE = 'https://pubchem.ncbi.nlm.nih.gov/rest/pug'
+
+// Resolves a client-typed compound (name OR SMILES) to a SMILES string via
+// PubChem, server-side, BEFORE inserting a request row -- this is what lets
+// an unresolvable compound fail fast with a clear error instead of silently
+// burning the client's one free run and 30 minutes of worker time on a typo.
+// Tries the SMILES endpoint first (cheap, exact), falls back to the name
+// endpoint (PubChem's synonym/name resolver) since most people will type a
+// drug name, not a SMILES string. The worker re-canonicalizes whatever this
+// returns through its own RDKit gate, so this doesn't need to be a "final"
+// canonical form -- it just needs to describe the right molecule.
+async function resolveCompoundToSmiles(input: string): Promise<string | null> {
+  const encoded = encodeURIComponent(input)
+  for (const path of [`/compound/smiles/${encoded}`, `/compound/name/${encoded}`]) {
+    try {
+      const res = await fetch(`${PUBCHEM_BASE}${path}/property/CanonicalSMILES/TXT`, {
+        signal: AbortSignal.timeout(10_000),
+      })
+      if (!res.ok) continue
+      const text = (await res.text()).trim()
+      if (text) return text
+    } catch {
+      // Network hiccup or timeout on one lookup path -- try the other before giving up.
+    }
+  }
+  return null
+}
+
 // "Newest patents" live extraction -- structure extraction sourced from
 // USPTO directly (via the persistent worker + live_extraction_requests
 // queue), for patents not yet indexed by Google Patents/PubChem. Free to
@@ -17,9 +45,24 @@ export async function POST(req: NextRequest) {
   const patentNumber = typeof body?.patentNumber === 'string' ? body.patentNumber.trim().toUpperCase() : ''
   const email = typeof body?.email === 'string' ? body.email.trim() : ''
   const name = typeof body?.name === 'string' ? body.name.trim() : ''
+  const compoundInput = typeof body?.compoundInput === 'string' ? body.compoundInput.trim() : ''
 
   if (!patentNumber || !email) {
     return NextResponse.json({ error: 'Patent number and email are required.' }, { status: 400 })
+  }
+
+  // Optional "does my compound appear in this patent" variant. Resolved
+  // here, before insert, so a typo or unrecognized name fails immediately
+  // with a clear message rather than wasting the client's one free run.
+  let compoundSmiles: string | null = null
+  if (compoundInput) {
+    compoundSmiles = await resolveCompoundToSmiles(compoundInput)
+    if (!compoundSmiles) {
+      return NextResponse.json(
+        { error: `Could not recognize "${compoundInput}" as a compound name or SMILES string. Double-check the spelling, or paste a SMILES string directly.` },
+        { status: 400 }
+      )
+    }
   }
 
   // Same chemistry-relevance gate as every other product -- reject before
@@ -48,7 +91,16 @@ export async function POST(req: NextRequest) {
 
   const { data: row, error } = await supabaseAdmin
     .from('live_extraction_requests')
-    .insert({ patent_number: patentNumber, requester_email: email, requester_name: name || null })
+    .insert({
+      patent_number: patentNumber,
+      requester_email: email,
+      requester_name: name || null,
+      // Only set for the compound-match variant -- omitted entirely (not
+      // even sent as null) for a plain "list every structure" request, so
+      // this insert is byte-for-byte what it was before that variant
+      // existed whenever compoundInput isn't supplied.
+      ...(compoundSmiles ? { query_compound_input: compoundInput, query_compound_smiles: compoundSmiles } : {}),
+    })
     .select('id')
     .single()
 

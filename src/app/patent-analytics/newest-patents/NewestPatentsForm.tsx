@@ -13,6 +13,7 @@ import { signInWithGoogle } from '@/lib/googleAuth'
 export default function NewestPatentsForm() {
   const [user, setUser] = useState<{ email: string; name: string } | null | undefined>(undefined)
   const [patentNumber, setPatentNumber] = useState('')
+  const [compoundInput, setCompoundInput] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [submittedId, setSubmittedId] = useState<string | null>(null)
@@ -49,7 +50,12 @@ export default function NewestPatentsForm() {
       const res = await fetch('/api/patent-analytics/newest-patents/create-request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ patentNumber: patentNumber.trim(), email: user.email, name: user.name }),
+        body: JSON.stringify({
+          patentNumber: patentNumber.trim(),
+          email: user.email,
+          name: user.name,
+          ...(compoundInput.trim() ? { compoundInput: compoundInput.trim() } : {}),
+        }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data?.error || 'Could not start your request.')
@@ -68,9 +74,13 @@ export default function NewestPatentsForm() {
           Processing -- you can close this tab
         </h2>
         <p className="text-base leading-relaxed mb-4" style={{ color: 'var(--on-surface-variant)' }}>
-          We&rsquo;re extracting structures from <b>{patentNumber.trim()}</b> now. This typically takes up to
-          30 minutes. We&rsquo;ll email <b>{user?.email}</b> a link to your result the moment it&rsquo;s ready --
-          you don&rsquo;t need to wait here.
+          {compoundInput.trim() ? (
+            <>We&rsquo;re checking whether <b>{compoundInput.trim()}</b> appears in <b>{patentNumber.trim()}</b> now.</>
+          ) : (
+            <>We&rsquo;re extracting structures from <b>{patentNumber.trim()}</b> now.</>
+          )}{' '}
+          This typically takes up to 30 minutes. We&rsquo;ll email <b>{user?.email}</b> a link to your result the
+          moment it&rsquo;s ready -- you don&rsquo;t need to wait here.
         </p>
         <button
           type="button"
@@ -111,13 +121,23 @@ export default function NewestPatentsForm() {
             className="text-base px-4 py-3 rounded-lg outline-none disabled:opacity-60"
             style={{ background: 'var(--input-bg)', border: '1px solid var(--border-light)' }}
           />
+          <input
+            placeholder="Optional: check a specific compound (name or SMILES)"
+            value={compoundInput}
+            onChange={(e) => setCompoundInput(e.target.value)}
+            disabled={busy}
+            className="text-base px-4 py-3 rounded-lg outline-none disabled:opacity-60"
+            style={{ background: 'var(--input-bg)', border: '1px solid var(--border-light)' }}
+          />
           {error && <p className="text-sm" style={{ color: '#ba1a1a' }}>{error}</p>}
           <button type="submit" disabled={busy || !patentNumber.trim()} className="pa-btn-primary text-base font-semibold px-6 py-3.5 disabled:opacity-60">
             {busy ? 'Starting…' : 'Run free extraction →'}
           </button>
           <p className="text-xs" style={{ color: 'var(--on-surface-muted)' }}>
-            One free run per account. If we can&rsquo;t confirm a clean structure, you&rsquo;ll see the full result
-            for free with an option to escalate to human review. If we do, unlocking the download is $15.
+            One free run per account. Leave the compound field blank to see every structure we find in the
+            patent, or fill it in to check specifically whether that compound appears in it. Either way: if
+            we can&rsquo;t confirm a clean answer, you&rsquo;ll see the full result for free with an option to
+            escalate to human review. If we do, unlocking the download is $15.
           </p>
         </form>
       )}
