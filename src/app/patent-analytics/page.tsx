@@ -13,6 +13,13 @@ export const revalidate = 3600
 
 const services = [
   {
+    name: 'Newest Patent Structure Extraction',
+    desc: "Chemical structures pulled directly from the newest patents — even the ones Google Patents and PubChem haven't indexed yet. Free to run, pay only when a structure comes back confirmed.",
+    flagship: true,
+    slug: 'newest-patents',
+    href: '/patent-analytics/newest-patents',
+  },
+  {
     name: 'Section 3(d) Compliance Screening',
     desc: 'India’s sharpest tool against evergreening: classifies whether a claimed compound is a salt, ester, isomer, or other "known substance" derivative of something already known — the structural half of the exact test that struck down Novartis’s Glivec patent. Whether therapeutic efficacy was actually enhanced is a separate clinical/legal question we flag for your review, not guess at.',
     flagship: true,

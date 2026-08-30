@@ -129,7 +129,12 @@ async function getPatentAnalyticsPages() {
   // landing page) were never in the sitemap at all, only discoverable via
   // on-site links. Google already knows about the /data pages from manual
   // URL Inspection requests, but they belong in the sitemap properly too.
-  const otherStaticPages = ['/pricing', '/cdmo', '/licensing'].map((path) => ({
+  const otherStaticPages = [
+    '/pricing', '/cdmo', '/licensing', '/newest-patents',
+    '/newest-patents/samples/egfr-her2-inhibitor',
+    '/newest-patents/samples/shp2-inhibitor',
+    '/newest-patents/samples/glp1r-agonist',
+  ].map((path) => ({
     url: `${paBase}${path}`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
