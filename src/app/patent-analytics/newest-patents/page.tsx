@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import PatentAnalyticsHeader from '../PatentAnalyticsHeader'
 import NewestPatentsForm from './NewestPatentsForm'
+import { SAMPLE_RESULTS } from '@/lib/newestPatentsSamples'
 
 const SITE = 'https://patent-analytics.thechemsolver.com'
 
@@ -50,21 +51,9 @@ export default function NewestPatentsPage() {
               what a flagged, uncertain result looks like, not just the clean cases.
             </p>
             <div className="flex flex-col gap-3">
-              <SampleCard
-                patent="US12698261B2"
-                title="Dana-Farber — Cyano-pyrimidine inhibitors of EGFR/HER2"
-                note="Confirmed structure extracted from a real synthetic-procedures scheme."
-              />
-              <SampleCard
-                patent="US12698271B2"
-                title="Pfizer — Crystalline form of a SHP2 inhibitor"
-                note="5 of 5 structures confirmed — both models agreed on every one."
-              />
-              <SampleCard
-                patent="US12698270B2"
-                title="MindRank AI — Aryl ether-substituted heterocyclic compounds as GLP1R agonists"
-                note="Real mixed result: some structures confirmed, others honestly flagged as uncertain rather than guessed."
-              />
+              {SAMPLE_RESULTS.map((s) => (
+                <SampleCard key={s.slug} slug={s.slug} patent={s.patentNumber} title={s.title} note={s.note} />
+              ))}
             </div>
           </div>
         </div>
@@ -73,12 +62,12 @@ export default function NewestPatentsPage() {
   )
 }
 
-function SampleCard({ patent, title, note }: { patent: string; title: string; note: string }) {
+function SampleCard({ slug, patent, title, note }: { slug: string; patent: string; title: string; note: string }) {
   return (
-    <div className="pa-glass p-5">
+    <Link href={`/patent-analytics/newest-patents/samples/${slug}`} className="pa-glass pa-glass-elevated p-5 block hover:shadow-md transition-shadow">
       <div className="pa-mono text-xs mb-1" style={{ color: 'var(--on-surface-muted)' }}>{patent}</div>
       <div className="text-sm font-semibold mb-1" style={{ color: 'var(--on-surface)' }}>{title}</div>
       <div className="text-sm" style={{ color: 'var(--on-surface-variant)' }}>{note}</div>
-    </div>
+    </Link>
   )
 }
