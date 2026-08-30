@@ -57,7 +57,7 @@ export function middleware(request: NextRequest) {
     // rewriting them the same way everything else is rewritten pointed at
     // a path that doesn't exist and 404'd. Serve them as-is; sitemap.ts
     // already lists the subdomain's own URLs as absolute paths.
-    if (p === '/robots.txt' || p === '/sitemap.xml') {
+    if (p === '/robots.txt' || p === '/sitemap.xml' || p === '/llms.txt') {
       return NextResponse.next()
     }
     // Real bug found 2026-08-29: every internal <Link> across this product

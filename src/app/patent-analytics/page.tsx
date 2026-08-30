@@ -3,7 +3,33 @@ import StructureSlideshow from './StructureSlideshow'
 import OpenLeadFormButton from './OpenLeadFormButton'
 import { PatentNewsFeedSection } from './PatentNewsFeed'
 import PatentAnalyticsHeader from './PatentAnalyticsHeader'
+import FaqSection from './FaqSection'
 import { getLiveVolumeStats } from '@/lib/productResults'
+
+const SITE = 'https://patent-analytics.thechemsolver.com'
+
+const HOME_FAQS = [
+  {
+    question: 'What is Patent Analytics?',
+    answer: 'A structure-verification service for pharma and chemistry patents. We extract, verify, and compare chemical structures across patents using real cheminformatics tools, not keyword search or legal opinions.',
+  },
+  {
+    question: 'Who is this for?',
+    answer: "Patent attorneys, IP teams, and pharma/CDMO business development teams who need structural clearance, genus/Markush coverage, or portfolio landscape analysis on a specific compound or patent.",
+  },
+  {
+    question: 'Does this replace legal advice?',
+    answer: 'No. Reports identify chemical structures and their relationship to claimed scope — they do not assert legal conclusions like infringement, validity, or disclosure/enablement. That judgment stays with you and your counsel.',
+  },
+  {
+    question: 'How current is the underlying data?',
+    answer: 'Most products pull from Google Patents/PubChem-indexed patents. A separate tool, Newest Patent Structure Extraction, pulls directly from the USPTO for patents not yet indexed elsewhere, since that indexing typically lags a patent\'s grant date by 3+ months.',
+  },
+  {
+    question: 'How much does it cost?',
+    answer: 'Every product has a free first look — either a real sample report or a free run. Paid tiers range from a $10 instant compound check to a $199 human-reviewed Standard Report; see the pricing page for the full breakdown.',
+  },
+]
 
 // Re-renders in the background at most once an hour so the live volume stat
 // below actually grows as 04_upload_to_website.py uploads more rows -- this
@@ -55,10 +81,44 @@ const services = [
   },
 ]
 
+const ORG_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: 'Patent Analytics',
+  url: SITE,
+  description: "Chemical structure extraction, genus/Markush claim coverage, Section 3(d) compliance screening, and freedom-to-operate structural triage for patent attorneys and pharma/CDMO IP teams.",
+  areaServed: 'Worldwide',
+  founder: {
+    '@type': 'Person',
+    name: 'Prashant Kotian',
+    jobTitle: 'PhD Researcher, Chemistry (Institute of Chemical Technology, Mumbai)',
+  },
+  knowsAbout: [
+    'Chemical structure extraction from patents',
+    'Genus/Markush claim coverage analysis',
+    'Section 3(d) compliance screening',
+    'Freedom-to-operate (FTO) structural triage',
+    'Patent family and portfolio landscape mapping',
+  ],
+  makesOffer: services.map((s) => ({
+    '@type': 'Offer',
+    itemOffered: {
+      '@type': 'Service',
+      name: s.name,
+      description: s.desc,
+      url: 'href' in s && s.href ? `${SITE}${s.href}` : `${SITE}/data/${s.slug}`,
+    },
+  })),
+}
+
 export default async function PatentAnalyticsPage() {
   const liveStats = await getLiveVolumeStats()
   return (
     <div className="min-h-screen w-full">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_JSON_LD) }}
+      />
       <PatentAnalyticsHeader />
 
       {/* Hero — full-width bento split */}
@@ -197,6 +257,12 @@ export default async function PatentAnalyticsPage() {
               confirmed from what still needs your review.
             </p>
           </div>
+        </div>
+      </section>
+
+      <section className="w-full px-6 md:px-12">
+        <div className="max-w-[1400px] mx-auto">
+          <FaqSection title="Frequently asked" faqs={HOME_FAQS} />
         </div>
       </section>
 

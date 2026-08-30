@@ -20,6 +20,7 @@ export const PRODUCTS: Record<ProductType, {
   shortName: string
   tagline: string
   hasLiveData: boolean // true = pulls from product_results (2025 bulk run); false = sample-only page
+  faq: { question: string; answer: string }[]
 }> = {
   markush_coverage: {
     slug: 'markush-coverage',
@@ -27,6 +28,20 @@ export const PRODUCTS: Record<ProductType, {
     shortName: 'Markush Coverage',
     tagline: 'Does a specific compound fall inside a patent’s broad genus claim?',
     hasLiveData: true,
+    faq: [
+      {
+        question: 'What does Markush/genus coverage analysis check?',
+        answer: "Whether a specific compound structurally falls inside a patent's broad genus (Markush) claim, using real cheminformatics substructure matching rather than a keyword search.",
+      },
+      {
+        question: 'How is this delivered?',
+        answer: 'Via a human-reviewed Standard Report ($199) — genus claims need a hand-confirmed R-group definition, not an automated same-hour check.',
+      },
+      {
+        question: 'Can I see a real example first?',
+        answer: 'Yes — real, currently-live sample results are listed on this page for free before you request anything.',
+      },
+    ],
   },
   section_3d: {
     slug: 'section-3d',
@@ -34,6 +49,20 @@ export const PRODUCTS: Record<ProductType, {
     shortName: 'Section 3(d) Screening',
     tagline: 'India-specific "known substance" derivative classification.',
     hasLiveData: true,
+    faq: [
+      {
+        question: 'What is Section 3(d) screening?',
+        answer: "An India-specific check of whether a claimed compound is a salt, ester, isomer, or other \"known substance\" derivative of something already known — the structural half of the test used to strike down Novartis's Glivec patent.",
+      },
+      {
+        question: 'Does it decide if a patent is invalid?',
+        answer: 'No — it flags the structural relationship for your review. Whether therapeutic efficacy was actually enhanced is a separate clinical/legal question outside its scope.',
+      },
+      {
+        question: "What's the turnaround?",
+        answer: 'Human-reviewed Standard Report, not an automated instant check — real sample output is on this page so you can see the format first.',
+      },
+    ],
   },
   fto_triage: {
     slug: 'fto-triage',
@@ -41,6 +70,20 @@ export const PRODUCTS: Record<ProductType, {
     shortName: 'FTO Structural Triage',
     tagline: 'Fast first-pass structure search across many patents (also covers CDMO process pre-screens).',
     hasLiveData: true,
+    faq: [
+      {
+        question: 'What is FTO Structural Triage?',
+        answer: 'A fast first-pass freedom-to-operate screen — search a target compound or synthetic route against the existing patent landscape before committing R&D or manufacturing spend.',
+      },
+      {
+        question: 'How fast is it?',
+        answer: "It's automated: the $10 Instant Compound Check on an arbitrary patent typically returns within about an hour.",
+      },
+      {
+        question: 'Does it work for CDMO process patents too?',
+        answer: 'Yes — the same engine also powers a dedicated CDMO process pre-screen page.',
+      },
+    ],
   },
   portfolio_landscape: {
     slug: 'portfolio-landscape',
@@ -48,6 +91,20 @@ export const PRODUCTS: Record<ProductType, {
     shortName: 'Portfolio Landscape',
     tagline: 'An entire patent family, consolidated into one structure database.',
     hasLiveData: true,
+    faq: [
+      {
+        question: 'What is Portfolio Landscape mapping?',
+        answer: 'It consolidates an entire patent family around one drug or target into a single structure database, so you can see which patents are weak or expiring and time a launch window.',
+      },
+      {
+        question: 'Is it automated?',
+        answer: 'Yes, for any patent number — the $10 Instant Compound Check flow covers this product live.',
+      },
+      {
+        question: 'What about ongoing monitoring, not just a one-time report?',
+        answer: 'A separate retainer-based Portfolio Intelligence service adds continuous alerts as new matching patents publish.',
+      },
+    ],
   },
 }
 

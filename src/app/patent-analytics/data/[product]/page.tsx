@@ -5,6 +5,7 @@ import { PRODUCTS, productBySlug, getResultsByProduct } from '@/lib/productResul
 import PatentAnalyticsHeader from '../../PatentAnalyticsHeader'
 import OpenCheckPatentButton from '../../OpenCheckPatentButton'
 import OpenStandardReportButton from '../../OpenStandardReportButton'
+import FaqSection from '../../FaqSection'
 
 // Only fto_triage/portfolio_landscape are automated enough to promise a
 // same-hour turnaround on an arbitrary new patent (the $10 Instant
@@ -78,6 +79,8 @@ export default async function ProductDataPage({ params }: Props) {
               </OpenStandardReportButton>
             </div>
           )}
+
+          <FaqSection title="Frequently asked" faqs={p.faq} />
         </div>
       </main>
     </>

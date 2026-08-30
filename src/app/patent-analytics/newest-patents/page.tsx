@@ -2,7 +2,27 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import PatentAnalyticsHeader from '../PatentAnalyticsHeader'
 import NewestPatentsForm from './NewestPatentsForm'
+import FaqSection from '../FaqSection'
 import { SAMPLE_RESULTS } from '@/lib/newestPatentsSamples'
+
+const FAQS = [
+  {
+    question: 'How is this different from your other products?',
+    answer: "Those rely on Google Patents and PubChem's own structure indexing, which typically lags a patent's grant date by 3+ months. This tool fetches the real patent PDF directly from the USPTO and runs our own extraction pipeline, so it covers patents the other tools can't see yet.",
+  },
+  {
+    question: 'What does it cost?',
+    answer: "It's free to run — you only pay $15 to unlock a confirmed result's download. If nothing comes back confirmed, you see the full result, including exactly what tripped it up, for free.",
+  },
+  {
+    question: 'How long does it take?',
+    answer: "Typically under 30 minutes. We email you a link when it's done so you don't have to wait on the page — sign in, submit, and close the tab.",
+  },
+  {
+    question: "What if my patent isn't chemistry-related, or has a broad genus claim instead of one fixed compound?",
+    answer: 'We check this up front. Unrelated patents get a clear "not applicable" response instead of wasting a run, and genus/Markush cases route to our Markush Coverage product\'s human-reviewed process instead.',
+  },
+]
 
 const SITE = 'https://patent-analytics.thechemsolver.com'
 
@@ -56,6 +76,8 @@ export default function NewestPatentsPage() {
               ))}
             </div>
           </div>
+
+          <FaqSection title="Frequently asked" faqs={FAQS} />
         </div>
       </main>
     </>
