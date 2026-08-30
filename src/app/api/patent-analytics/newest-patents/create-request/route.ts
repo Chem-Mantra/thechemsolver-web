@@ -46,14 +46,19 @@ export async function POST(req: NextRequest) {
   const email = typeof body?.email === 'string' ? body.email.trim() : ''
   const name = typeof body?.name === 'string' ? body.name.trim() : ''
   const compoundInput = typeof body?.compoundInput === 'string' ? body.compoundInput.trim() : ''
+  const mode = body?.mode === 'section3d' ? 'section3d' : body?.mode === 'compound_match' ? 'compound_match' : null
 
   if (!patentNumber || !email) {
     return NextResponse.json({ error: 'Patent number and email are required.' }, { status: 400 })
   }
+  if (mode && !compoundInput) {
+    return NextResponse.json({ error: 'A compound is required for this check.' }, { status: 400 })
+  }
 
-  // Optional "does my compound appear in this patent" variant. Resolved
-  // here, before insert, so a typo or unrecognized name fails immediately
-  // with a clear message rather than wasting the client's one free run.
+  // Optional "does my compound appear in this patent" / "is this compound a
+  // salt/ester/isomer of a known compound" variants. Resolved here, before
+  // insert, so a typo or unrecognized name fails immediately with a clear
+  // message rather than wasting the client's one free run.
   let compoundSmiles: string | null = null
   if (compoundInput) {
     compoundSmiles = await resolveCompoundToSmiles(compoundInput)
@@ -95,11 +100,13 @@ export async function POST(req: NextRequest) {
       patent_number: patentNumber,
       requester_email: email,
       requester_name: name || null,
-      // Only set for the compound-match variant -- omitted entirely (not
-      // even sent as null) for a plain "list every structure" request, so
-      // this insert is byte-for-byte what it was before that variant
-      // existed whenever compoundInput isn't supplied.
-      ...(compoundSmiles ? { query_compound_input: compoundInput, query_compound_smiles: compoundSmiles } : {}),
+      // Only set for the compound-match/section3d variants -- omitted
+      // entirely (not even sent as null) for a plain "list every structure"
+      // request, so this insert is byte-for-byte what it was before either
+      // variant existed whenever compoundInput isn't supplied.
+      ...(compoundSmiles
+        ? { query_compound_input: compoundInput, query_compound_smiles: compoundSmiles, query_mode: mode ?? 'compound_match' }
+        : {}),
     })
     .select('id')
     .single()

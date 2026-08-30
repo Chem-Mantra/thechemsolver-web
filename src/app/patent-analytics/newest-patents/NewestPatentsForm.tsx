@@ -10,9 +10,18 @@ import { signInWithGoogle } from '@/lib/googleAuth'
 // Google sign-in first, same reused auth as GatedDownloadButton, so the
 // email backing that free-run check is a real verified identity, not
 // whatever a client types into a plain text field.
+type Mode = 'list' | 'compound_match' | 'section3d'
+
+const MODE_LABELS: Record<Mode, string> = {
+  list: 'List every structure we find in this patent',
+  compound_match: 'Check whether a specific compound appears in this patent',
+  section3d: 'Section 3(d) screen: is a compound in this patent a salt/ester/isomer of a known compound?',
+}
+
 export default function NewestPatentsForm() {
   const [user, setUser] = useState<{ email: string; name: string } | null | undefined>(undefined)
   const [patentNumber, setPatentNumber] = useState('')
+  const [mode, setMode] = useState<Mode>('list')
   const [compoundInput, setCompoundInput] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -44,6 +53,7 @@ export default function NewestPatentsForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!user?.email || !patentNumber.trim()) return
+    if (mode !== 'list' && !compoundInput.trim()) return
     setBusy(true)
     setError(null)
     try {
@@ -54,7 +64,7 @@ export default function NewestPatentsForm() {
           patentNumber: patentNumber.trim(),
           email: user.email,
           name: user.name,
-          ...(compoundInput.trim() ? { compoundInput: compoundInput.trim() } : {}),
+          ...(mode !== 'list' ? { compoundInput: compoundInput.trim(), mode } : {}),
         }),
       })
       const data = await res.json()
@@ -74,7 +84,10 @@ export default function NewestPatentsForm() {
           Processing -- you can close this tab
         </h2>
         <p className="text-base leading-relaxed mb-4" style={{ color: 'var(--on-surface-variant)' }}>
-          {compoundInput.trim() ? (
+          {mode === 'section3d' ? (
+            <>We&rsquo;re checking whether a compound in <b>{patentNumber.trim()}</b> is a salt, ester, or isomer of
+            <b> {compoundInput.trim()}</b> now.</>
+          ) : mode === 'compound_match' ? (
             <>We&rsquo;re checking whether <b>{compoundInput.trim()}</b> appears in <b>{patentNumber.trim()}</b> now.</>
           ) : (
             <>We&rsquo;re extracting structures from <b>{patentNumber.trim()}</b> now.</>
@@ -121,23 +134,44 @@ export default function NewestPatentsForm() {
             className="text-base px-4 py-3 rounded-lg outline-none disabled:opacity-60"
             style={{ background: 'var(--input-bg)', border: '1px solid var(--border-light)' }}
           />
-          <input
-            placeholder="Optional: check a specific compound (name or SMILES)"
-            value={compoundInput}
-            onChange={(e) => setCompoundInput(e.target.value)}
+          <select
+            value={mode}
+            onChange={(e) => setMode(e.target.value as Mode)}
             disabled={busy}
             className="text-base px-4 py-3 rounded-lg outline-none disabled:opacity-60"
             style={{ background: 'var(--input-bg)', border: '1px solid var(--border-light)' }}
-          />
+          >
+            {(Object.keys(MODE_LABELS) as Mode[]).map((m) => (
+              <option key={m} value={m}>{MODE_LABELS[m]}</option>
+            ))}
+          </select>
+          {mode !== 'list' && (
+            <input
+              required
+              placeholder={mode === 'section3d' ? 'Known compound (name or SMILES) -- e.g. imatinib' : 'Compound to look for (name or SMILES)'}
+              value={compoundInput}
+              onChange={(e) => setCompoundInput(e.target.value)}
+              disabled={busy}
+              className="text-base px-4 py-3 rounded-lg outline-none disabled:opacity-60"
+              style={{ background: 'var(--input-bg)', border: '1px solid var(--border-light)' }}
+            />
+          )}
           {error && <p className="text-sm" style={{ color: '#ba1a1a' }}>{error}</p>}
-          <button type="submit" disabled={busy || !patentNumber.trim()} className="pa-btn-primary text-base font-semibold px-6 py-3.5 disabled:opacity-60">
-            {busy ? 'Starting…' : 'Run free extraction →'}
+          <button
+            type="submit"
+            disabled={busy || !patentNumber.trim() || (mode !== 'list' && !compoundInput.trim())}
+            className="pa-btn-primary text-base font-semibold px-6 py-3.5 disabled:opacity-60"
+          >
+            {busy ? 'Starting…' : 'Run free check →'}
           </button>
           <p className="text-xs" style={{ color: 'var(--on-surface-muted)' }}>
-            One free run per account. Leave the compound field blank to see every structure we find in the
-            patent, or fill it in to check specifically whether that compound appears in it. Either way: if
-            we can&rsquo;t confirm a clean answer, you&rsquo;ll see the full result for free with an option to
-            escalate to human review. If we do, unlocking the download is $15.
+            One free run per account. If we can&rsquo;t confirm a clean answer, you&rsquo;ll see the full result for
+            free with an option to escalate to human review. If we do, unlocking the download is $15.
+            {mode === 'section3d' && (
+              <> Note: this screens the structural relationship only (salt/ester/isomer/etc.) -- it cannot determine
+              whether therapeutic efficacy was enhanced, which Section 3(d) also requires and which no structural
+              tool can see from a SMILES string alone.</>
+            )}
           </p>
         </form>
       )}

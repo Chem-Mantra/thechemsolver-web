@@ -26,6 +26,20 @@ export type CompoundMatchResult = {
   error?: string
 }
 
+export type Section3dHit = {
+  page: number
+  new_compound_smiles: string
+  category: 'SALT' | 'ISOMER' | 'IDENTICAL_STRUCTURE' | 'SAME_FORMULA_DIFFERENT_CONNECTIVITY' | 'POSSIBLE_ESTER_ETHER_DERIVATIVE'
+  explanation: string
+  structurally_detectable: boolean
+}
+
+export type Section3dResult = {
+  query_canonical_smiles: string | null
+  hits: Section3dHit[]
+  error?: string
+}
+
 export type LiveExtractionRequest = {
   id: string
   patent_number: string
@@ -36,12 +50,13 @@ export type LiveExtractionRequest = {
   error_message: string | null
   created_at: string
   completed_at: string | null
-  // Compound-vs-one-patent variant only -- null for the regular "list every
+  // Compound-vs-one-patent variants only -- null for the regular "list every
   // structure in this patent" flow. See live_extraction_schema_compound_match_addendum.sql
   // -- these columns must exist in the DB before this file's .select() below
   // is updated to request them (same rule that bit the `unlocked` rollout).
   query_compound_input: string | null
-  match_result: CompoundMatchResult | null
+  query_mode: 'compound_match' | 'section3d' | null
+  match_result: CompoundMatchResult | Section3dResult | null
 }
 
 // Server-side only (admin/service-role client, never exposed to the
@@ -54,7 +69,7 @@ export type LiveExtractionRequest = {
 export async function getLiveExtractionRequest(id: string): Promise<LiveExtractionRequest | null> {
   const { data, error } = await supabaseAdmin
     .from('live_extraction_requests')
-    .select('id, patent_number, status, outcome, unlocked, result_json, error_message, created_at, completed_at, query_compound_input, match_result')
+    .select('id, patent_number, status, outcome, unlocked, result_json, error_message, created_at, completed_at, query_compound_input, query_mode, match_result')
     .eq('id', id)
     .maybeSingle()
   if (error || !data) return null
