@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getLiveExtractionRequest, type Section3dResult, type CompoundMatchResult } from '@/lib/liveExtractionRequests'
+import { getLiveExtractionRequest, type Section3dResult, type CompoundMatchResult, type MarkushResultJson, type LiveExtractionResultJson } from '@/lib/liveExtractionRequests'
 import PatentAnalyticsHeader from '../../../PatentAnalyticsHeader'
 import OpenStandardReportButton from '../../../OpenStandardReportButton'
 import UnlockButton from '../../UnlockButton'
@@ -30,6 +30,8 @@ export default async function ResultPage({ params }: Props) {
             <StillProcessing />
           ) : request.status === 'failed' ? (
             <Failed message={request.error_message} />
+          ) : request.product_type === 'markush_coverage' ? (
+            <Markush request={request} />
           ) : request.query_mode === 'section3d' ? (
             <Section3d request={request} />
           ) : request.outcome === 'confirmed' ? (
@@ -71,7 +73,7 @@ function Failed({ message }: { message: string | null }) {
 type RequestWithResult = NonNullable<Awaited<ReturnType<typeof getLiveExtractionRequest>>>
 
 function Confirmed({ request }: { request: RequestWithResult }) {
-  const r = request.result_json!
+  const r = request.result_json! as LiveExtractionResultJson
   const isCompoundMatch = Boolean(request.query_compound_input)
   // Only reached when query_mode !== 'section3d' (routed away in the parent
   // dispatch), so match_result here is always the compound-match shape.
@@ -124,7 +126,7 @@ function Confirmed({ request }: { request: RequestWithResult }) {
 }
 
 function NeedsReview({ request }: { request: RequestWithResult }) {
-  const r = request.result_json!
+  const r = request.result_json! as LiveExtractionResultJson
   const isCompoundMatch = Boolean(request.query_compound_input)
   return (
     <div className="pa-glass p-8 mt-4">
@@ -171,6 +173,99 @@ function NeedsReview({ request }: { request: RequestWithResult }) {
   )
 }
 
+function Markush({ request }: { request: RequestWithResult }) {
+  const r = request.result_json as MarkushResultJson | null
+  const rGroups = r?.r_groups ?? []
+  const unresolvedCount = rGroups.filter((g) => g.explicit_smiles.length === 0 && !g.hydrogen_allowed).length
+
+  if (!r?.verdict) {
+    return (
+      <div className="pa-glass p-8 mt-4">
+        <h1 className="pa-display text-2xl font-bold mb-3" style={{ color: 'var(--on-surface)' }}>
+          Couldn&rsquo;t auto-resolve a genus from this patent
+        </h1>
+        <p className="text-base leading-relaxed mb-6" style={{ color: 'var(--on-surface-variant)' }}>
+          {request.error_message || 'Our automated genus-parsing model could not confidently read this patent’s Markush structure.'}{' '}
+          This is free -- no charge for this result. A human reviewer can usually resolve this.
+        </p>
+        <div className="pa-glass p-6 flex flex-col sm:flex-row items-center justify-between gap-4" style={{ background: 'var(--surface-bright)' }}>
+          <p className="text-sm" style={{ color: 'var(--on-surface-variant)' }}>
+            Get a hand-reviewed genus coverage analysis instead.
+          </p>
+          <OpenStandardReportButton className="pa-chip text-sm font-medium px-5 py-2.5 shrink-0">
+            Get a Standard Report →
+          </OpenStandardReportButton>
+        </div>
+      </div>
+    )
+  }
+
+  const isMember = r.verdict === 'MEMBER'
+
+  return (
+    <div className="pa-glass p-8 mt-4">
+      <h1 className="pa-display text-2xl font-bold mb-3" style={{ color: 'var(--on-surface)' }}>
+        {isMember
+          ? <>Covered -- &ldquo;{request.query_compound_input}&rdquo; falls within this patent&rsquo;s genus claim</>
+          : <>Not confirmed as covered vs. &ldquo;{request.query_compound_input}&rdquo;</>}
+      </h1>
+      <p className="text-base leading-relaxed mb-2" style={{ color: 'var(--on-surface-variant)' }}>
+        We automatically parsed this patent&rsquo;s genus (Markush) scaffold from its own diagram and claim text,
+        then checked your compound&rsquo;s structure against it using real R-group decomposition (RDKit) -- not a
+        keyword or similarity-score match.
+      </p>
+      <p className="text-sm leading-relaxed mb-6" style={{ color: 'var(--on-surface-muted)' }}>
+        This is a structural coverage test only -- it does not determine legal disclosure, enablement,
+        infringement, or validity. Not a substitute for patent-attorney review.
+        {unresolvedCount > 0 && (
+          <> {unresolvedCount} of {rGroups.length} R-group position(s) in this genus could not be automatically
+          resolved from the claim text and were treated as unconfirmed.</>
+        )}
+      </p>
+
+      {!isMember ? (
+        <>
+          <div className="pa-glass p-5 mb-6" style={{ background: 'var(--surface-bright)' }}>
+            <p className="text-sm" style={{ color: 'var(--on-surface-variant)' }}>
+              We could not automatically confirm this compound falls within the patent&rsquo;s claimed genus. This
+              does not mean it definitely isn&rsquo;t covered -- only that we can&rsquo;t confirm it automatically.
+              This is free -- no charge for this result.
+            </p>
+          </div>
+          <div className="pa-glass p-6 flex flex-col sm:flex-row items-center justify-between gap-4" style={{ background: 'var(--surface-bright)' }}>
+            <p className="text-sm" style={{ color: 'var(--on-surface-variant)' }}>
+              A human reviewer can often resolve exactly this kind of ambiguity.
+            </p>
+            <OpenStandardReportButton className="pa-chip text-sm font-medium px-5 py-2.5 shrink-0">
+              Get a Standard Report →
+            </OpenStandardReportButton>
+          </div>
+        </>
+      ) : request.unlocked ? (
+        <div className="flex flex-col gap-3">
+          <div className="pa-glass p-4">
+            <div className="pa-mono text-xs mb-1" style={{ color: 'var(--on-surface-muted)' }}>Core scaffold (SMARTS)</div>
+            <div className="pa-mono text-sm break-all" style={{ color: 'var(--on-surface)' }}>{r.core_smarts}</div>
+          </div>
+          {(r.reasoning ?? []).map((line, i) => (
+            <div key={i} className="text-sm" style={{ color: 'var(--on-surface-variant)' }}>{line}</div>
+          ))}
+        </div>
+      ) : (
+        <>
+          <div className="pa-glass p-5 mb-6" style={{ background: 'var(--surface-bright)' }}>
+            <p className="text-sm mb-2" style={{ color: 'var(--on-surface-muted)' }}>Preview (unlock to see the full scaffold and reasoning):</p>
+            <div className="pa-mono text-sm" style={{ color: 'var(--on-surface-muted)', filter: 'blur(4px)' }}>
+              {'█'.repeat(40)}
+            </div>
+          </div>
+          <UnlockButton requestId={request.id} />
+        </>
+      )}
+    </div>
+  )
+}
+
 const SECTION3D_CATEGORY_LABEL: Record<string, string> = {
   SALT: 'Salt',
   ISOMER: 'Isomer',
@@ -180,7 +275,7 @@ const SECTION3D_CATEGORY_LABEL: Record<string, string> = {
 }
 
 function Section3d({ request }: { request: RequestWithResult }) {
-  const r = request.result_json!
+  const r = request.result_json! as LiveExtractionResultJson
   const section3d = request.match_result as Section3dResult | null
   const hits = section3d?.hits ?? []
 

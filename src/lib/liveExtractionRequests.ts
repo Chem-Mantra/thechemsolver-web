@@ -40,16 +40,38 @@ export type Section3dResult = {
   error?: string
 }
 
+// Shape written by modal_markush_worker.py's run_markush_check -- distinct
+// from LiveExtractionResultJson (different product, different worker,
+// different real fields: a Markush check has no per-page structure list,
+// just a genus verdict).
+export type MarkushRGroupDefinition = {
+  label: string
+  explicit_smiles: string[]
+  smarts_class: string | null
+  description: string
+  hydrogen_allowed: boolean
+}
+
+export type MarkushResultJson = {
+  verdict?: 'MEMBER' | 'NOT_MEMBER' | 'AMBIGUOUS'
+  reasoning?: string[]
+  core_smarts?: string
+  r_groups?: MarkushRGroupDefinition[]
+  page_selection_method?: string
+  timing?: Record<string, unknown>
+}
+
 export type LiveExtractionRequest = {
   id: string
   patent_number: string
   status: 'pending' | 'processing' | 'completed' | 'failed'
   outcome: 'confirmed' | 'needs_review' | null
   unlocked: boolean
-  result_json: LiveExtractionResultJson | null
+  result_json: LiveExtractionResultJson | MarkushResultJson | null
   error_message: string | null
   created_at: string
   completed_at: string | null
+  product_type: 'structure_extraction' | 'markush_coverage' | 'portfolio_landscape' | 'section_3d'
   // Compound-vs-one-patent variants only -- null for the regular "list every
   // structure in this patent" flow. See live_extraction_schema_compound_match_addendum.sql
   // -- these columns must exist in the DB before this file's .select() below
@@ -69,7 +91,7 @@ export type LiveExtractionRequest = {
 export async function getLiveExtractionRequest(id: string): Promise<LiveExtractionRequest | null> {
   const { data, error } = await supabaseAdmin
     .from('live_extraction_requests')
-    .select('id, patent_number, status, outcome, unlocked, result_json, error_message, created_at, completed_at, query_compound_input, query_mode, match_result')
+    .select('id, patent_number, status, outcome, unlocked, result_json, error_message, created_at, completed_at, product_type, query_compound_input, query_mode, match_result')
     .eq('id', id)
     .maybeSingle()
   if (error || !data) return null

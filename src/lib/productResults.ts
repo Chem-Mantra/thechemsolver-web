@@ -35,7 +35,7 @@ export const PRODUCTS: Record<ProductType, {
       },
       {
         question: 'How is this delivered?',
-        answer: 'Via a human-reviewed Standard Report ($199) — genus claims need a hand-confirmed R-group definition, not an automated same-hour check.',
+        answer: 'A free automated instant check is available (patent number + your compound) via the Newest Patent Extraction tool’s Markush mode — it parses the genus diagram and claim text automatically and confirms a match when it can. When it can’t confirm automatically, you get the free result plus the option to escalate to a human-reviewed Standard Report ($199).',
       },
       {
         question: 'Can I see a real example first?',

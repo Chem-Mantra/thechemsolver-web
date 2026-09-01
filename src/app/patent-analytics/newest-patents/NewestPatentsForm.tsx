@@ -10,12 +10,13 @@ import { signInWithGoogle } from '@/lib/googleAuth'
 // Google sign-in first, same reused auth as GatedDownloadButton, so the
 // email backing that free-run check is a real verified identity, not
 // whatever a client types into a plain text field.
-type Mode = 'list' | 'compound_match' | 'section3d'
+type Mode = 'list' | 'compound_match' | 'section3d' | 'markush_coverage'
 
 const MODE_LABELS: Record<Mode, string> = {
   list: 'List every structure we find in this patent',
   compound_match: 'Check whether a specific compound appears in this patent',
   section3d: 'Section 3(d) screen: is a compound in this patent a salt/ester/isomer of a known compound?',
+  markush_coverage: 'Markush check: does a compound fall within this patent’s genus (Formula) claim?',
 }
 
 export default function NewestPatentsForm() {
@@ -87,6 +88,9 @@ export default function NewestPatentsForm() {
           {mode === 'section3d' ? (
             <>We&rsquo;re checking whether a compound in <b>{patentNumber.trim()}</b> is a salt, ester, or isomer of
             <b> {compoundInput.trim()}</b> now.</>
+          ) : mode === 'markush_coverage' ? (
+            <>We&rsquo;re checking whether <b>{compoundInput.trim()}</b> falls within <b>{patentNumber.trim()}</b>&rsquo;s
+            genus claim now.</>
           ) : mode === 'compound_match' ? (
             <>We&rsquo;re checking whether <b>{compoundInput.trim()}</b> appears in <b>{patentNumber.trim()}</b> now.</>
           ) : (
@@ -148,7 +152,11 @@ export default function NewestPatentsForm() {
           {mode !== 'list' && (
             <input
               required
-              placeholder={mode === 'section3d' ? 'Known compound (name or SMILES) -- e.g. imatinib' : 'Compound to look for (name or SMILES)'}
+              placeholder={
+                mode === 'section3d' ? 'Known compound (name or SMILES) -- e.g. imatinib'
+                : mode === 'markush_coverage' ? 'Compound to check (name or SMILES)'
+                : 'Compound to look for (name or SMILES)'
+              }
               value={compoundInput}
               onChange={(e) => setCompoundInput(e.target.value)}
               disabled={busy}
@@ -171,6 +179,12 @@ export default function NewestPatentsForm() {
               <> Note: this screens the structural relationship only (salt/ester/isomer/etc.) -- it cannot determine
               whether therapeutic efficacy was enhanced, which Section 3(d) also requires and which no structural
               tool can see from a SMILES string alone.</>
+            )}
+            {mode === 'markush_coverage' && (
+              <> Note: automated genus parsing is newer and less mature than our structure extraction --
+              expect a meaningful share of patents to come back as a free, unconfirmed result rather than an
+              instant answer. That&rsquo;s not an error; a hand-reviewed Standard Report is always available as
+              a fallback.</>
             )}
           </p>
         </form>

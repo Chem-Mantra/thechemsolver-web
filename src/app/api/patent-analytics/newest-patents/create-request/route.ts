@@ -46,7 +46,10 @@ export async function POST(req: NextRequest) {
   const email = typeof body?.email === 'string' ? body.email.trim() : ''
   const name = typeof body?.name === 'string' ? body.name.trim() : ''
   const compoundInput = typeof body?.compoundInput === 'string' ? body.compoundInput.trim() : ''
-  const mode = body?.mode === 'section3d' ? 'section3d' : body?.mode === 'compound_match' ? 'compound_match' : null
+  const mode = body?.mode === 'section3d' ? 'section3d'
+    : body?.mode === 'compound_match' ? 'compound_match'
+    : body?.mode === 'markush_coverage' ? 'markush_coverage'
+    : null
 
   if (!patentNumber || !email) {
     return NextResponse.json({ error: 'Patent number and email are required.' }, { status: 400 })
@@ -81,10 +84,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: NOT_CHEMISTRY_MESSAGE }, { status: 400 })
   }
 
+  // Markush coverage is a SEPARATE product from structure_extraction
+  // (different Modal worker, different real cost -- GPU vs CPU), so its
+  // free-run allowance is scoped to its own product_type rather than
+  // sharing the structure-extraction gate below. A returning
+  // newest-patents user who already used their free structure-extraction
+  // run should still get one free markush check, and vice versa.
+  const productType = mode === 'markush_coverage' ? 'markush_coverage' : 'structure_extraction'
+
   const { data: priorRequest } = await supabaseAdmin
     .from('live_extraction_requests')
     .select('id')
     .eq('requester_email', email)
+    .eq('product_type', productType)
     .limit(1)
     .maybeSingle()
   if (priorRequest) {
@@ -100,11 +112,13 @@ export async function POST(req: NextRequest) {
       patent_number: patentNumber,
       requester_email: email,
       requester_name: name || null,
-      // Only set for the compound-match/section3d variants -- omitted
-      // entirely (not even sent as null) for a plain "list every structure"
-      // request, so this insert is byte-for-byte what it was before either
-      // variant existed whenever compoundInput isn't supplied.
-      ...(compoundSmiles
+      ...(mode === 'markush_coverage'
+        ? { product_type: 'markush_coverage', query_compound_input: compoundInput, query_compound_smiles: compoundSmiles }
+        // Only set for the compound-match/section3d variants -- omitted
+        // entirely (not even sent as null) for a plain "list every structure"
+        // request, so this insert is byte-for-byte what it was before either
+        // variant existed whenever compoundInput isn't supplied.
+        : compoundSmiles
         ? { query_compound_input: compoundInput, query_compound_smiles: compoundSmiles, query_mode: mode ?? 'compound_match' }
         : {}),
     })
