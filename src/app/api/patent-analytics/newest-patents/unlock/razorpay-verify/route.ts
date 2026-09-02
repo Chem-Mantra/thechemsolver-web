@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
 import { supabaseAdmin } from '@/lib/supabase-admin'
 
-export const maxDuration = 60
-
 const RAZORPAY_API_BASE = 'https://api.razorpay.com/v1'
 
 async function getAuthHeader(): Promise<string> {
@@ -38,37 +36,49 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Payment could not be verified -- please try again.' }, { status: 402 })
   }
 
-  const paymentRes = await fetch(`${RAZORPAY_API_BASE}/payments/${razorpayPaymentId}`, {
-    headers: { Authorization: await getAuthHeader() },
-  })
-  const payment = await paymentRes.json()
-  if (!paymentRes.ok || payment.status !== 'captured') {
-    console.error('[newest-patents unlock razorpay-verify] payment not captured', razorpayPaymentId, payment)
-    return NextResponse.json({ error: 'Payment could not be completed -- please try again.' }, { status: 402 })
-  }
+  try {
+    const paymentRes = await fetch(`${RAZORPAY_API_BASE}/payments/${razorpayPaymentId}`, {
+      headers: { Authorization: await getAuthHeader() },
+    })
+    const payment = await paymentRes.json()
+    if (!paymentRes.ok || payment.status !== 'captured') {
+      console.error('[newest-patents unlock razorpay-verify] payment not captured', razorpayPaymentId, payment)
+      return NextResponse.json({ error: 'Payment could not be completed -- please try again.' }, { status: 402 })
+    }
 
-  const orderRes = await fetch(`${RAZORPAY_API_BASE}/orders/${razorpayOrderId}`, {
-    headers: { Authorization: await getAuthHeader() },
-  })
-  const order = await orderRes.json()
-  const requestId = typeof order?.notes?.requestId === 'string' ? order.notes.requestId : ''
+    const orderRes = await fetch(`${RAZORPAY_API_BASE}/orders/${razorpayOrderId}`, {
+      headers: { Authorization: await getAuthHeader() },
+    })
+    const order = await orderRes.json()
+    const requestId = typeof order?.notes?.requestId === 'string' ? order.notes.requestId : ''
 
-  if (!requestId) {
-    console.error('[newest-patents unlock razorpay-verify] CAPTURED PAYMENT WITH UNREADABLE order notes -- MANUAL REFUND/RECOVERY NEEDED', { razorpayOrderId, razorpayPaymentId })
+    if (!requestId) {
+      console.error('[newest-patents unlock razorpay-verify] CAPTURED PAYMENT WITH UNREADABLE order notes -- MANUAL REFUND/RECOVERY NEEDED', { razorpayOrderId, razorpayPaymentId })
+      return NextResponse.json(
+        { error: `Payment succeeded but something went wrong on our end -- email support@thechemsolver.com with reference ${razorpayOrderId}.` },
+        { status: 500 }
+      )
+    }
+
+    const { error } = await supabaseAdmin.from('live_extraction_requests').update({ unlocked: true }).eq('id', requestId)
+    if (error) {
+      console.error('[newest-patents unlock razorpay-verify] payment captured but failed to unlock -- MANUAL FOLLOW-UP NEEDED', { razorpayOrderId, requestId, error })
+      return NextResponse.json(
+        { error: `Payment succeeded but something went wrong on our end -- email support@thechemsolver.com with reference ${razorpayOrderId}.` },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json({ unlocked: true })
+  } catch (exc) {
+    // A charge may have already been captured by this point -- never let an
+    // uncaught exception here surface as a raw/opaque failure to someone
+    // who might have just been charged. Same recovery-reference pattern as
+    // the handled failure branches above.
+    console.error('[newest-patents unlock razorpay-verify] uncaught exception -- CHECK FOR UNRECORDED CAPTURED PAYMENT', { razorpayOrderId, razorpayPaymentId, exc })
     return NextResponse.json(
-      { error: `Payment succeeded but something went wrong on our end -- email support@thechemsolver.com with reference ${razorpayOrderId}.` },
+      { error: `Payment may have succeeded but something went wrong on our end -- email support@thechemsolver.com with reference ${razorpayOrderId}.` },
       { status: 500 }
     )
   }
-
-  const { error } = await supabaseAdmin.from('live_extraction_requests').update({ unlocked: true }).eq('id', requestId)
-  if (error) {
-    console.error('[newest-patents unlock razorpay-verify] payment captured but failed to unlock -- MANUAL FOLLOW-UP NEEDED', { razorpayOrderId, requestId, error })
-    return NextResponse.json(
-      { error: `Payment succeeded but something went wrong on our end -- email support@thechemsolver.com with reference ${razorpayOrderId}.` },
-      { status: 500 }
-    )
-  }
-
-  return NextResponse.json({ unlocked: true })
 }

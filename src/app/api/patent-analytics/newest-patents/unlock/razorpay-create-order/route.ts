@@ -66,15 +66,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ orderId: order.id, amount: order.amount, currency: order.currency, keyId })
   } catch (exc) {
-    // TEMPORARY diagnostic -- this route was returning a raw infra 502
-    // (not JSON) in production for reasons not yet reproduced locally.
-    // Surfacing the real exception message here (never done elsewhere in
-    // this codebase) is a one-off to see the actual failure; strip the
-    // `debug` field back out once the real cause is found and fixed.
     console.error('[newest-patents unlock razorpay-create-order] uncaught exception', exc)
-    return NextResponse.json(
-      { error: 'Could not start payment -- please try again.', debug: exc instanceof Error ? exc.message : String(exc) },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Could not start payment -- please try again.' }, { status: 500 })
   }
 }
