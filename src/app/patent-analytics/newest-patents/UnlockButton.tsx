@@ -29,6 +29,19 @@ type RazorpayGlobal = new (options: {
   modal?: { ondismiss?: () => void }
 }) => RazorpayInstance
 
+// A gateway timeout/crash returns an HTML or plain-text error page, not
+// JSON -- calling res.json() directly on that throws a raw parser error
+// ("Unexpected token '<' ... is not valid JSON") that would otherwise leak
+// straight into the user-facing error message. Parse defensively so a
+// transient infrastructure hiccup shows a normal retry message instead.
+async function safeParseJson(res: Response): Promise<{ error?: string; [key: string]: unknown }> {
+  try {
+    return await res.json()
+  } catch {
+    return { error: 'Something went wrong on our end -- please try again in a moment.' }
+  }
+}
+
 // Standalone unlock button for a CONFIRMED newest-patents result -- same
 // embedded-PayPal-Buttons + Razorpay-Checkout pattern as CheckPatentModal,
 // without the modal chrome, since this lives directly on the results page.
@@ -54,7 +67,7 @@ export default function UnlockButton({ requestId }: { requestId: string }) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ requestId }),
         })
-        const data = await res.json()
+        const data = await safeParseJson(res)
         if (!res.ok || !data.orderID) throw new Error(data?.error || 'Could not start payment.')
         return data.orderID as string
       },
@@ -67,7 +80,7 @@ export default function UnlockButton({ requestId }: { requestId: string }) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ orderID: data.orderID }),
           })
-          const result = await res.json()
+          const result = await safeParseJson(res)
           if (!res.ok) throw new Error(result?.error || 'Payment succeeded but something went wrong.')
           router.refresh()
         } catch (err) {
@@ -102,14 +115,14 @@ export default function UnlockButton({ requestId }: { requestId: string }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ requestId }),
       })
-      const order = await orderRes.json()
+      const order = await safeParseJson(orderRes)
       if (!orderRes.ok || !order.orderId) throw new Error(order?.error || 'Could not start payment.')
 
       const rzp = new window.Razorpay({
-        key: order.keyId,
-        amount: order.amount,
-        currency: order.currency,
-        order_id: order.orderId,
+        key: order.keyId as string,
+        amount: order.amount as number,
+        currency: order.currency as string,
+        order_id: order.orderId as string,
         name: 'Patent Analytics',
         description: 'Newest Patent Extraction unlock',
         theme: { color: '#0284c7' },
@@ -121,7 +134,7 @@ export default function UnlockButton({ requestId }: { requestId: string }) {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(response),
             })
-            const result = await res.json()
+            const result = await safeParseJson(res)
             if (!res.ok) throw new Error(result?.error || 'Payment succeeded but something went wrong.')
             router.refresh()
           } catch (err) {

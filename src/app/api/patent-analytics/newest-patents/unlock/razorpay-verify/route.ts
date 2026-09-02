@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
 import { supabaseAdmin } from '@/lib/supabase-admin'
 
+export const maxDuration = 60
+
 const RAZORPAY_API_BASE = 'https://api.razorpay.com/v1'
 
 async function getAuthHeader(): Promise<string> {

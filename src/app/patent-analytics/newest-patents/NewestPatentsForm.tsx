@@ -97,7 +97,8 @@ export default function NewestPatentsForm() {
             <>We&rsquo;re extracting structures from <b>{patentNumber.trim()}</b> now.</>
           )}{' '}
           This typically takes up to 30 minutes. We&rsquo;ll email <b>{user?.email}</b> a link to your result the
-          moment it&rsquo;s ready -- you don&rsquo;t need to wait here.
+          moment it&rsquo;s ready -- you don&rsquo;t need to wait here. New senders sometimes land in spam/promotions
+          at first, so please check there if you don&rsquo;t see it in your inbox.
         </p>
         <button
           type="button"

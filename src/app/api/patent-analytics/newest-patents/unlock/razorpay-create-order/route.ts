@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase-admin'
 
+export const maxDuration = 60
+
 const RAZORPAY_API_BASE = 'https://api.razorpay.com/v1'
 const UNLOCK_PRICE_INR_PAISE = 124500 // ~$15 at a conservative USD/INR rate, same fixed-rate approach as the $10 tier
 
