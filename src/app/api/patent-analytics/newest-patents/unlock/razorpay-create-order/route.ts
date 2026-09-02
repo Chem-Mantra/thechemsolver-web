@@ -40,21 +40,43 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'This result is already unlocked.' }, { status: 400 })
   }
 
-  const res = await fetch(`${RAZORPAY_API_BASE}/orders`, {
-    method: 'POST',
-    headers: { Authorization: await getAuthHeader(), 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      amount: UNLOCK_PRICE_INR_PAISE,
-      currency: 'INR',
-      receipt: `unlock_${requestId}_${Date.now()}`,
-      notes: { requestId },
-    }),
-  })
-  const order = await res.json()
-  if (!res.ok || !order.id) {
-    console.error('[newest-patents unlock razorpay-create-order] Razorpay order creation failed', order)
-    return NextResponse.json({ error: 'Could not start payment -- please try again.' }, { status: 502 })
-  }
+  try {
+    const res = await fetch(`${RAZORPAY_API_BASE}/orders`, {
+      method: 'POST',
+      headers: { Authorization: await getAuthHeader(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        amount: UNLOCK_PRICE_INR_PAISE,
+        currency: 'INR',
+        // Real bug found 2026-09-02: this used to embed the full requestId
+        // UUID (36 chars), producing e.g. "unlock_5caa4595-...-...9c627d631fc3_1788376073000"
+        // (57 chars) -- Razorpay's receipt field caps at 56 chars and
+        // rejects anything longer with a 400. The sibling check-payment
+        // route never hit this because it uses a short patent number here,
+        // not a UUID. Truncating to the UUID's first 8 chars (still unique
+        // enough for a human-readable receipt label -- the real identifier
+        // lives in `notes.requestId` below, not the receipt) keeps this
+        // safely under the limit.
+        receipt: `unlock_${requestId.slice(0, 8)}_${Date.now()}`,
+        notes: { requestId },
+      }),
+    })
+    const order = await res.json()
+    if (!res.ok || !order.id) {
+      console.error('[newest-patents unlock razorpay-create-order] Razorpay order creation failed', order)
+      return NextResponse.json({ error: 'Could not start payment -- please try again.' }, { status: 502 })
+    }
 
-  return NextResponse.json({ orderId: order.id, amount: order.amount, currency: order.currency, keyId })
+    return NextResponse.json({ orderId: order.id, amount: order.amount, currency: order.currency, keyId })
+  } catch (exc) {
+    // TEMPORARY diagnostic -- this route was returning a raw infra 502
+    // (not JSON) in production for reasons not yet reproduced locally.
+    // Surfacing the real exception message here (never done elsewhere in
+    // this codebase) is a one-off to see the actual failure; strip the
+    // `debug` field back out once the real cause is found and fixed.
+    console.error('[newest-patents unlock razorpay-create-order] uncaught exception', exc)
+    return NextResponse.json(
+      { error: 'Could not start payment -- please try again.', debug: exc instanceof Error ? exc.message : String(exc) },
+      { status: 500 }
+    )
+  }
 }
