@@ -130,11 +130,102 @@ export default function PricingPage() {
             ))}
           </div>
 
-          <div className="pa-glass p-8 max-w-2xl mx-auto text-center">
+          <div className="pa-glass p-8 max-w-2xl mx-auto text-center mb-16">
             <p className="text-sm" style={{ color: 'var(--on-surface-variant)' }}>
               Every report includes an explicit &ldquo;what we claim / what we don&apos;t claim&rdquo; section — we identify
               chemical structures and their relationship to claimed scope, not legal conclusions like infringement or validity.
             </p>
+          </div>
+
+          <div className="max-w-4xl mx-auto">
+            <h2 className="pa-display text-2xl font-bold mb-2 text-center" style={{ color: 'var(--on-surface)' }}>
+              How we compare
+            </h2>
+            <p className="text-sm text-center mb-8" style={{ color: 'var(--on-surface-variant)' }}>
+              Every claim below is sourced from each company&apos;s own public pricing pages and product posts as of
+              September 2026. Where a competitor doesn&apos;t publish something, we say so instead of guessing.
+            </p>
+            <div className="overflow-x-auto pa-glass p-2">
+              <table className="w-full text-sm border-collapse min-w-[720px]">
+                <thead>
+                  <tr>
+                    <th className="text-left p-4 font-medium" style={{ color: 'var(--on-surface-muted)' }} />
+                    <th className="text-left p-4 font-bold" style={{ color: 'var(--primary)' }}>Us</th>
+                    <th className="text-left p-4 font-medium" style={{ color: 'var(--on-surface)' }}>PatSnap Eureka</th>
+                    <th className="text-left p-4 font-medium" style={{ color: 'var(--on-surface)' }}>IPRally</th>
+                    <th className="text-left p-4 font-medium" style={{ color: 'var(--on-surface)' }}>Clarivate Cortellis</th>
+                    <th className="text-left p-4 font-medium" style={{ color: 'var(--on-surface)' }}>ChemAxon<sup>1</sup></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    {
+                      label: 'Pricing model',
+                      us: 'Pay per check or report',
+                      patsnap: 'Monthly subscription (credits)',
+                      iprally: 'Enterprise contract',
+                      clarivate: 'Enterprise contract',
+                      chemaxon: 'Enterprise license',
+                    },
+                    {
+                      label: 'Starting price',
+                      us: 'Free first check, then $10',
+                      patsnap: '$200/mo (Pro tier)²',
+                      iprally: 'Not published — demo required',
+                      clarivate: 'Not published — demo required',
+                      chemaxon: 'Not published',
+                    },
+                    {
+                      label: 'Self-serve, no sales call',
+                      us: true,
+                      patsnap: 'Yes, above the free trial',
+                      iprally: false,
+                      clarivate: false,
+                      chemaxon: false,
+                    },
+                    {
+                      label: 'Extracts structures from patents too new for Google Patents/PubChem',
+                      us: true,
+                      patsnap: false,
+                      iprally: false,
+                      clarivate: false,
+                      chemaxon: false,
+                    },
+                    {
+                      label: 'Automated instant Markush genus-coverage check',
+                      us: true,
+                      patsnap: false,
+                      iprally: false,
+                      clarivate: false,
+                      chemaxon: 'Enumeration tool, not coverage-checking³',
+                    },
+                    {
+                      label: 'Every result labeled confirmed vs. needs review',
+                      us: true,
+                      patsnap: 'Publishes its own benchmark scores',
+                      iprally: 'Some — reasoning shown per assessment',
+                      clarivate: 'Not published',
+                      chemaxon: 'Not published',
+                    },
+                  ].map((row) => (
+                    <tr key={row.label} className="border-t" style={{ borderColor: 'var(--border-light)' }}>
+                      <td className="p-4 font-medium" style={{ color: 'var(--on-surface)' }}>{row.label}</td>
+                      {[row.us, row.patsnap, row.iprally, row.clarivate, row.chemaxon].map((cell, i) => (
+                        <td key={i} className="p-4" style={{ color: i === 0 ? 'var(--on-surface)' : 'var(--on-surface-variant)' }}>
+                          {cell === true ? <span style={{ color: 'var(--tertiary-bright)' }}>✓</span> : cell === false ? <span style={{ color: 'var(--on-surface-muted)' }}>✗</span> : cell}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="text-xs mt-4 leading-relaxed" style={{ color: 'var(--on-surface-muted)' }}>
+              <p>1. ChemAxon&apos;s cheminformatics business now operates under Certara branding; its LinkedIn updates redirect there as of 2026.</p>
+              <p>2. Source: patsnap.com/pricing and eureka.patsnap.com, accessed September 2026. Higher usage tiers go up from there.</p>
+              <p>3. ChemAxon/Certara&apos;s Markush tools generate compound variants from a genus (enumeration) — a different task from checking whether one specific compound falls within a genus claim, which is what our Markush Coverage product does.</p>
+              <p>We couldn&apos;t find published self-serve pricing for IPRally, Clarivate Cortellis, or ChemAxon/Certara — if that&apos;s changed, let us know and we&apos;ll correct this.</p>
+            </div>
           </div>
         </div>
       </main>
