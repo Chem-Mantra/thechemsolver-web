@@ -50,6 +50,11 @@ export async function POST(req: NextRequest) {
     : body?.mode === 'compound_match' ? 'compound_match'
     : body?.mode === 'markush_coverage' ? 'markush_coverage'
     : null
+  // Defaults true (stereo-sensitive) when absent -- matches
+  // check_membership()'s own default, so any client request shape that
+  // predates this field (or simply doesn't send it) keeps today's behavior
+  // unchanged, not silently switched to the broader stereo-blind match.
+  const stereoSensitive = typeof body?.stereoSensitive === 'boolean' ? body.stereoSensitive : true
 
   if (!patentNumber || !email) {
     return NextResponse.json({ error: 'Patent number and email are required.' }, { status: 400 })
@@ -113,7 +118,7 @@ export async function POST(req: NextRequest) {
       requester_email: email,
       requester_name: name || null,
       ...(mode === 'markush_coverage'
-        ? { product_type: 'markush_coverage', query_compound_input: compoundInput, query_compound_smiles: compoundSmiles }
+        ? { product_type: 'markush_coverage', query_compound_input: compoundInput, query_compound_smiles: compoundSmiles, stereo_sensitive: stereoSensitive }
         // Only set for the compound-match/section3d variants -- omitted
         // entirely (not even sent as null) for a plain "list every structure"
         // request, so this insert is byte-for-byte what it was before either

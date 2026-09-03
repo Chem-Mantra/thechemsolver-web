@@ -24,6 +24,10 @@ export default function NewestPatentsForm() {
   const [patentNumber, setPatentNumber] = useState('')
   const [mode, setMode] = useState<Mode>('list')
   const [compoundInput, setCompoundInput] = useState('')
+  // Defaults to stereo-sensitive (matches check_membership()'s own default
+  // and the pre-toggle behavior) -- an unchecked box is an explicit,
+  // deliberate opt-in to the broader stereo-blind match, never the default.
+  const [stereoSensitive, setStereoSensitive] = useState(true)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [submittedId, setSubmittedId] = useState<string | null>(null)
@@ -66,6 +70,7 @@ export default function NewestPatentsForm() {
           email: user.email,
           name: user.name,
           ...(mode !== 'list' ? { compoundInput: compoundInput.trim(), mode } : {}),
+          ...(mode === 'markush_coverage' ? { stereoSensitive } : {}),
         }),
       })
       const data = await res.json()
@@ -164,6 +169,21 @@ export default function NewestPatentsForm() {
               className="text-base px-4 py-3 rounded-lg outline-none disabled:opacity-60"
               style={{ background: 'var(--input-bg)', border: '1px solid var(--border-light)' }}
             />
+          )}
+          {mode === 'markush_coverage' && (
+            <label className="flex items-start gap-2 text-sm" style={{ color: 'var(--on-surface-variant)' }}>
+              <input
+                type="checkbox"
+                checked={stereoSensitive}
+                onChange={(e) => setStereoSensitive(e.target.checked)}
+                disabled={busy}
+                className="mt-0.5"
+              />
+              <span>
+                Match stereochemistry exactly (recommended). Uncheck to ignore stereochemistry -- a broader,
+                stereo-blind match that can also return compounds differing only in stereo configuration.
+              </span>
+            </label>
           )}
           {error && <p className="text-sm" style={{ color: '#ba1a1a' }}>{error}</p>}
           <button
